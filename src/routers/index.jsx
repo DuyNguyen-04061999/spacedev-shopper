@@ -1,4 +1,4 @@
-import { AuthRoute } from "@/components/AuthRoute";
+import { GuestRoute } from "@/components/GuestRoute";
 import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
@@ -19,7 +19,7 @@ export const routers = [
                 children: [],
             },
             {
-                element: <AuthRoute redirect="/" />,
+                element: <GuestRoute redirect="/" />,
                 children: []
             },
 
