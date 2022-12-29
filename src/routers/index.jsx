@@ -3,8 +3,17 @@ import { PrivateRoute } from "@/components/PrivateRoute";
 import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
 import { lazy } from "react";
+import { profile } from "./ca-nhan";
 const Home = lazy(() => import('@/pages'))
 const Page404 = lazy(() => import('@/pages/404'))
+const Account = lazy(() => import('@/pages/tai-khoan'))
+const Product = lazy(() => import('@/pages/san-pham'))
+const ProductDetail = lazy(() => import('@/pages/[slug]-id[id]'))
+const Category = lazy(() => import('@/pages/[slug]-c[id]'))
+const Contact = lazy(() => import('@/pages/lien-he'))
+const FAQ = lazy(() => import('@/pages/hoi-dap'))
+const About = lazy(() => import('@/pages/ve-chung-toi'))
+const Shipping = lazy(() => import('@/pages/quy-dinh-giao-hang'))
 
 export const routers = [
     {
@@ -15,14 +24,43 @@ export const routers = [
                 element: <Home />,
             },
             {
-                element: <PrivateRoute redirect="/" />,
-                children: [],
+                element: <Product />,
+                path: PATH.product
             },
             {
-                element: <AuthRoute redirect="/" />,
-                children: []
+                element: <ProductDetail />,
+                path: PATH.productDetail
             },
-
+            {
+                element: <Category />,
+                path: PATH.category
+            },
+            {
+                element: <Contact />,
+                path: PATH.contact
+            },
+            {
+                element: <FAQ />,
+                path: PATH.faq
+            },
+            {
+                element: <About />,
+                path: PATH.about
+            },
+            {
+                element: <Shipping />,
+                path: PATH.shipping
+            },
+            profile,
+            {
+                element: <AuthRoute redirect="/" />,
+                children: [
+                    {
+                        element: <Account />,
+                        path: PATH.account
+                    }
+                ]
+            },
             {
                 element: <Page404 />,
                 path: '*'
