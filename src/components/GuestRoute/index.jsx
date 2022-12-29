@@ -2,7 +2,7 @@
 import { useAuth } from "@/hooks/useAuth"
 import { Navigate, Outlet, useLocation } from "react-router-dom"
 
-export const AuthRoute = ({ redirect = '/' }) => {
+export const GuestRoute = ({ redirect = '/' }) => {
     const { user } = useAuth()
     const {state} = useLocation()
 

@@ -3,8 +3,8 @@ const profile = '/ca-nhan'
 export const PATH = {
     home: '/',
     product: '/san-pham',
-    productDetail: '/:slug-id:id',
-    category: '/:slug-c:id',
+    productDetail: '/:slug',
+    category: '/:slug/:id',
     contact: '/lien-he',
     faq: '/hoi-dap',
     about: '/ve-chung-toi',

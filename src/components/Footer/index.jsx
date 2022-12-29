@@ -4,7 +4,7 @@ export const Footer = () => {
     return (
         <>
             {/* FOOTER */}
-            <footer footer className="bg-dark bg-cover @@classList" style={{ backgroundImage: 'url(./img/patterns/pattern-2.svg)' }
+            <footer className="bg-dark bg-cover @@classList" style={{ backgroundImage: 'url(/img/patterns/pattern-2.svg)' }
             }>
                 <div className="py-12 border-bottom border-gray-700">
                     <div className="container">
@@ -153,12 +153,12 @@ export const Footer = () => {
                             </div>
                             <div className="col-auto">
                                 {/* Payment methods */}
-                                <img className="footer-payment" src="./img/payment/mastercard.svg" alt="..." />
-                                <img className="footer-payment" src="./img/payment/visa.svg" alt="..." />
-                                <img className="footer-payment" src="./img/payment/amex.svg" alt="..." />
-                                <img className="footer-payment" src="./img/payment/paypal.svg" alt="..." />
-                                <img className="footer-payment" src="./img/payment/maestro.svg" alt="..." />
-                                <img className="footer-payment" src="./img/payment/klarna.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/mastercard.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/visa.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/amex.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/paypal.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/maestro.svg" alt="..." />
+                                <img className="footer-payment" src="/img/payment/klarna.svg" alt="..." />
                             </div>
                         </div>
                     </div>

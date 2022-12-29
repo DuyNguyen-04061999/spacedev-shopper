@@ -267,8 +267,8 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a className="card-img-hover" href="product.html">
-                        <img className="card-img-top card-img-back" src="./img/products/product-120.jpg" alt="..." />
-                        <img className="card-img-top card-img-front" src="./img/products/product-5.jpg" alt="..." />
+                        <img className="card-img-top card-img-back" src="/img/products/product-120.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-5.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -312,8 +312,8 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a className="card-img-hover" href="product.html">
-                        <img className="card-img-top card-img-back" src="./img/products/product-121.jpg" alt="..." />
-                        <img className="card-img-top card-img-front" src="./img/products/product-6.jpg" alt="..." />
+                        <img className="card-img-top card-img-back" src="/img/products/product-121.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-6.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -361,8 +361,8 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a className="card-img-hover" href="product.html">
-                        <img className="card-img-top card-img-back" src="./img/products/product-122.jpg" alt="..." />
-                        <img className="card-img-top card-img-front" src="./img/products/product-7.jpg" alt="..." />
+                        <img className="card-img-top card-img-back" src="/img/products/product-122.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-7.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -407,7 +407,7 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a href="#!">
-                        <img className="card-img-top card-img-front" src="./img/products/product-8.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-8.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -451,7 +451,7 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a href="#!">
-                        <img className="card-img-top card-img-front" src="./img/products/product-9.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-9.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -499,8 +499,8 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a className="card-img-hover" href="product.html">
-                        <img className="card-img-top card-img-back" src="./img/products/product-123.jpg" alt="..." />
-                        <img className="card-img-top card-img-front" src="./img/products/product-10.jpg" alt="..." />
+                        <img className="card-img-top card-img-back" src="/img/products/product-123.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-10.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -545,8 +545,8 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a className="card-img-hover" href="product.html">
-                        <img className="card-img-top card-img-back" src="./img/products/product-124.jpg" alt="..." />
-                        <img className="card-img-top card-img-front" src="./img/products/product-11.jpg" alt="..." />
+                        <img className="card-img-top card-img-back" src="/img/products/product-124.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-11.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -594,7 +594,7 @@ export const Home = () => {
                     <div className="card-img">
                       {/* Image */}
                       <a href="#!">
-                        <img className="card-img-top card-img-front" src="./img/products/product-12.jpg" alt="..." />
+                        <img className="card-img-top card-img-front" src="/img/products/product-12.jpg" alt="..." />
                       </a>
                       {/* Actions */}
                       <div className="card-actions">
@@ -714,7 +714,7 @@ export const Home = () => {
                       <div className="row align-items-center mb-6">
                         <div className="col-4">
                           {/* Image */}
-                          <img src="./img/products/product-13.jpg" alt="..." className="img-fluid" />
+                          <img src="/img/products/product-13.jpg" alt="..." className="img-fluid" />
                         </div>
                         <div className="col-8 ml-n2">
                           {/* Preheading */}
@@ -766,7 +766,7 @@ export const Home = () => {
                       <div className="row align-items-center mb-6">
                         <div className="col-4">
                           {/* Image */}
-                          <img src="./img/products/product-14.jpg" alt="..." className="img-fluid" />
+                          <img src="/img/products/product-14.jpg" alt="..." className="img-fluid" />
                         </div>
                         <div className="col-8 ml-n2">
                           {/* Preheading */}
@@ -819,7 +819,7 @@ export const Home = () => {
                       <div className="row align-items-center mb-6">
                         <div className="col-4">
                           {/* Image */}
-                          <img src="./img/products/product-15.jpg" alt="..." className="img-fluid" />
+                          <img src="/img/products/product-15.jpg" alt="..." className="img-fluid" />
                         </div>
                         <div className="col-8 ml-n2">
                           {/* Preheading */}
@@ -871,7 +871,7 @@ export const Home = () => {
                       <div className="row align-items-center mb-6">
                         <div className="col-4">
                           {/* Image */}
-                          <img src="./img/products/product-10.jpg" alt="..." className="img-fluid" />
+                          <img src="/img/products/product-10.jpg" alt="..." className="img-fluid" />
                         </div>
                         <div className="col-8 ml-n2">
                           {/* Preheading */}
@@ -938,7 +938,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card mb-2">
                 {/* Image */}
-                <img src="./img/products/product-16.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-16.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -951,7 +951,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card mb-2">
                 {/* Image */}
-                <img src="./img/products/product-17.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-17.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -964,7 +964,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card mb-2">
                 {/* Image */}
-                <img src="./img/products/product-18.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-18.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -977,7 +977,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card mb-2">
                 {/* Image */}
-                <img src="./img/products/product-19.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-19.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -990,7 +990,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card">
                 {/* Image */}
-                <img src="./img/products/product-20.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-20.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -1003,7 +1003,7 @@ export const Home = () => {
               {/* Card */}
               <div className="card">
                 {/* Image */}
-                <img src="./img/products/product-21.jpg" alt="..." className="card-img" />
+                <img src="/img/products/product-21.jpg" alt="..." className="card-img" />
                 {/* Overlay */}
                 <a className="card-img-overlay card-img-overlay-hover align-items-center bg-dark-40" href="blog-post.html">
                   <p className="my-0 font-size-xxs text-center text-white">
@@ -1016,31 +1016,31 @@ export const Home = () => {
           <div className="row">
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/mango.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
+              <img src="/img/brands/gray-350/mango.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/zara.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
+              <img src="/img/brands/gray-350/zara.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/reebok.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
+              <img src="/img/brands/gray-350/reebok.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/asos.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
+              <img src="/img/brands/gray-350/asos.svg" alt="..." className="img-fluid mb-7 mb-md-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/stradivarius.svg" alt="..." className="img-fluid mb-6 mb-sm-0" />
+              <img src="/img/brands/gray-350/stradivarius.svg" alt="..." className="img-fluid mb-6 mb-sm-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/adidas.svg" alt="..." className="img-fluid mb-6 mb-sm-0" />
+              <img src="/img/brands/gray-350/adidas.svg" alt="..." className="img-fluid mb-6 mb-sm-0" />
             </div>
             <div className="col-4 col-sm-3 col-md text-center">
               {/* Brand */}
-              <img src="./img/brands/gray-350/bershka.svg" alt="..." className="img-fluid" />
+              <img src="/img/brands/gray-350/bershka.svg" alt="..." className="img-fluid" />
             </div>
           </div>
         </div>

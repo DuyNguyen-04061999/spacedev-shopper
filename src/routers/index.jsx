@@ -1,5 +1,4 @@
-import { AuthRoute } from "@/components/AuthRoute";
-import { PrivateRoute } from "@/components/PrivateRoute";
+import { GuestRoute } from "@/components/GuestRoute";
 import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
 import { lazy } from "react";
@@ -8,8 +7,8 @@ const Home = lazy(() => import('@/pages'))
 const Page404 = lazy(() => import('@/pages/404'))
 const Account = lazy(() => import('@/pages/tai-khoan'))
 const Product = lazy(() => import('@/pages/san-pham'))
-const ProductDetail = lazy(() => import('@/pages/[slug]-id[id]'))
-const Category = lazy(() => import('@/pages/[slug]-c[id]'))
+const ProductDetail = lazy(() => import('@/pages/[slug]'))
+const Category = lazy(() => import('@/pages/[slug]/[id]'))
 const Contact = lazy(() => import('@/pages/lien-he'))
 const FAQ = lazy(() => import('@/pages/hoi-dap'))
 const About = lazy(() => import('@/pages/ve-chung-toi'))
@@ -53,7 +52,7 @@ export const routers = [
             },
             profile,
             {
-                element: <AuthRoute redirect="/" />,
+                element: <GuestRoute redirect={PATH.profile} />,
                 children: [
                     {
                         element: <Account />,
