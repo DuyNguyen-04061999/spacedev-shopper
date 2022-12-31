@@ -15,7 +15,7 @@ export const Header = () => {
                         <span className="navbar-toggler-icon" />
                     </button>
                     {/* Collapse */}
-                    <div className="collapse navbar-collapse" id="topbarCollapse">
+                    <div className="navbar-collapse" id="topbarCollapse">
                         {/* Nav */}
                         <ul className="nav nav-divided navbar-nav mr-auto">
                             <li className="nav-item dropdown">
@@ -107,7 +107,7 @@ export const Header = () => {
                         <span className="navbar-toggler-icon" />
                     </button>
                     {/* Collapse */}
-                    <div className="collapse navbar-collapse" id="navbarCollapse">
+                    <div className="navbar-collapse" id="navbarCollapse">
                         {/* Nav */}
                         <ul className="navbar-nav mx-auto">
                             <li className="nav-item">
