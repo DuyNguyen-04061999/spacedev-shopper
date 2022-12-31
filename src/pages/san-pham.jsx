@@ -6,7 +6,7 @@ import { array } from "@/utils/array";
 
 export default function Product() {
     const { data: { data: products = [] } = {}, loading } = useQuery({
-        queryFn: () => productService.getProduct('?page=2'),
+        queryFn: () => productService.getProduct(),
     })
 
     return (
