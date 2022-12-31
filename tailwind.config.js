@@ -3,7 +3,16 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
+    container: {
+      screens: {
+        '2xl': {
+          max: 1440
+        }
+      }
+    },
   },
   plugins: [],
-  prefix: 'tw-'
+  corePlugins: {
+    preflight: false,
+  }
 }
