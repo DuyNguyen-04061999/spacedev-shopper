@@ -4,7 +4,7 @@ import Page404 from './404'
 
 export default function ProductDetail() {
     const { slug } = useParams()
-    const [,id] = slug.split('-id')
+    const [,id] = slug.split('-p')
     
 
 
