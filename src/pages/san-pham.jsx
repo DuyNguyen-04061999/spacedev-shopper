@@ -1,12 +1,18 @@
+import { Paginate } from "@/components/Paginate";
 import { ProductCard, ProductCardLoading } from "@/components/ProductCard";
 import { useQuery } from "@/hooks/useQuery";
 import { productService } from "@/services/product";
 import { array } from "@/utils/array";
+import { useSearchParams } from "react-router-dom";
 
 
 export default function Product() {
-    const { data: { data: products = [] } = {}, loading } = useQuery({
-        queryFn: () => productService.getProduct(),
+    const [search] = useSearchParams()
+
+    const query = search.toString()
+    const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
+        queryFn: () => productService.getProduct(`${query ? `?${query}` : ''}`),
+        dependencyList: [query]
     })
 
     return (
@@ -241,43 +247,12 @@ export default function Product() {
                         {/* Products */}
                         <div className="row">
                             {
-                                loading ? array(15).map((_, i) => <div className="col-6 col-md-4" key={i}><ProductCardLoading  /></div>) :
+                                loading ? array(15).map((_, i) => <div className="col-6 col-md-4" key={i}><ProductCardLoading /></div>) :
                                     products.map(e => <div className="col-6 col-md-4" key={e.id}><ProductCard  {...e} /></div>)
                             }
                         </div>
                         {/* Pagination */}
-                        <nav className="d-flex justify-content-center justify-content-md-end">
-                            <ul className="pagination pagination-sm text-gray-400">
-                                <li className="page-item">
-                                    <a className="page-link page-link-arrow" href="#">
-                                        <i className="fa fa-caret-left" />
-                                    </a>
-                                </li>
-                                <li className="page-item active">
-                                    <a className="page-link" href="#">1</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">2</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">3</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">4</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">5</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link" href="#">6</a>
-                                </li>
-                                <li className="page-item">
-                                    <a className="page-link page-link-arrow" href="#">
-                                        <i className="fa fa-caret-right" />
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <Paginate totalPage={paginate.totalPage} />
                     </div>
                 </div>
             </div>
