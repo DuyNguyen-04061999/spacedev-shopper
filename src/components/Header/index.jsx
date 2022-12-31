@@ -1,4 +1,6 @@
+import { PATH } from '@/config/path'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export const Header = () => {
     return (
@@ -114,7 +116,7 @@ export const Header = () => {
                                 <a className="nav-link" href="./">Trang chủ</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="./shop.html">Sản phẩm</a>
+                                <Link className="nav-link" to={PATH.product}>Sản phẩm</Link>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link" href="./shop.html">Laptop</a>

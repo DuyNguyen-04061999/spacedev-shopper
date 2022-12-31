@@ -394,7 +394,7 @@ export const Home = () => {
                       </div>
                       {/* Price */}
                       <div className="font-weight-bold">
-                        <span className="font-size-xs text-gray-350 text-decoration-line-through">$85.00</span>
+                        <span className="font-size-xs text-gray-350 text-decoration-line-through ml-1">$85.00</span>
                         <span className="text-primary">$85.00</span>
                       </div>
                     </div>
@@ -532,7 +532,7 @@ export const Home = () => {
                       </div>
                       {/* Price */}
                       <div className="font-weight-bold">
-                        <span className="font-size-xs text-gray-350 text-decoration-line-through">$79.00</span>
+                        <span className="font-size-xs text-gray-350 text-decoration-line-through ml-1">$79.00</span>
                         <span className="text-primary">$49.00</span>
                       </div>
                     </div>
