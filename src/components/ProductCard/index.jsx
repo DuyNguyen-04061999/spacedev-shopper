@@ -1,9 +1,14 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, generatePath } from 'react-router-dom'
 import Skeleton from '../Skeleton'
 import { currency } from '@/utils/currency'
+import { useCategory } from '@/hooks/useCategories'
+import { slugify } from '@/utils/slugify'
+import { PATH } from '@/config/path'
 
-export const ProductCard = ({ name, price, real_price, images, slug, id, rating_average }) => {
+export const ProductCard = ({ categories, name, price, real_price, images, slug, id, rating_average }) => {
+
+    const category = useCategory(categories)
 
     const image1 = images[0].thumbnail_url
     const image2 = images?.[1]?.thumbnail_url || image1
@@ -47,7 +52,9 @@ export const ProductCard = ({ name, price, real_price, images, slug, id, rating_
             <div className="card-body px-0">
                 {/* Category */}
                 <div className="font-size-xs">
-                    <a className="text-muted" href="shop.html">Shoes</a>
+                    {
+                        category && category.title && <Link className="text-muted" to={generatePath(PATH.category, { slug: slugify(category.title), id: category.id })}>{category.title}</Link>
+                    }
                 </div>
                 {/* Title */}
                 <div className="font-weight-bold">

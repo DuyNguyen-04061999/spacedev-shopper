@@ -4,5 +4,8 @@ import { http } from "@/utils/http"
 export const productService = {
     getProduct(query = '', signal) {
         return http.get(`${PRODUCT_API}${query}`, { signal })
+    },
+    getCategories() {
+        return http.get(`${PRODUCT_API}/categories`)
     }
 }

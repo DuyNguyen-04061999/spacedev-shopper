@@ -1,10 +1,5 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import Product from '../san-pham'
 
-export default function Category() {
-    const { slug, id } = useParams()
-    console.log(slug, id)
-    return (
-        <div>Category</div>
-    )
-}
+export default Product

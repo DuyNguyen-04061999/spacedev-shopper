@@ -3,34 +3,37 @@ import { ProductCard, ProductCardLoading } from "@/components/ProductCard";
 import { useQuery } from "@/hooks/useQuery";
 import { productService } from "@/services/product";
 import { array } from "@/utils/array";
-import { useSearchParams } from "react-router-dom";
-import querString from 'querystring'
+import { Link, NavLink, generatePath, useLocation, useMatch, useParams, useSearchParams } from "react-router-dom";
+import querString from 'query-string'
 import { Helmet } from "react-helmet";
 import { useRef } from "react";
+import Skeleton from "@/components/Skeleton";
+import { PATH } from "@/config/path";
+import { slugify } from "@/utils/slugify";
+import { cn } from "@/utils";
+import { useCategories, useCategory } from "@/hooks/useCategories";
 
 
 export default function Product() {
     const [search] = useSearchParams()
-
+    const match = useMatch(PATH.category)
+    const category = useCategory(parseInt(match?.params?.id || '-1'))
     const currentPage = search.get('page') || 1
-
+    
     const query = querString.stringify({
-        page: currentPage
+        page: currentPage,
+        categories: match?.params?.id
     })
-
-    // const controllerRef = useRef(new AbortController())
 
 
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
-        queryFn: ({ signal }) => {
-            // controllerRef.current.abort()
-            // controllerRef.current = new AbortController()
-
-            return productService.getProduct(`${query ? `?${query}` : ''}`, signal)
-        },
-        queryKey: [currentPage],
+        queryFn: ({ signal }) => productService.getProduct(`${query ? `?${query}` : ''}`, signal),
+        queryKey: [query, currentPage],
         keepPreviousData: true
     })
+
+
+    const { data: categories, loading: categoryLoading } = useCategories()
 
     return (
         <section className="py-11">
@@ -52,59 +55,28 @@ export default function Product() {
                                     <div>
                                         <div className="form-group">
                                             <ul className="list-styled mb-0" id="productsNav">
+
                                                 <li className="list-styled-item">
-                                                    <a className="list-styled-link " href="#">
-                                                        All Products
-                                                    </a>
+                                                    <NavLink className={({ isActive }) => cn('list-styled-link', { 'font-bold': isActive })} to={PATH.product}>
+                                                        Tất cả sản phẩm
+                                                    </NavLink>
                                                 </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link font-bold" href="#blousesCollapse">
-                                                        Blouses and Shirts
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#coatsCollapse">
-                                                        Coats and Jackets
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#dressesCollapse" aria-expanded="true">
-                                                        Dresses
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#hoodiesCollapse">
-                                                        Hoodies and Sweats
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#denimCollapse">
-                                                        Denim
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#jeansCollapse">
-                                                        Jeans
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#jumpersCollapse">
-                                                        Jumpers and Cardigans
-                                                    </a>
-                                                </li>
-                                                <li className="list-styled-item">
-                                                    {/* Toggle */}
-                                                    <a className="list-styled-link" href="#legginsCollapse">
-                                                        Leggings
-                                                    </a>
-                                                </li>
+                                                {
+                                                    categoryLoading ? array(10).map((_, i) => (
+                                                        <li key={i} className="list-styled-item">
+                                                            <Skeleton height={24} />
+                                                        </li>
+                                                    )) :
+                                                        categories.map(e => (
+                                                            <li key={e.id} className="list-styled-item">
+                                                                {/* Toggle */}
+                                                                <NavLink className={({ isActive }) => cn('list-styled-link', { 'font-bold': isActive })} to={generatePath(PATH.category, { slug: slugify(e.title), id: e.id })}>
+                                                                    {e.title}
+                                                                </NavLink>
+                                                            </li>
+                                                        ))
+                                                }
+
                                             </ul>
                                         </div>
                                     </div>
@@ -177,41 +149,34 @@ export default function Product() {
                     </div>
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}
-                        <div className="flickity-page-dots-inner mb-9" data-flickity="{&quot;pageDots&quot;: true}">
-                            {/* Item */}
+                        {/* <div className="flickity-page-dots-inner mb-9" data-flickity="{&quot;pageDots&quot;: true}">
                             <div className="w-100">
-                                <div className="card bg-h-100 bg-left" style={{ backgroundImage: 'url(./img/covers/cover-24.jpg)' }}>
+                                <div className="card bg-h-100 bg-left" style={{ backgroundImage: 'url(/img/covers/cover-24.jpg)' }}>
                                     <div className="row" style={{ minHeight: '400px' }}>
                                         <div className="col-12 col-md-10 col-lg-8 col-xl-6 align-self-center">
                                             <div className="card-body px-md-10 py-11">
-                                                {/* Heading */}
                                                 <h4>
                                                     2019 Summer Collection
                                                 </h4>
-                                                {/* Button */}
                                                 <a className="btn btn-link px-0 text-body" href="shop.html">
                                                     View Collection <i className="fe fe-arrow-right ml-2" />
                                                 </a>
                                             </div>
                                         </div>
-                                        <div className="col-12 col-md-2 col-lg-4 col-xl-6 d-none d-md-block bg-cover" style={{ backgroundImage: 'url(./img/covers/cover-16.jpg)' }} />
+                                        <div className="col-12 col-md-2 col-lg-4 col-xl-6 d-none d-md-block bg-cover" style={{ backgroundImage: 'url(/img/covers/cover-16.jpg)' }} />
                                     </div>
                                 </div>
                             </div>
-                            {/* Item */}
                             <div className="w-100">
-                                <div className="card bg-cover" style={{ backgroundImage: 'url(./img/covers/cover-29.jpg)' }}>
+                                <div className="card bg-cover" style={{ backgroundImage: 'url(/img/covers/cover-29.jpg)' }}>
                                     <div className="row align-items-center" style={{ minHeight: '400px' }}>
                                         <div className="col-12 col-md-10 col-lg-8 col-xl-6">
                                             <div className="card-body px-md-10 py-11">
-                                                {/* Heading */}
                                                 <h4 className="mb-5">Get -50% from Summer Collection</h4>
-                                                {/* Text */}
                                                 <p className="mb-7">
                                                     Appear, dry there darkness they're seas. <br />
                                                     <strong className="text-primary">Use code 4GF5SD</strong>
                                                 </p>
-                                                {/* Button */}
                                                 <a className="btn btn-outline-dark" href="shop.html">
                                                     Shop Now <i className="fe fe-arrow-right ml-2" />
                                                 </a>
@@ -220,29 +185,25 @@ export default function Product() {
                                     </div>
                                 </div>
                             </div>
-                            {/* Item */}
                             <div className="w-100">
-                                <div className="card bg-cover" style={{ backgroundImage: 'url(./img/covers/cover-30.jpg)' }}>
+                                <div className="card bg-cover" style={{ backgroundImage: 'url(/img/covers/cover-30.jpg)' }}>
                                     <div className="row align-items-center" style={{ minHeight: '400px' }}>
                                         <div className="col-12">
                                             <div className="card-body px-md-10 py-11 text-center text-white">
-                                                {/* Preheading */}
                                                 <p className="text-uppercase">Enjoy an extra</p>
-                                                {/* Heading */}
                                                 <h1 className="display-4 text-uppercase">50% off</h1>
-                                                {/* Link */}
                                                 <a className="link-underline text-reset" href="shop.html">Shop Collection</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         {/* Header */}
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
                                 {/* Heading */}
-                                <h3 className="mb-1">Womens' Clothing</h3>
+                                <h3 className="mb-1">{category?.title || 'Tất cả sản phẩm'}</h3>
                                 {/* Breadcrumb */}
                                 <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
                                     <li className="breadcrumb-item">
@@ -256,10 +217,10 @@ export default function Product() {
                             <div className="col-12 col-md-auto">
                                 {/* Select */}
                                 <select className="custom-select custom-select-xs">
-                                    <option selected>Giá giãm</option>
-                                    <option selected>Giá tăng</option>
-                                    <option selected>Mới nhất</option>
-                                    <option selected>Giảm giá nhiều nhất</option>
+                                    <option>Giá giãm</option>
+                                    <option>Giá tăng</option>
+                                    <option>Mới nhất</option>
+                                    <option>Giảm giá nhiều nhất</option>
                                 </select>
                             </div>
                         </div>

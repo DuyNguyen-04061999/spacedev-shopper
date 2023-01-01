@@ -1,13 +1,20 @@
 import { localStorageCache, sessionStorageCache } from "@/utils/cache"
 import { CanceledError } from "axios"
 import { useRef } from "react"
-import { useMemo } from "react"
 import { useEffect, useState } from "react"
 
 const _cache = {
     localStorage: localStorageCache,
     sessionStorage: sessionStorageCache,
 }
+
+
+// _asyncFunction = {
+//     categories: Promise,
+//     course-index: Promise,
+// }
+
+const _asyncFunction = {}
 
 
 export const useQuery = (options = {}) => {
@@ -22,18 +29,18 @@ export const useQuery = (options = {}) => {
     const refetchRef = useRef()
     // Dùng để lưu trữ các data để sử dụng lại cho keepPreviousData
     const dataRef = useRef({})
-    const cacheName = Array.isArray(queryKey) ? queryKey?.[0] : undefined
-    
+    const cacheName = Array.isArray(queryKey) ? queryKey?.[0] : typeof queryKey === 'string' ? queryKey : undefined
+
 
     const controllerRef = useRef(new AbortController())
-
+    
 
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState()
     const [status, setStatus] = useState('idle')
     useEffect(() => {
-        if(typeof refetchRef.current === 'boolean') {
+        if (typeof refetchRef.current === 'boolean') {
             refetchRef.current = true
         }
     }, dependencyList)
@@ -47,7 +54,7 @@ export const useQuery = (options = {}) => {
     const fetchData = async () => {
         controllerRef.current.abort()
         controllerRef.current = new AbortController()
-
+        
         try {
             setLoading(true)
             setStatus('pending')
@@ -55,7 +62,7 @@ export const useQuery = (options = {}) => {
             let res
 
             // Lấy data từ biến lưu trữ
-            if(keepPreviousData && cacheName && dataRef.current[cacheName]) {
+            if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
                 res = dataRef.current[cacheName]
             }
 
@@ -64,14 +71,28 @@ export const useQuery = (options = {}) => {
                 res = cache.get(cacheName)
             }
 
+            // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
+            if(cacheName && _asyncFunction[cacheName]) {
+                res = await _asyncFunction[cacheName]
+            }
+
+
             if (!res) {
-                res = await queryFn({
+                const asyncFun = queryFn({
                     signal: controllerRef.current.signal
                 })
+
+                if(cacheName) {
+                    _asyncFunction[cacheName] = asyncFun 
+                }
+
+                res = await asyncFun
+
+                delete _asyncFunction[cacheName]
             }
 
             // Lưu trữ lại giá trị khi keepPreviousData
-            if(keepPreviousData && cacheName) {
+            if (keepPreviousData && cacheName) {
                 dataRef.current[cacheName] = res
             }
 
@@ -92,7 +113,7 @@ export const useQuery = (options = {}) => {
             setLoading(false)
         } catch (err) {
             console.error(err)
-            if(err instanceof CanceledError) {
+            if (err instanceof CanceledError) {
                 return
             }
             setError(err)
