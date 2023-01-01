@@ -5,6 +5,8 @@ import { productService } from "@/services/product";
 import { array } from "@/utils/array";
 import { useSearchParams } from "react-router-dom";
 import querString from 'querystring'
+import { Helmet } from "react-helmet";
+import { useRef } from "react";
 
 
 export default function Product() {
@@ -16,15 +18,25 @@ export default function Product() {
         page: currentPage
     })
 
+    // const controllerRef = useRef(new AbortController())
+
 
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
-        queryFn: () => productService.getProduct(`${query ? `?${query}` : ''}`),
+        queryFn: ({ signal }) => {
+            // controllerRef.current.abort()
+            // controllerRef.current = new AbortController()
+
+            return productService.getProduct(`${query ? `?${query}` : ''}`, signal)
+        },
         queryKey: [currentPage],
         keepPreviousData: true
     })
 
     return (
         <section className="py-11">
+            <Helmet>
+                <title>Sản phẩm</title>
+            </Helmet>
             <div className="container">
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-3">

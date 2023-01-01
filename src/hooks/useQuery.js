@@ -1,4 +1,5 @@
 import { localStorageCache, sessionStorageCache } from "@/utils/cache"
+import { CanceledError } from "axios"
 import { useRef } from "react"
 import { useMemo } from "react"
 import { useEffect, useState } from "react"
@@ -24,6 +25,8 @@ export const useQuery = (options = {}) => {
     const cacheName = Array.isArray(queryKey) ? queryKey?.[0] : undefined
     
 
+    const controllerRef = useRef(new AbortController())
+
 
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
@@ -42,6 +45,9 @@ export const useQuery = (options = {}) => {
     }, [enabled].concat(dependencyList, queryKey))
 
     const fetchData = async () => {
+        controllerRef.current.abort()
+        controllerRef.current = new AbortController()
+
         try {
             setLoading(true)
             setStatus('pending')
@@ -59,7 +65,9 @@ export const useQuery = (options = {}) => {
             }
 
             if (!res) {
-                res = await queryFn()
+                res = await queryFn({
+                    signal: controllerRef.current.signal
+                })
             }
 
             // Lưu trữ lại giá trị khi keepPreviousData
@@ -81,11 +89,14 @@ export const useQuery = (options = {}) => {
             }
 
             refetchRef.current = false
+            setLoading(false)
         } catch (err) {
+            console.error(err)
+            if(err instanceof CanceledError) {
+                return
+            }
             setError(err)
             setStatus('error')
-        }
-        finally {
             setLoading(false)
         }
     }
