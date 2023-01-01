@@ -2,9 +2,9 @@ import { cn } from '@/utils'
 import React from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 
-export const Paginate = ({ totalPage }) => {
+export const Paginate = ({ totalPage, name = 'page' }) => {
     const [search] = useSearchParams()
-    const currentPage = parseInt(search.get('page') || '1')
+    const currentPage = parseInt(search.get(name) || '1')
     const { pathname } = useLocation()
 
     const urlSearchParam = new URLSearchParams(search) // tạo ra một object mới
@@ -26,7 +26,7 @@ export const Paginate = ({ totalPage }) => {
 
         let list = []
         for (let i = start; i <= end; i++) {
-            urlSearchParam.set('page', i)
+            urlSearchParam.set(name, i)
             list.push(<li key={i} className={cn('page-item', { active: i === currentPage })}>
                 <Link className="page-link" to={`${pathname}?${urlSearchParam.toString()}`}>{i}</Link>
             </li>)
@@ -34,10 +34,10 @@ export const Paginate = ({ totalPage }) => {
         return list
     }
 
-    urlSearchParam.set('page', currentPage - 1)
+    urlSearchParam.set(name, currentPage - 1)
     const prevLink = `${pathname}?${urlSearchParam.toString()}`
 
-    urlSearchParam.set('page', currentPage + 1)
+    urlSearchParam.set(name, currentPage + 1)
     const nextLink = `${pathname}?${urlSearchParam.toString()}`
 
 

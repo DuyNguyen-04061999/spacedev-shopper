@@ -15,9 +15,15 @@ export const useQuery = (options = {}) => {
         dependencyList = [],
         enabled = true,
         cacheTime,
+        keepPreviousData,
         storeDriver = 'localStorage' } = options
     const cache = _cache[storeDriver]
     const refetchRef = useRef()
+    // Dùng để lưu trữ các data để sử dụng lại cho keepPreviousData
+    const dataRef = useRef({})
+    const cacheName = Array.isArray(queryKey) ? queryKey?.[0] : undefined
+    
+
 
     const [data, setData] = useState()
     const [loading, setLoading] = useState(true)
@@ -33,7 +39,7 @@ export const useQuery = (options = {}) => {
         if (enabled) {
             fetchData()
         }
-    }, [queryKey, enabled].concat(...dependencyList))
+    }, [enabled].concat(dependencyList, queryKey))
 
     const fetchData = async () => {
         try {
@@ -41,13 +47,24 @@ export const useQuery = (options = {}) => {
             setStatus('pending')
 
             let res
+
+            // Lấy data từ biến lưu trữ
+            if(keepPreviousData && cacheName && dataRef.current[cacheName]) {
+                res = dataRef.current[cacheName]
+            }
+
             // Kiểm tra cache xem có dữ liệu hay không
-            if (queryKey && !refetchRef.current) {
-                res = cache.get(queryKey)
+            if (cacheName && cacheTime && !refetchRef.current) {
+                res = cache.get(cacheName)
             }
 
             if (!res) {
                 res = await queryFn()
+            }
+
+            // Lưu trữ lại giá trị khi keepPreviousData
+            if(keepPreviousData && cacheName) {
+                dataRef.current[cacheName] = res
             }
 
             setStatus('success')
@@ -55,12 +72,12 @@ export const useQuery = (options = {}) => {
 
 
             // update lại thời gian expired trong trường hợp cache đã tồn tại
-            if (queryKey) {
+            if (cacheName && cacheTime) {
                 let expired = cacheTime
                 if (cacheTime) {
                     expired += Date.now()
                 }
-                cache.set(queryKey, res, expired)
+                cache.set(cacheName, res, expired)
             }
 
             refetchRef.current = false

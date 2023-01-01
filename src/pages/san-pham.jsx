@@ -4,15 +4,23 @@ import { useQuery } from "@/hooks/useQuery";
 import { productService } from "@/services/product";
 import { array } from "@/utils/array";
 import { useSearchParams } from "react-router-dom";
+import querString from 'querystring'
 
 
 export default function Product() {
     const [search] = useSearchParams()
 
-    const query = search.toString()
+    const currentPage = search.get('page') || 1
+
+    const query = querString.stringify({
+        page: currentPage
+    })
+
+
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
         queryFn: () => productService.getProduct(`${query ? `?${query}` : ''}`),
-        dependencyList: [query]
+        queryKey: [currentPage],
+        keepPreviousData: true
     })
 
     return (
@@ -253,6 +261,7 @@ export default function Product() {
                         </div>
                         {/* Pagination */}
                         <Paginate totalPage={paginate.totalPage} />
+                        {/* <Paginate name="paginate" totalPage={paginate.totalPage} /> */}
                     </div>
                 </div>
             </div>
