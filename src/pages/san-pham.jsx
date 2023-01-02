@@ -20,7 +20,7 @@ export default function Product() {
     const [search, setSearch] = useSearch({
         page: 1,
         search: undefined,
-        sort: 'real_price.desc'
+        sort: 'newest'
     })
 
 
@@ -30,7 +30,7 @@ export default function Product() {
 
     // const currentPage = search.get('page') || 1
     // const searchKeyWord = search.get('search')
-    // const sort = search.get('sort') || 'real_price.desc'
+    // const sort = search.get('sort') || 'newest'
 
     const query = querString.stringify({
         page: search.page,
@@ -242,12 +242,12 @@ export default function Product() {
                                         })
                                     }}
                                     className="custom-select custom-select-xs">
+                                    <option value="newest">Mới nhất</option>
                                     <option value="real_price.desc">Giá giảm dần</option>
-                                    <option value="real_price.asc">Giá tăng</option>
+                                    <option value="real_price.asc">Giá tăng dần</option>
                                     <option value="discount_rate.desc">Giảm giá nhiều nhất</option>
                                     <option value="rating_average.desc">Đánh giá cao nhất</option>
-                                    <option value="review_count.desc">Mua nhiều nhất</option>
-                                    <option value="newest">Mới nhất</option>
+                                    <option value="top_seller">Mua nhiều nhất</option>
                                 </select>
                             </div>
                         </div>
