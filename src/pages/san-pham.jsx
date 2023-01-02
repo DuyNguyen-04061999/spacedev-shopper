@@ -12,26 +12,38 @@ import { PATH } from "@/config/path";
 import { slugify } from "@/utils/slugify";
 import { cn } from "@/utils";
 import { useCategories, useCategory } from "@/hooks/useCategories";
+import { useSearch } from "@/hooks/useSearch";
 
 
 export default function Product() {
-    const [search] = useSearchParams()
-    const match = useMatch(PATH.category)
-    const category = useCategory(parseInt(match?.params?.id || '0'))
-    const currentPage = search.get('page') || 1
 
-    const searchKeyWord = search.get('search')
-    
-    const query = querString.stringify({
-        page: currentPage,
-        categories: match?.params?.id,
-        name: searchKeyWord || undefined
+    const [search, setSearch] = useSearch({
+        page: 1,
+        search: undefined,
+        sort: 'real_price.desc'
     })
 
 
+    // const [search, setSearchParam] = useSearchParams()
+    const match = useMatch(PATH.category)
+    const category = useCategory(parseInt(match?.params?.id || '0'))
+
+    // const currentPage = search.get('page') || 1
+    // const searchKeyWord = search.get('search')
+    // const sort = search.get('sort') || 'real_price.desc'
+
+    const query = querString.stringify({
+        page: search.page,
+        categories: match?.params?.id,
+        name: search.search || undefined,
+        sort: search.sort
+    })
+
+    
+
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
         queryFn: ({ signal }) => productService.getProduct(`${query ? `?${query}` : ''}`, signal),
-        queryKey: [query, currentPage],
+        queryKey: [query, search.page],
         keepPreviousData: true
     })
 
@@ -219,18 +231,30 @@ export default function Product() {
                             </div>
                             <div className="col-12 col-md-auto">
                                 {/* Select */}
-                                <select className="custom-select custom-select-xs">
-                                    <option>Giá giảm dần</option>
-                                    <option>Giá tăng</option>
-                                    <option>Mới nhất</option>
-                                    <option>Giảm giá nhiều nhất</option>
+                                <select
+                                    value={search.sort} onChange={ev => {
+                                        // search.set('sort', ev.target.value)
+                                        // search.set('page', 1)
+                                        // setSearchParam(search)
+                                        setSearch({
+                                            sort: ev.target.value,
+                                            page: 1
+                                        })
+                                    }}
+                                    className="custom-select custom-select-xs">
+                                    <option value="real_price.desc">Giá giảm dần</option>
+                                    <option value="real_price.asc">Giá tăng</option>
+                                    <option value="discount_rate.desc">Giảm giá nhiều nhất</option>
+                                    <option value="rating_average.desc">Đánh giá cao nhất</option>
+                                    <option value="review_count.desc">Mua nhiều nhất</option>
+                                    <option value="newest">Mới nhất</option>
                                 </select>
                             </div>
                         </div>
                         {
-                            searchKeyWord && <h4 className="mb-5 text-2xl">Tìm kiếm `{searchKeyWord}`</h4>
+                            search.search && <h4 className="mb-5 text-2xl">Tìm kiếm `{search.search}`</h4>
                         }
-                        
+
                         {/* Products */}
                         <div className="row">
                             {
