@@ -1,4 +1,4 @@
-import { useCategories } from '@/hooks/useCategories'
+import { useCategories, useCategory } from '@/hooks/useCategories'
 import { useDebounce } from '@/hooks/useDebounce'
 import { useQuery } from '@/hooks/useQuery'
 import { productService } from '@/services/product'
@@ -8,20 +8,32 @@ import { Drawer } from 'antd'
 import queryString from 'query-string'
 import React, { useState } from 'react'
 import Skeleton from '../Skeleton'
+import { generatePath } from 'react-router'
+import { PATH } from '@/config/path'
+import { slugify } from '@/utils/slugify'
+import { Link } from 'react-router-dom'
 
 export const SearchDrawer = ({ open, onClose }) => {
     const { data: categories } = useCategories()
     const [value, setValue] = useDebounce('')
+    const [categoryId, setCategory] = useDebounce(0)
+    const category = useCategory(categoryId)
     const query = queryString.stringify({
         limit: 5,
-        name: value || undefined
+        name: value || undefined,
+        categories: categoryId || undefined
     })
     const { data: { data: products = [] } = {}, loading } = useQuery({
         queryKey: ['search', query],
         queryFn: () => productService.getProduct(`?${query}`),
-        enabled: !!value.trim(),
-
+        enabled: !!value,
     })
+
+    const queryLink = queryString.stringify({
+        search: value || undefined
+    })
+
+    const viewAllLink = (category ? generatePath(PATH.category, { slug: slugify(category.title), id: category.id }) : PATH.product) + `?${queryLink}`
     return (
         <Drawer open={open} onClose={onClose} bodyStyle={{ padding: 0 }} width={470} headerStyle={{ display: 'none' }}>
             {/* Close */}
@@ -34,25 +46,23 @@ export const SearchDrawer = ({ open, onClose }) => {
             </div>
             {/* Body: Form */}
             <div className="modal-body">
-                <form>
-                    <div className="form-group">
-                        <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
-                        <select className="custom-select" id="modalSearchCategories">
-                            <option>Tất cả sản phẩm</option>
-                            {
-                                categories.map(e => <option key={e.id} value={e.id}>{e.title}</option>)
-                            }
-                        </select>
+                <div className="form-group">
+                    <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
+                    <select className="custom-select" id="modalSearchCategories" onChange={(ev) => setCategory(parseInt(ev.target.value))}>
+                        <option value={0}>Tất cả sản phẩm</option>
+                        {
+                            categories.map(e => <option key={e.id} value={e.id}>{e.title}</option>)
+                        }
+                    </select>
+                </div>
+                <div className="input-group input-group-merge">
+                    <input defaultValue={value} onChange={(ev) => setValue(ev.target.value.trim())} className="form-control" type="search" placeholder="Search" />
+                    <div className="input-group-append">
+                        <button className="btn btn-outline-border" type="submit">
+                            <i className="fe fe-search" />
+                        </button>
                     </div>
-                    <div className="input-group input-group-merge">
-                        <input defaultValue={value} onChange={(ev) => setValue(ev.target.value)} className="form-control" type="search" placeholder="Search" />
-                        <div className="input-group-append">
-                            <button className="btn btn-outline-border" type="submit">
-                                <i className="fe fe-search" />
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
             {/* Body: Results (add `.d-none` to disable it) */}
             <div className="modal-body border-top font-size-sm">
@@ -61,44 +71,62 @@ export const SearchDrawer = ({ open, onClose }) => {
                 {/* Items */}
                 {
                     value && (
-                        loading ? array(5).map((_, i) => <CartItemLoading key={i}/>) :
+                        loading ? array(5).map((_, i) => <CartItemLoading key={i} />) :
                             products.length > 0 ?
-                                products.map(e => <CartItem key={e.id} {...e} />) : <p className='border p-4'>Rất tiếu không tìm thấy sản phẩm phù hợp với lựa chọn của bạn</p>
+                                products.map(e => <CartItem key={e.id} {...e} />) : <div className="modal-body border">
+                                    {/* Text */}
+                                    <p className="mb-3 font-size-sm text-center">
+                                        Rất tiếc không tìm thấy sản phẩm phù hợp với tiêu chí của bạn
+                                    </p>
+                                    <p className="mb-0 font-size-sm text-center">
+                                        😞
+                                    </p>
+                                </div>
                     )
                 }
                 {/* Button */}
-                <a className="btn btn-link px-0 text-reset" href="./shop.html">
-                    View All <i className="fe fe-arrow-right ml-2" />
-                </a>
+                <Link onClick={onClose} className="btn btn-link px-0 text-reset" to={viewAllLink}>
+                    Tất cả sản phẩm<i className="fe fe-arrow-right ml-2" />
+                </Link>
             </div>
             {/* Body: Empty (remove `.d-none` to disable it) */}
-            <div className="d-none modal-body">
-                {/* Text */}
-                <p className="mb-3 font-size-sm text-center">
-                    Nothing matches your search
-                </p>
-                <p className="mb-0 font-size-sm text-center">
-                    😞
-                </p>
-            </div>
+
         </Drawer>
     )
 }
 
 
 const CartItem = ({ name, real_price, price, slug, id, images }) => {
+
+    const salePrice = price - real_price
+
     return (
         <div className="row align-items-center position-relative mb-5">
+            {
+                salePrice > 0 && <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
+                    - {Math.floor(salePrice / price * 100)}%
+                </div>
+            }
             <div className="col-4 col-md-3">
                 {/* Image */}
                 <img className="img-fluid" src={images?.[0]?.thumbnail_url} alt="..." />
             </div>
             <div className="col position-static">
                 {/* Text */}
-                <p className="mb-0 font-weight-bold">
+                <div className="mb-0 font-weight-bold">
                     <a className="stretched-link text-body" href="./product.html">{name}</a> <br />
-                    <span className="text-muted">{currency(real_price)}</span>
-                </p>
+                    <div className="card-product-price">
+                        {
+                            real_price < price ? <>
+                                <span className="text-primary sale">{currency(real_price)}</span>
+                                <span className="font-size-xs text-gray-350 text-decoration-line-through ml-1">{currency(price)}</span>
+                            </> : <>
+                                <span className="text-xl flex h-full items-end">{currency(real_price)}</span>
+                            </>
+                        }
+                    </div>
+
+                </div>
             </div>
         </div>
     )
@@ -113,14 +141,14 @@ const CartItemLoading = () => {
             </div>
             <div className="col position-static">
                 {/* Text */}
-                <p className="mb-0 font-weight-bold">
+                <div className="mb-0 font-weight-bold">
                     <a className="stretched-link text-body" href="#">
-                        <Skeleton height={42.5}/>
+                        <Skeleton height={42.5} />
                     </a> <br />
                     <span className="text-muted">
-                        <Skeleton width={150} height={20}/>
+                        <Skeleton width={150} height={20} />
                     </span>
-                </p>
+                </div>
             </div>
         </div>
     )

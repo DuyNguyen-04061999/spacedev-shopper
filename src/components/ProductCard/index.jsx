@@ -29,8 +29,8 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
             <div className="card-img">
                 {/* Image */}
                 <Link to={_slug} className="card-img-hover" href="product.html">
-                    <img className="card-img-top card-img-back" src={image1} alt="..." />
-                    <img className="card-img-top card-img-front" src={image2} alt="..." />
+                    <img className="card-img-top card-img-back" src={image2} alt="..." />
+                    <img className="card-img-top card-img-front" src={image1} alt="..." />
                 </Link>
                 {/* Actions */}
                 <div className="card-actions">

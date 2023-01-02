@@ -19,10 +19,13 @@ export default function Product() {
     const match = useMatch(PATH.category)
     const category = useCategory(parseInt(match?.params?.id || '-1'))
     const currentPage = search.get('page') || 1
+
+    const searchKeyWord = search.get('search')
     
     const query = querString.stringify({
         page: currentPage,
-        categories: match?.params?.id
+        categories: match?.params?.id,
+        name: searchKeyWord || undefined
     })
 
 
@@ -224,7 +227,10 @@ export default function Product() {
                                 </select>
                             </div>
                         </div>
-                        <h4 className="mb-5 text-2xl">Searching for `Clothing`</h4>
+                        {
+                            searchKeyWord && <h4 className="mb-5 text-2xl">Tìm kiếm `{searchKeyWord}`</h4>
+                        }
+                        
                         {/* Products */}
                         <div className="row">
                             {
