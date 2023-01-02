@@ -8,8 +8,8 @@ export const SkeletonStyle = styled.span`
     animation: 1.5s shine linear infinite;
     width: 100%;
     display: block;
-    transform: scale(0.925);
-    transform-origin: left;
+    // transform: scale(0.925);
+    // transform-origin: left;
     &.rectangle {
 
     }
