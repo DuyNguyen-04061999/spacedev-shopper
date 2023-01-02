@@ -29,8 +29,8 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
             <div className="card-img">
                 {/* Image */}
                 <Link to={_slug} className="card-img-hover" href="product.html">
-                    <img className="card-img-top card-img-back" src={image1} alt="..." />
-                    <img className="card-img-top card-img-front" src={image2} alt="..." />
+                    <img className="card-img-top card-img-back" src={image2} alt="..." />
+                    <img className="card-img-top card-img-front" src={image1} alt="..." />
                 </Link>
                 {/* Actions */}
                 <div className="card-actions">
@@ -102,7 +102,7 @@ export const ProductCardLoading = () => {
             </Link>
         </div>
         {/* Body */}
-        <div className="card-body px-0">
+        <div className="card-body px-0 mt-2">
             {/* Category */}
             <div className="font-size-xs">
                 <a className="text-muted" href="shop.html">
@@ -110,7 +110,7 @@ export const ProductCardLoading = () => {
                 </a>
             </div>
             {/* Title */}
-            <div className="font-weight-bold">
+            <div className="font-weight-bold mt-2">
                 <Link className="text-body card-product-name" to='#'>
                     <Skeleton height={66} />
                 </Link>
@@ -119,7 +119,7 @@ export const ProductCardLoading = () => {
                 <Skeleton height={21} width={150} />
             </div>
             {/* Price */}
-            <div className="card-product-price">
+            <div className="card-product-price mt-2">
                 <Skeleton height={32} width={100} />
             </div>
         </div>

@@ -7,7 +7,6 @@ export const useCategories = () => {
         queryFn: () => productService.getCategories(),
         cacheTime: 3600_000
     })
-
     return { data, loading }
 }
 

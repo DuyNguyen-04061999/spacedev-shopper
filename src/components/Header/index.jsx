@@ -1,10 +1,17 @@
 import { PATH } from '@/config/path'
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { SearchDrawer } from '../SearchDrawer'
 
 export const Header = () => {
+    const [openSearchDrawer, setOpenSearchDrawer] = useState(false)
+    const onOpenSearchDrawer = (ev) => {
+        ev.preventDefault()
+        setOpenSearchDrawer(true)
+    }
     return (
         <>
+            <SearchDrawer open={openSearchDrawer} onClose={() => setOpenSearchDrawer(false)} />
             {/* NAVBAR */}
             <div className="navbar navbar-topbar navbar-expand-xl navbar-light bg-light">
                 <div className="container">
@@ -131,7 +138,7 @@ export const Header = () => {
                         {/* Nav */}
                         <ul className="navbar-nav flex-row">
                             <li className="nav-item">
-                                <a className="nav-link" data-toggle="modal" href="#modalSearch">
+                                <a onClick={onOpenSearchDrawer} className="nav-link" data-toggle="modal" href="#modalSearch">
                                     <i className="fe fe-search" />
                                 </a>
                             </li>

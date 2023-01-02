@@ -36,7 +36,7 @@ export const useQuery = (options = {}) => {
     
 
     const [data, setData] = useState()
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [error, setError] = useState()
     const [status, setStatus] = useState('idle')
     useEffect(() => {
@@ -76,7 +76,6 @@ export const useQuery = (options = {}) => {
                 res = await _asyncFunction[cacheName]
             }
 
-
             if (!res) {
                 const asyncFun = queryFn({
                     signal: controllerRef.current.signal
@@ -95,7 +94,6 @@ export const useQuery = (options = {}) => {
             if (keepPreviousData && cacheName) {
                 dataRef.current[cacheName] = res
             }
-
             setStatus('success')
             setData(res)
 
