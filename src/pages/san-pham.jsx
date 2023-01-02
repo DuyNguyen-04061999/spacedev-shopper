@@ -17,7 +17,7 @@ import { useCategories, useCategory } from "@/hooks/useCategories";
 export default function Product() {
     const [search] = useSearchParams()
     const match = useMatch(PATH.category)
-    const category = useCategory(parseInt(match?.params?.id || '-1'))
+    const category = useCategory(parseInt(match?.params?.id || '0'))
     const currentPage = search.get('page') || 1
     
     const query = querString.stringify({
@@ -217,7 +217,7 @@ export default function Product() {
                             <div className="col-12 col-md-auto">
                                 {/* Select */}
                                 <select className="custom-select custom-select-xs">
-                                    <option>Giá giãm</option>
+                                    <option>Giá giảm dần</option>
                                     <option>Giá tăng</option>
                                     <option>Mới nhất</option>
                                     <option>Giảm giá nhiều nhất</option>

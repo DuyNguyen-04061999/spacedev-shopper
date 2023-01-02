@@ -7,5 +7,8 @@ export const productService = {
     },
     getCategories() {
         return http.get(`${PRODUCT_API}/categories`)
+    },
+    getCategoryDetail(id) {
+        return http.get(`${PRODUCT_API}/categories/${id}`)
     }
 }

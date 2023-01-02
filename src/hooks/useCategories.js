@@ -13,6 +13,16 @@ export const useCategories = () => {
 
 
 export const useCategory = (id) => {
+    // const { data: { data: category } = {} } = useQuery({
+    //     queryFn: () => productService.getCategoryDetail(id),
+    //     enabled: !!id,
+    //     queryKey: `category-${id}`,
+    //     storeDriver: 'sessionStorage',
+    //     cacheTime: Infinity
+    // })
+
+    // return category
+
     const { data } = useCategories()
     return data.find(e => e.id === id)
 }
