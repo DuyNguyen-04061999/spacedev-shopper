@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Skeleton from '../Skeleton'
 import { currency } from '@/utils/currency'
 
-export const ProductCard = ({ name, price, real_price, images, slug, id, rating_average, rating_count }) => {
+export const ProductCard = ({ name, price, real_price, images, slug, id, rating_average, review_count }) => {
 
     const image1 = images[0].thumbnail_url
     const image2 = images?.[1]?.thumbnail_url || image1
@@ -64,7 +64,7 @@ export const ProductCard = ({ name, price, real_price, images, slug, id, rating_
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
-                        (${rating_count} nhận xét)
+                        ({review_count} nhận xét)
                     </>}
 
                 </div>
