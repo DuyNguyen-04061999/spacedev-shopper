@@ -6,7 +6,7 @@ import { useCategory } from '@/hooks/useCategories'
 import { slugify } from '@/utils/slugify'
 import { PATH } from '@/config/path'
 
-export const ProductCard = ({ categories, name, price, real_price, images, slug, id, rating_average }) => {
+export const ProductCard = ({ categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
 
     const category = useCategory(categories)
 
@@ -71,6 +71,7 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
                         <svg stroke="currentColor" fill="currentColor" strokeWidth={0} viewBox="0 0 24 24" size={14} color="#fdd836" height={14} width={14} xmlns="http://www.w3.org/2000/svg" style={{ color: 'rgb(253, 216, 54)' }}><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" /></svg>
+                        ({review_count} nhận xét)
                     </>}
 
                 </div>
