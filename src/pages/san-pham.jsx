@@ -6,22 +6,28 @@ import { array } from "@/utils/array";
 import { Link, NavLink, generatePath, useLocation, useMatch, useParams, useSearchParams } from "react-router-dom";
 import querString from 'query-string'
 import { Helmet } from "react-helmet";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Skeleton from "@/components/Skeleton";
 import { PATH } from "@/config/path";
 import { slugify } from "@/utils/slugify";
 import { cn } from "@/utils";
 import { useCategories, useCategory } from "@/hooks/useCategories";
 import { useSearch } from "@/hooks/useSearch";
+import { useDidUpdateEffect } from "@/hooks/useDidUpdateEffect";
 
 
 export default function Product() {
 
     const [search, setSearch] = useSearch({
         page: 1,
-        search: undefined,
-        sort: 'newest'
+        // search: undefined,
+        sort: 'newest',
+        // minPrice: undefined,
+        // maxPrice: undefined
     })
+
+    const [minPrice, setMinPrice] = useState(search.minPrice || '')
+    const [maxPrice, setMaxPrice] = useState(search.maxPrice || '')
 
 
     // const [search, setSearchParam] = useSearchParams()
@@ -36,10 +42,12 @@ export default function Product() {
         page: search.page,
         categories: match?.params?.id,
         name: search.search || undefined,
-        sort: search.sort
+        sort: search.sort,
+        minPrice: search.minPrice || undefined,
+        maxPrice: search.maxPrice || undefined
     })
 
-    
+
 
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
         queryFn: ({ signal }) => productService.getProduct(`${query ? `?${query}` : ''}`, signal),
@@ -50,6 +58,12 @@ export default function Product() {
 
     const { data: categories, loading: categoryLoading } = useCategories()
 
+    // Chỉ run kể từ lần thứ 2 trở đi
+    useDidUpdateEffect(() => {
+        setMinPrice('')
+        setMaxPrice('')
+    }, [match?.params?.id])
+
     return (
         <section className="py-11">
             <Helmet>
@@ -59,7 +73,7 @@ export default function Product() {
                 <div className="row">
                     <div className="col-12 col-md-4 col-lg-3">
                         {/* Filters */}
-                        <form className="mb-10 mb-md-0">
+                        <div className="mb-10 mb-md-0">
                             <ul className="nav nav-vertical" id="filterNav">
                                 <li className="nav-item">
                                     {/* Toggle */}
@@ -150,17 +164,22 @@ export default function Product() {
                                         {/* Range */}
                                         <div className="d-flex align-items-center">
                                             {/* Input */}
-                                            <input type="number" className="form-control form-control-xs" placeholder="$10.00" min={10} />
+                                            <input value={minPrice} onChange={ev => setMinPrice(ev.target.value)} type="number" className="form-control form-control-xs" placeholder="Thấp nhất" min={10} />
                                             {/* Divider */}
                                             <div className="text-gray-350 mx-2">‒</div>
                                             {/* Input */}
-                                            <input type="number" className="form-control form-control-xs" placeholder="$350.00" max={350} />
+                                            <input value={maxPrice} onChange={ev => setMaxPrice(ev.target.value)} type="number" className="form-control form-control-xs" placeholder="Cao nhất" max={350} />
                                         </div>
-                                        <button className="btn btn-outline-dark btn-block mt-5">Apply</button>
+                                        <button className="btn btn-outline-dark btn-block mt-5" onClick={() => {
+                                            setSearch({
+                                                minPrice: minPrice || undefined,
+                                                maxPrice: maxPrice || undefined
+                                            })
+                                        }}>Áp dụng</button>
                                     </div>
                                 </li>
                             </ul>
-                        </form>
+                        </div>
                     </div>
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}
