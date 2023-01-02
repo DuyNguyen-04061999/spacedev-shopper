@@ -1,11 +1,31 @@
+import { useCategories } from '@/hooks/useCategories'
+import { useDebounce } from '@/hooks/useDebounce'
+import { useQuery } from '@/hooks/useQuery'
+import { productService } from '@/services/product'
+import { array } from '@/utils/array'
+import { currency } from '@/utils/currency'
 import { Drawer } from 'antd'
-import React from 'react'
+import queryString from 'query-string'
+import React, { useState } from 'react'
+import Skeleton from '../Skeleton'
 
-export const SearchDrawer = () => {
+export const SearchDrawer = ({ open, onClose }) => {
+    const { data: categories } = useCategories()
+    const [value, setValue] = useDebounce('')
+    const query = queryString.stringify({
+        limit: 5,
+        name: value || undefined
+    })
+    const { data: { data: products = [] } = {}, loading } = useQuery({
+        queryKey: ['search', query],
+        queryFn: () => productService.getProduct(`?${query}`),
+        enabled: !!value.trim(),
+
+    })
     return (
-        <Drawer open={false} bodyStyle={{ padding: 0 }} width={470} headerStyle={{ display: 'none' }}>
+        <Drawer open={open} onClose={onClose} bodyStyle={{ padding: 0 }} width={470} headerStyle={{ display: 'none' }}>
             {/* Close */}
-            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+            <button onClick={onClose} type="button" className="close !outline-none" data-dismiss="modal" aria-label="Close">
                 <i className="fe fe-x" aria-hidden="true" />
             </button>
             {/* Header*/}
@@ -18,14 +38,14 @@ export const SearchDrawer = () => {
                     <div className="form-group">
                         <label className="sr-only" htmlFor="modalSearchCategories">Categories:</label>
                         <select className="custom-select" id="modalSearchCategories">
-                            <option selected>All Categories</option>
-                            <option>Women</option>
-                            <option>Men</option>
-                            <option>Kids</option>
+                            <option>Tất cả sản phẩm</option>
+                            {
+                                categories.map(e => <option key={e.id} value={e.id}>{e.title}</option>)
+                            }
                         </select>
                     </div>
                     <div className="input-group input-group-merge">
-                        <input className="form-control" type="search" placeholder="Search" />
+                        <input defaultValue={value} onChange={(ev) => setValue(ev.target.value)} className="form-control" type="search" placeholder="Search" />
                         <div className="input-group-append">
                             <button className="btn btn-outline-border" type="submit">
                                 <i className="fe fe-search" />
@@ -37,73 +57,15 @@ export const SearchDrawer = () => {
             {/* Body: Results (add `.d-none` to disable it) */}
             <div className="modal-body border-top font-size-sm">
                 {/* Heading */}
-                <p>Search Results:</p>
+                {value ? <p>Kết quả tìm kiếm:</p> : <p className='border p-4'>Tìm kiếm bất kỳ sản phẩm nào mà bạn yêu thích, chúng tôi sẽ gợi ý cho bạn</p>}
                 {/* Items */}
-                <div className="row align-items-center position-relative mb-5">
-                    <div className="col-4 col-md-3">
-                        {/* Image */}
-                        <img className="img-fluid" src="/img/products/product-5.jpg" alt="..." />
-                    </div>
-                    <div className="col position-static">
-                        {/* Text */}
-                        <p className="mb-0 font-weight-bold">
-                            <a className="stretched-link text-body" href="./product.html">Leather mid-heel Sandals</a> <br />
-                            <span className="text-muted">$129.00</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="row align-items-center position-relative mb-5">
-                    <div className="col-4 col-md-3">
-                        {/* Image */}
-                        <img className="img-fluid" src="/img/products/product-6.jpg" alt="..." />
-                    </div>
-                    <div className="col position-static">
-                        {/* Text */}
-                        <p className="mb-0 font-weight-bold">
-                            <a className="stretched-link text-body" href="./product.html">Cotton floral print Dress</a> <br />
-                            <span className="text-muted">$40.00</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="row align-items-center position-relative mb-5">
-                    <div className="col-4 col-md-3">
-                        {/* Image */}
-                        <img className="img-fluid" src="/img/products/product-7.jpg" alt="..." />
-                    </div>
-                    <div className="col position-static">
-                        {/* Text */}
-                        <p className="mb-0 font-weight-bold">
-                            <a className="stretched-link text-body" href="./product.html">Leather Sneakers</a> <br />
-                            <span className="text-primary">$85.00</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="row align-items-center position-relative mb-5">
-                    <div className="col-4 col-md-3">
-                        {/* Image */}
-                        <img className="img-fluid" src="/img/products/product-8.jpg" alt="..." />
-                    </div>
-                    <div className="col position-static">
-                        {/* Text */}
-                        <p className="mb-0 font-weight-bold">
-                            <a className="stretched-link text-body" href="./product.html">Cropped cotton Top</a> <br />
-                            <span className="text-muted">$29.00</span>
-                        </p>
-                    </div>
-                </div>
-                <div className="row align-items-center position-relative mb-5">
-                    <div className="col-4 col-md-3">
-                        {/* Image */}
-                        <img className="img-fluid" src="/img/products/product-9.jpg" alt="..." />
-                    </div>
-                    <div className="col position-static">
-                        {/* Text */}
-                        <p className="mb-0 font-weight-bold">
-                            <a className="stretched-link text-body" href="./product.html">Floral print midi Dress</a> <br />
-                            <span className="text-muted">$50.00</span>
-                        </p>
-                    </div>
-                </div>
+                {
+                    value && (
+                        loading ? array(5).map((_, i) => <CartItemLoading key={i}/>) :
+                            products.length > 0 ?
+                                products.map(e => <CartItem key={e.id} {...e} />) : <p className='border p-4'>Rất tiếu không tìm thấy sản phẩm phù hợp với lựa chọn của bạn</p>
+                    )
+                }
                 {/* Button */}
                 <a className="btn btn-link px-0 text-reset" href="./shop.html">
                     View All <i className="fe fe-arrow-right ml-2" />
@@ -120,5 +82,46 @@ export const SearchDrawer = () => {
                 </p>
             </div>
         </Drawer>
+    )
+}
+
+
+const CartItem = ({ name, real_price, price, slug, id, images }) => {
+    return (
+        <div className="row align-items-center position-relative mb-5">
+            <div className="col-4 col-md-3">
+                {/* Image */}
+                <img className="img-fluid" src={images?.[0]?.thumbnail_url} alt="..." />
+            </div>
+            <div className="col position-static">
+                {/* Text */}
+                <p className="mb-0 font-weight-bold">
+                    <a className="stretched-link text-body" href="./product.html">{name}</a> <br />
+                    <span className="text-muted">{currency(real_price)}</span>
+                </p>
+            </div>
+        </div>
+    )
+}
+
+const CartItemLoading = () => {
+    return (
+        <div className="row align-items-center position-relative mb-5">
+            <div className="col-4 col-md-3">
+                {/* Image */}
+                <Skeleton width={73} height={100} />
+            </div>
+            <div className="col position-static">
+                {/* Text */}
+                <p className="mb-0 font-weight-bold">
+                    <a className="stretched-link text-body" href="#">
+                        <Skeleton height={42.5}/>
+                    </a> <br />
+                    <span className="text-muted">
+                        <Skeleton width={150} height={20}/>
+                    </span>
+                </p>
+            </div>
+        </div>
     )
 }
