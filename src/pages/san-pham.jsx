@@ -157,7 +157,7 @@ export default function Product() {
                                 <li className="nav-item">
                                     {/* Toggle */}
                                     <a className="nav-link font-size-lg text-reset border-bottom mb-6" data-toggle="collapse" href="#priceCollapse">
-                                        Price
+                                        Giá
                                     </a>
                                     {/* Collapse */}
                                     <div>
