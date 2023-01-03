@@ -148,7 +148,7 @@
     bottom: 0;
 }
 
-.card-img {
+.product-card .card-img {
     height: 300px;
 }
 
@@ -172,6 +172,6 @@
     display: -webkit-box;
 }
 
-.card-body {
+.product-card .card-body {
     padding: 0 !important;
 }

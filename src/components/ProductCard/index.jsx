@@ -17,7 +17,7 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
 
     const _slug = '/' + slug
     return (
-        <div className="card mb-7">
+        <div className="product-card card mb-7">
             {/* Badge */}
             {
                 salePrice > 0 && <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
