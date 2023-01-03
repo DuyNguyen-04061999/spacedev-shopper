@@ -20,5 +20,5 @@ export const PATH = {
         paymentDetail: profile + '/so-thanh-toan/:id',
         productHistory: profile + '/san-pham-da-xem'
     },
-    account: '/tai-khoan'
+    account: '/signin'
 }

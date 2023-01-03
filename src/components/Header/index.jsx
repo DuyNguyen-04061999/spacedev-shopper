@@ -155,9 +155,9 @@ export const Header = () => {
                                 </a>
                             </li>
                             <li className="nav-item ml-lg-n4">
-                                <a className="nav-link" href="./auth.html">
+                                <Link className="nav-link" to={PATH.account}>
                                     <i className="fe fe-user" />
-                                </a>
+                                </Link>
                             </li>
                         </ul>
                     </div>

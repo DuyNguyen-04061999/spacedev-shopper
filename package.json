@@ -8,7 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^4.8.0",
     "@reduxjs/toolkit": "^1.9.1",
+    "antd": "^5.1.2",
     "axios": "^1.2.1",
     "classnames": "^2.3.2",
     "lodash": "^4.17.21",

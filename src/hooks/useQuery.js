@@ -51,7 +51,7 @@ export const useQuery = (options = {}) => {
         }
     }, [enabled].concat(dependencyList, queryKey))
 
-    const fetchData = async () => {
+    const fetchData = async (...data) => {
         controllerRef.current.abort()
         controllerRef.current = new AbortController()
         
@@ -78,7 +78,8 @@ export const useQuery = (options = {}) => {
 
             if (!res) {
                 const asyncFun = queryFn({
-                    signal: controllerRef.current.signal
+                    signal: controllerRef.current.signal,
+                    params: data
                 })
 
                 if(cacheName) {
@@ -109,6 +110,8 @@ export const useQuery = (options = {}) => {
 
             refetchRef.current = false
             setLoading(false)
+
+            return res
         } catch (err) {
             console.error(err)
             if (err instanceof CanceledError) {
@@ -118,12 +121,14 @@ export const useQuery = (options = {}) => {
             setError(err)
             setStatus('error')
             setLoading(false)
+            throw err
         }
     }
     return {
         loading,
         error,
         data,
-        status
+        status,
+        refetch: fetchData
     }
 }

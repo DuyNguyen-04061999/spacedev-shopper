@@ -21,7 +21,7 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
             {/* Badge */}
             {
                 salePrice > 0 && <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
-                    - {Math.floor(salePrice / price * 100)}%
+                    -{Math.floor(salePrice / price * 100)}%
                 </div>
             }
 

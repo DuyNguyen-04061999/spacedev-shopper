@@ -38,6 +38,9 @@ const ERROR_MESSAGE = {
     confirm: (field) => `Xin vui lòng điến giống ${field}`
 }
 
+
+
+
 /**
  * 
  * @param {*} rules
@@ -48,6 +51,14 @@ export const validate = (rules, forms) => {
     const errorObject = {}
     for (let name in rules) {
         for (let rule of rules[name]) {
+            if(typeof rule === 'function') {
+                let error = rule(forms[name], forms) 
+                if(error) {
+                    errorObject[name] = error
+                    break;
+                }
+            }
+
             if (rule.required) {
                 if(typeof forms[name] === 'boolean' && !forms[name]) {
 
@@ -68,18 +79,24 @@ export const validate = (rules, forms) => {
 
                 if (!regexp.test(forms[name])) {
                     errorObject[name] = rule.message || ERROR_MESSAGE.regexp
+                    break;
+
                 }
             }
 
             if (rule.min || rule.max) {
                 if (forms[name]?.length < rule.min || forms[name]?.length > rule.max) {
                     errorObject[name] = rule.message || ERROR_MESSAGE.minMax(rule.min, rule.max)
+                    break;
+
                 }
             }
 
             if(rule.confirm) {
                 if(forms[rule.confirm] !== forms[name]) {
                     errorObject[name] = rule.message || ERROR_MESSAGE.confirm(rule.confirm)
+                    break;
+
                 }
             }
         }
@@ -87,22 +104,3 @@ export const validate = (rules, forms) => {
 
     return errorObject
 }
-
-export const required = (message) => ({
-    required: true,
-    message
-})
-
-export const regexp = (pattern, message) => ({
-    regexp: pattern,
-    message
-})
-
-
-export const minMax = (min, max, message) => ({
-    min, max, message
-})
-
-export const confirm = (field) => ({
-    confirm: field
-})
