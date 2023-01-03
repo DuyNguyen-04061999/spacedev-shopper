@@ -40,7 +40,7 @@ export const Paginate = ({ totalPage, name = 'page' }) => {
     urlSearchParam.set(name, currentPage + 1)
     const nextLink = `${pathname}?${urlSearchParam.toString()}`
 
-
+    if(totalPage <= 1) return null
     return (
         <nav className="d-flex justify-content-center justify-content-md-end">
             <ul className="pagination pagination-sm text-gray-400">
