@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useId, useState } from 'react'
+import React, { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
 
 const Context = createContext({})
 
@@ -19,16 +19,26 @@ export const Radio = ({ children, ...props }) => {
 }
 
 
-Radio.Group = ({ children, value, onChange, uncheckedWhen2nd }) => {
+Radio.Group = ({ children, value, onChange, onCheckedWhen2nd }) => {
     const name = useId()
+    const uncheckRef = useRef(false)
+
+    const newOnChange = (ev) => {
+        if(!uncheckRef.current) {
+            onChange?.(ev)
+        }
+
+        uncheckRef.current = false
+    }
 
     const onClick = (radioValue) => {
-        if (uncheckedWhen2nd) {
+        if (onCheckedWhen2nd) {
             if (radioValue == value) {
-                onChange?.(undefined, 'uncheckedWhen2nd')
+                onCheckedWhen2nd?.()
+                uncheckRef.current = true
             }
         }
     }
 
-    return <Context.Provider value={{ selected: value, name, onChange, onClick }}>{children}</Context.Provider>
+    return <Context.Provider value={{ selected: value, name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
 }

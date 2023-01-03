@@ -3,10 +3,11 @@ import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
 import { lazy } from "react";
 import { profile } from "./ca-nhan";
+import Product from "@/pages/san-pham";
 const Home = lazy(() => import('@/pages'))
 const Page404 = lazy(() => import('@/pages/404'))
 const Account = lazy(() => import('@/pages/tai-khoan'))
-const Product = lazy(() => import('@/pages/san-pham'))
+// const Product = lazy(() => import('@/pages/san-pham'))
 const ProductDetail = lazy(() => import('@/pages/[slug]'))
 const Category = lazy(() => import('@/pages/[slug]/[id]'))
 const Contact = lazy(() => import('@/pages/lien-he'))

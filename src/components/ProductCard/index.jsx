@@ -51,13 +51,13 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
             {/* Body */}
             <div className="card-body px-0">
                 {/* Category */}
-                <div className="font-size-xs">
+                <div className="card-product-category font-size-xs">
                     {
                         category && category.title && <Link className="text-muted" to={generatePath(PATH.category, { slug: slugify(category.title), id: category.id })}>{category.title}</Link>
                     }
                 </div>
                 {/* Title */}
-                <div className="font-weight-bold">
+                <div className="card-product-title font-weight-bold">
                     <Link className="text-body card-product-name" to={_slug}>
                         {name}
                     </Link>
@@ -94,7 +94,7 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
 
 export const ProductCardLoading = () => {
 
-    return <div className="card mb-7">
+    return <div className="product-card card mb-7">
         {/* Image */}
         <div className="card-img">
             {/* Image */}
@@ -103,25 +103,25 @@ export const ProductCardLoading = () => {
             </Link>
         </div>
         {/* Body */}
-        <div className="card-body px-0 mt-2">
+        <div className="card-body px-0">
             {/* Category */}
-            <div className="font-size-xs block" >
+            <div className="card-product-category font-size-xs">
                 <a className="text-muted" href="shop.html">
-                    <Skeleton height={19} width={150} />
+                    <Skeleton height='100%' width={150} />
                 </a>
             </div>
             {/* Title */}
-            <div className="font-weight-bold mt-2" style={{ height: 44 }}>
+            <div className="card-product-title font-weight-bold">
                 <Link className="text-body card-product-name" to='#'>
-                    <Skeleton height={44} />
+                    <Skeleton height='100%' />
                 </Link>
             </div>
             <div className="card-product-rating">
-                <Skeleton height={21} width={150} />
+                <Skeleton height='100%' width={150} />
             </div>
             {/* Price */}
-            <div className="card-product-price mt-2">
-                <Skeleton height={32} width={100} />
+            <div className="card-product-price">
+                <Skeleton height='100%' width={100} />
             </div>
         </div>
     </div>

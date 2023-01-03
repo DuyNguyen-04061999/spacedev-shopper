@@ -112,6 +112,7 @@ export const useQuery = (options = {}) => {
         } catch (err) {
             console.error(err)
             if (err instanceof CanceledError) {
+                delete _asyncFunction[cacheName]
                 return
             }
             setError(err)

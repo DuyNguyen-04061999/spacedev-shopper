@@ -67,15 +67,10 @@ export default function Product() {
     }, [match?.params?.id])
 
 
-    const onChangeFilterRating = (ev, reason) => {
-        console.log(ev,reason)
-        if(reason === 'uncheckedWhen2nd') {
-            setSearch({filter_rating: undefined})
-        }else {
-            setSearch({
-                filter_rating: ev.target.value
-            })
-        }
+    const onChangeFilterRating = (ev) => {
+        setSearch({
+            filter_rating: ev.target.value || undefined
+        })
     }
 
     return (
@@ -134,7 +129,9 @@ export default function Product() {
                                         <Radio.Group
                                             value={search.filter_rating}
                                             onChange={onChangeFilterRating}
-                                            uncheckedWhen2nd
+                                            onCheckedWhen2nd={() => {
+                                                setSearch({ filter_rating: undefined })
+                                            }}
                                         >
                                             <div className="form-group form-group-overflow mb-6" id="seasonGroup">
                                                 <div className="custom-control custom-radio mb-3">
@@ -295,7 +292,19 @@ export default function Product() {
                         <div className="row">
                             {
                                 loading ? array(15).map((_, i) => <div className="col-6 col-md-4" key={i}><ProductCardLoading /></div>) :
-                                    products.map(e => <div className="col-6 col-md-4" key={e.id}><ProductCard  {...e} /></div>)
+                                    products.length > 0 ? products.map(e => <div className="col-6 col-md-4" key={e.id}><ProductCard  {...e} /></div>) : (
+                                        <div className="col-12">
+                                            <div className="modal-body border ">
+                                                {/* Text */}
+                                                <p className="mb-3 font-size-sm text-center">
+                                                    Rất tiếc không tìm thấy sản phẩm phù hợp với tiêu chí của bạn
+                                                </p>
+                                                <p className="mb-0 font-size-sm text-center">
+                                                    😞
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )
                             }
                         </div>
                         {/* Pagination */}
