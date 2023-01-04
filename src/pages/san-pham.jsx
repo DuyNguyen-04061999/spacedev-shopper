@@ -54,7 +54,7 @@ export default function Product() {
     const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
         queryFn: ({ signal }) => productService.getProduct(`${query ? `?${query}` : ''}`, signal),
         queryKey: [query, search.page],
-        keepPreviousData: true
+        keepPreviousData: true,
     })
 
 
@@ -72,7 +72,6 @@ export default function Product() {
             filter_rating: ev.target.value || undefined
         })
     }
-
     return (
         <section className="py-11">
             <Helmet>

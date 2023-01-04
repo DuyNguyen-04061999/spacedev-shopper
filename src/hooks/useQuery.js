@@ -16,6 +16,22 @@ const _cache = {
 
 const _asyncFunction = {}
 
+// B1: loading -> true
+
+// B2: startTime = Thời điểm bắt đầu (miliseconds)
+
+// B3: await api
+
+// B4: endTime = Thời điểm kết thúc
+
+// B5: timeout = endTime - startTime miliseconds
+
+// B6: [Nếu] timeout < 300 -> await delay(300 - timeout)
+
+// B7: return data hoặc throw error
+
+// B8: loading -> false
+
 
 export const useQuery = (options = {}) => {
     const { queryFn,
@@ -24,6 +40,7 @@ export const useQuery = (options = {}) => {
         enabled = true,
         cacheTime,
         keepPreviousData,
+        limitDuration,
         storeDriver = 'localStorage' } = options
     const cache = _cache[storeDriver]
     const refetchRef = useRef()
@@ -33,7 +50,7 @@ export const useQuery = (options = {}) => {
 
 
     const controllerRef = useRef(new AbortController())
-    
+
 
     const [data, setData] = useState()
     const [loading, setLoading] = useState(false)
@@ -54,75 +71,99 @@ export const useQuery = (options = {}) => {
     const fetchData = async (...data) => {
         controllerRef.current.abort()
         controllerRef.current = new AbortController()
-        
-        try {
+
+        const startTime = Date.now()
+        let res
+        let error
+
+
+        // Lấy data từ biến lưu trữ
+        if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
+            res = dataRef.current[cacheName]
+        }
+
+        // Kiểm tra cache xem có dữ liệu hay không
+        if (cacheName && cacheTime && !refetchRef.current) {
+            res = cache.get(cacheName)
+        }
+       
+        if (!res) {
             setLoading(true)
             setStatus('pending')
 
-            let res
+            try {
 
-            // Lấy data từ biến lưu trữ
-            if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
-                res = dataRef.current[cacheName]
-            }
 
-            // Kiểm tra cache xem có dữ liệu hay không
-            if (cacheName && cacheTime && !refetchRef.current) {
-                res = cache.get(cacheName)
-            }
 
-            // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
-            if(cacheName && _asyncFunction[cacheName]) {
-                res = await _asyncFunction[cacheName]
-            }
-
-            if (!res) {
-                const asyncFun = queryFn({
-                    signal: controllerRef.current.signal,
-                    params: data
-                })
-
-                if(cacheName) {
-                    _asyncFunction[cacheName] = asyncFun 
+                // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
+                if (cacheName && _asyncFunction[cacheName]) {
+                    res = await _asyncFunction[cacheName]
                 }
 
-                res = await asyncFun
+                if (!res) {
+                    const asyncFun = queryFn({
+                        signal: controllerRef.current.signal,
+                        params: data
+                    })
 
-                delete _asyncFunction[cacheName]
-            }
+                    if (cacheName) {
+                        _asyncFunction[cacheName] = asyncFun
+                    }
 
-            // Lưu trữ lại giá trị khi keepPreviousData
-            if (keepPreviousData && cacheName) {
-                dataRef.current[cacheName] = res
+                    res = await asyncFun
+
+                    delete _asyncFunction[cacheName]
+                }
+
+                // Lưu trữ lại giá trị khi keepPreviousData
+                if (keepPreviousData && cacheName) {
+                    dataRef.current[cacheName] = res
+                }
+
+
+
+                // update lại thời gian expired trong trường hợp cache đã tồn tại
+                if (cacheName && cacheTime) {
+                    let expired = cacheTime
+                    if (cacheTime) {
+                        expired += Date.now()
+                    }
+                    cache.set(cacheName, res, expired)
+                }
+
+            } catch (err) {
+                error = err
             }
+        }
+
+        const endTime = Date.now()
+        if (limitDuration) {
+            const timeout = endTime - startTime
+            if (timeout < limitDuration) {
+                await delay(limitDuration - timeout)
+            }
+        }
+
+
+        if (res) {
+            setLoading(false)
+            refetchRef.current = false
             setStatus('success')
             setData(res)
-
-
-            // update lại thời gian expired trong trường hợp cache đã tồn tại
-            if (cacheName && cacheTime) {
-                let expired = cacheTime
-                if (cacheTime) {
-                    expired += Date.now()
-                }
-                cache.set(cacheName, res, expired)
-            }
-
-            refetchRef.current = false
-            setLoading(false)
-
             return res
-        } catch (err) {
-            console.error(err)
-            if (err instanceof CanceledError) {
+        } else if (error) {
+            console.error(error)
+            if (error instanceof CanceledError) {
                 delete _asyncFunction[cacheName]
-                return
+            } else {
+                setLoading(false)
+                setError(error)
+                setStatus('error')
+                throw error
             }
-            setError(err)
-            setStatus('error')
-            setLoading(false)
-            throw err
+
         }
+
     }
     return {
         loading,
@@ -132,3 +173,6 @@ export const useQuery = (options = {}) => {
         refetch: fetchData
     }
 }
+
+
+const delay = duration => new Promise(resolve => setTimeout(resolve, duration)) 

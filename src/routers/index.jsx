@@ -31,7 +31,7 @@ export const routers = [
                 path: PATH.productDetail
             },
             {
-                element: <Category />,
+                element: <Product />,
                 path: PATH.category
             },
             {
