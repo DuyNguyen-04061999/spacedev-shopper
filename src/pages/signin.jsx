@@ -18,14 +18,21 @@ const registerRule = {
 
 
 export default function Account() {
-    const registerForm = useForm(registerRule)
+    const registerForm = useForm(registerRule, {
+        dependencies: {
+            password: ['confirmPassword']
+        }
+    })
 
     const { refetch: registerService, loading: registerLoading } = useQuery({
         queryFn: ({ params }) => userService.register(...params),
         enabled: false,
+        limitDuration: 1000
     })
 
     const onSubmitRegister = async (ev) => {
+        const startTime = Date.now()
+
         try {
             ev.preventDefault()
             if (registerForm.validate()) {
@@ -37,6 +44,9 @@ export default function Account() {
         } catch (err) {
             handleError(err)
         }
+        const endTime = Date.now()
+        console.log(endTime - startTime)
+
     }
     return (
         <section className="py-12">
@@ -167,18 +177,4 @@ export default function Account() {
 }
 
 
-// B1: loading -> true
 
-// B2: startTime = Thời điểm bắt đầu (miliseconds)
-
-// B3: await api
-
-// B4: endTime = Thời điểm kết thúc
-
-// B5: timeout = endTime - startTime miliseconds
-
-// B6: [Nếu] timeout < 300 -> await delay(300 - timeout)
-
-// B7: resolve data
-
-// B8: loading -> false
