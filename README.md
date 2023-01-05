@@ -43,7 +43,8 @@ https://github.com/dangthuyenvuong/spacedev-react-project-template
 
 
 ### Bước 3: Cài đặt các package sử dụng cho dự án
-`yarn add react-router-dom @reduxjs/toolkit axios classnames lodash moment redux react-redux styled-components react-helmet`
+
+`yarn add react-router-dom @reduxjs/toolkit axios classnames lodash moment redux react-redux styled-components`
 
 `yarn add tailwindcss postcss autoprefixer -D`
 
