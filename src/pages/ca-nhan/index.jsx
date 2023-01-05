@@ -2,10 +2,12 @@ import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
 import { Form } from "@/components/Form";
 import { Radio } from "@/components/Radio";
+import { UploadFile } from "@/components/UploadFile";
 import { avatarDefault } from "@/config/assets";
 import { MESSAGE } from "@/config/message";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@/hooks/useQuery";
+import { fileService } from "@/services/file";
 import { userService } from "@/services/user";
 import { authActions, setUserAction } from "@/stories/auth";
 import { handleError } from "@/utils/handleError";
@@ -14,6 +16,7 @@ import { confirm, minMax, password, regexp, required, requiredLetter } from "@/u
 import { validate } from "@/utils/validate";
 import { DatePicker, message } from "antd";
 import dayjs from "dayjs";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 const rules = {
@@ -46,6 +49,8 @@ const rules = {
 export default function Profile() {
     const { user } = useAuth()
     const dispatch = useDispatch()
+    const fileRef = useRef()
+
     const { refetch: updateProfileService, loading: updateProfileLoading } = useQuery({
         queryFn: ({ params }) => userService.updateProfile(...params),
         enabled: false
@@ -56,14 +61,32 @@ export default function Profile() {
         enabled: false
     })
 
-    const onSubmit = async (values, form) => {
+    const { refetch: uploadFileService, loading: uploadFileLoading } = useQuery({
+        queryFn: ({ params }) => fileService.upload(...params),
+        enabled: false
+    })
 
-        if (!isEqual(values, user, 'phone', 'name', 'birthday', 'gender')) {
+    const onSubmit = async (values, form) => {
+        let avatar
+        try {
+            if (fileRef.current) {
+                const res = await uploadFileService(fileRef.current)
+                avatar = res.link
+            }
+        } catch (err) {
+            console.error(err)
+            handleError(err)
+            return
+        }
+
+
+        if (avatar || !isEqual(values, user, 'phone', 'name', 'birthday', 'gender')) {
             updateProfileService({
                 phone: values.phone,
                 name: values.name,
                 birthday: values.birthday,
-                gender: values.gender
+                gender: values.gender,
+                avatar
             }).then(res => {
                 dispatch(setUserAction(res.data))
                 message.success(MESSAGE.UPDATE_PROFILE_SUCCESS)
@@ -85,6 +108,7 @@ export default function Profile() {
         }
     }
 
+
     return (
         <Form
             form={{
@@ -99,12 +123,17 @@ export default function Profile() {
             <div className="row">
                 <div className="col-12">
                     <div className="profile-avatar">
-                        <div className="wrap">
-                            <img src={user.avatar || avatarDefault} />
-                            <i className="icon">
-                                <img src="./img/icons/icon-camera.svg" />
-                            </i>
-                        </div>
+                        <UploadFile onChange={(file) => fileRef.current = file} >
+                            {({ previewSrc, triggerEvent }) => (
+                                <div className="wrap" onClick={triggerEvent}>
+                                    <img src={previewSrc || user.avatar || avatarDefault} />
+                                    <i className="icon">
+                                        <img src="./img/icons/icon-camera.svg" />
+                                    </i>
+                                </div>
+                            )}
+                        </UploadFile>
+
                     </div>
                 </div>
                 <div className="col-12">
@@ -215,7 +244,7 @@ export default function Profile() {
                 </div>
                 <div className="col-12">
                     {/* Button */}
-                    <Button loading={updateProfileLoading || changePasswordLoading}>Save Changes</Button>
+                    <Button loading={uploadFileLoading || updateProfileLoading || changePasswordLoading}>Save Changes</Button>
                 </div>
             </div>
         </Form>
