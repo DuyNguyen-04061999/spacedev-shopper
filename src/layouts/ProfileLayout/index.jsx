@@ -1,7 +1,8 @@
+import { PATH } from '@/config/path'
 import { logoutThunkAction } from '@/stories/auth'
 import React, { Suspense } from 'react'
 import { useDispatch } from 'react-redux'
-import { Outlet } from 'react-router-dom'
+import { NavLink, Outlet } from 'react-router-dom'
 
 export const ProfileLayout = () => {
   const dispatch = useDispatch()
@@ -24,12 +25,12 @@ export const ProfileLayout = () => {
             {/* Nav */}
             <nav className="mb-10 mb-md-0">
               <div className="list-group list-group-sm list-group-strong list-group-flush-x">
-                <a className="list-group-item list-group-item-action dropright-toggle " href="account-orders.html">Đơn hàng</a>
-                <a className="list-group-item list-group-item-action dropright-toggle " href="account-personal-info.html">Tài khoản của tôi</a>
-                <a className="list-group-item list-group-item-action dropright-toggle active" href="account-wishlist.html">Sản phẩm yêu thích</a>
-                <a className="list-group-item list-group-item-action dropright-toggle " href="account-address.html">Sổ địa chỉ</a>
-                <a className="list-group-item list-group-item-action dropright-toggle " href="account-payment.html">Sổ thanh toán</a>
-                <a className="list-group-item list-group-item-action dropright-toggle " href="account-product.html">Sản phẩm đã xem</a>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.order}>Đơn hàng</NavLink>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " end to={PATH.profile.index}>Tài khoản của tôi</NavLink>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.wishlist}>Sản phẩm yêu thích</NavLink>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.address}>Sổ địa chỉ</NavLink>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.payment}>Sổ thanh toán</NavLink>
+                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.productHistory}>Sản phẩm đã xem</NavLink>
                 <a className="list-group-item list-group-item-action dropright-toggle" href="#!" onClick={logout}>Đăng xuất</a>
               </div>
             </nav>

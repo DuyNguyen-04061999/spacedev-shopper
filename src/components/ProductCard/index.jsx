@@ -5,8 +5,14 @@ import { currency } from '@/utils/currency'
 import { useCategory } from '@/hooks/useCategories'
 import { slugify } from '@/utils/slugify'
 import { PATH } from '@/config/path'
+import { useQuery } from '@/hooks/useQuery'
+import { productService } from '@/services/product'
+import { message } from 'antd'
+import { MESSAGE } from '@/config/message'
+import { handleError } from '@/utils/handleError'
+import { delay } from '@/utils'
 
-export const ProductCard = ({ categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
+export const ProductCard = ({ hideWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
 
     const category = useCategory(categories)
 
@@ -14,8 +20,28 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
     const image2 = images?.[1]?.thumbnail_url || image1
     const salePrice = price - real_price
 
-
     const _slug = '/' + slug
+
+    const onAddWishlist = async () => {
+        const key = `wishlist-${id}`
+        try {
+            message.loading({
+                key,
+                content: `Đang đưa sản phẩm "${name}" vào yêu thích`,
+                duration: 0
+            })
+            
+            await productService.addWishlist(id)
+            message.success({
+                key,
+                content: MESSAGE.ADD_WISHLIST_SUCCESS(name)
+            })
+
+        } catch (err) {
+            handleError(err, key)
+        }
+    }
+
     return (
         <div className="product-card card mb-7">
             {/* Badge */}
@@ -41,11 +67,16 @@ export const ProductCard = ({ categories, name, price, real_price, images, slug,
                             <i className="fe fe-shopping-cart" />
                         </button>
                     </span>
-                    <span className="card-action">
-                        <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
-                            <i className="fe fe-heart" />
-                        </button>
-                    </span>
+                    {
+                        !hideWishlist && (
+                            <span className="card-action">
+                                <button onClick={onAddWishlist} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                    <i className="fe fe-heart" />
+                                </button>
+                            </span>
+                        )
+                    }
+
                 </div>
             </div>
             {/* Body */}
