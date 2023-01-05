@@ -7,6 +7,11 @@ import { confirm, minMax, password, regexp, required, requiredLetter } from "@/u
 import { handleError } from "@/utils/handleError"
 import { message } from "antd"
 import { useAsync } from "@/hooks/useAsync"
+import { Checkbox } from "@/components/Checkbox"
+import { authService } from "@/services/auth"
+import { useDispatch, useSelector } from "react-redux"
+import { useAuth } from "@/hooks/useAuth"
+import { loginThunkAction } from "@/stories/auth"
 
 
 const registerRule = {
@@ -16,13 +21,22 @@ const registerRule = {
     confirmPassword: [confirm('password')]
 }
 
+const loginRule = {
+    username: [required(), regexp('email')],
+    password: [required(), minMax(6, 32), password(1)]
+}
+
 
 export default function Account() {
+    const dispatch = useDispatch()
+    const { loginLoading } = useAuth()
     const registerForm = useForm(registerRule, {
         dependencies: {
             password: ['confirmPassword']
         }
     })
+
+    const loginForm = useForm(loginRule)
 
     const { refetch: registerService, loading: registerLoading } = useQuery({
         queryFn: ({ params }) => userService.register(...params),
@@ -48,6 +62,16 @@ export default function Account() {
         console.log(endTime - startTime)
 
     }
+
+    const onSubmitLogin = async () => {
+        if (loginForm.validate()) {
+            try{
+                await dispatch(loginThunkAction(loginForm.values)).unwrap()
+            }catch(err) {
+                handleError(err)
+            }
+        }
+    }
     return (
         <section className="py-12">
             <div className="container">
@@ -59,36 +83,43 @@ export default function Account() {
                                 {/* Heading */}
                                 <h6 className="mb-7">Returning Customer</h6>
                                 {/* Form */}
-                                <form>
+                                <div>
                                     <div className="row">
                                         <div className="col-12">
                                             {/* Email */}
-                                            <div className="form-group">
+                                            <Field {...loginForm.register('username')} placeholder="Email Address *" />
+                                            {/* <div className="form-group">
                                                 <label className="sr-only" htmlFor="loginEmail">
                                                     Email Address *
                                                 </label>
                                                 <input className="form-control form-control-sm" id="loginEmail" type="email" placeholder="Email Address *" required />
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="col-12">
                                             {/* Password */}
-                                            <div className="form-group">
+                                            <Field {...loginForm.register('password')} type="password" placeholder="Password *" />
+
+                                            {/* <div className="form-group">
                                                 <label className="sr-only" htmlFor="loginPassword">
                                                     Password *
                                                 </label>
                                                 <input className="form-control form-control-sm" id="loginPassword" type="password" placeholder="Password *" required />
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="col-12 col-md">
                                             {/* Remember */}
-                                            <div className="form-group">
+                                            <Field
+                                                {...loginForm.register('remember')}
+                                                renderField={(props) => <Checkbox {...props}>Remember me</Checkbox>}
+                                            />
+                                            {/* <div className="form-group">
                                                 <div className="custom-control custom-checkbox">
                                                     <input className="custom-control-input" id="loginRemember" type="checkbox" />
                                                     <label className="custom-control-label" htmlFor="loginRemember">
                                                         Remember me
                                                     </label>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
                                         <div className="col-12 col-md-auto">
                                             {/* Link */}
@@ -99,12 +130,12 @@ export default function Account() {
                                         </div>
                                         <div className="col-12">
                                             {/* Button */}
-                                            <a href="./account-personal-info.html" className="btn btn-sm btn-dark" type="submit">
+                                            <Button loading={loginLoading} onClick={onSubmitLogin}>
                                                 Sign In
-                                            </a>
+                                            </Button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>

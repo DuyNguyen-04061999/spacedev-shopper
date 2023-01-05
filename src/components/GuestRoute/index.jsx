@@ -1,12 +1,12 @@
 // import { useAuth } from "@/hooks/useAuth"
 import { useAuth } from "@/hooks/useAuth"
-import { Navigate, Outlet, useLocation } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
+import { Navigate } from "../Navigate"
 
 export const GuestRoute = ({ redirect = '/' }) => {
     const { user } = useAuth()
-    const {state} = useLocation()
-
-    if (user) return <Navigate to={state?.redirect || redirect} />
+    const { state } = useLocation()
+    if (user) return <Navigate to={state?.redirect || redirect}/> 
 
     return <Outlet />
 }

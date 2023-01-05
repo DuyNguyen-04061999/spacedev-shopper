@@ -1,4 +1,6 @@
-import { getUser } from "@/utils/token"
+import { authService } from "@/services/auth"
+import { userService } from "@/services/user"
+import { getUser, setToken, setUser } from "@/utils/token"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 
@@ -14,6 +16,7 @@ export const loginThunkAction = createAsyncThunk('auth/login', async (data, thun
         // dispatch({ type: SET_USER_ACTION, payload: user.data })
         return user.data
     } catch (err) {
+        console.error(err)
         thunkApi.rejectWithValue(err.response.data)
         throw err?.response.data
     }
@@ -23,7 +26,8 @@ export const loginThunkAction = createAsyncThunk('auth/login', async (data, thun
 export const { reducer: authReducer, actions: authActions } = createSlice({
     initialState: () => ({
         user: getUser(),
-        status: 'idle'
+        status: 'idle',
+        loginLoading: false
     }),
     name: 'auth',
     reducers: {
@@ -37,13 +41,16 @@ export const { reducer: authReducer, actions: authActions } = createSlice({
     extraReducers: (builder) => {
         builder.addCase(loginThunkAction.pending, (state) => {
             state.status = 'pending'
+            state.loginLoading = true
         })
         builder.addCase(loginThunkAction.fulfilled, (state, action) => {
             state.user = action.payload
             state.status = 'success'
+            state.loginLoading = false
         })
         builder.addCase(loginThunkAction.rejected, (state) => {
             state.status = 'error'
+            state.loginLoading = false
         })
     }
 })

@@ -54,7 +54,7 @@ export const routers = [
             },
             profile,
             {
-                element: <GuestRoute redirect={PATH.profile} />,
+                element: <GuestRoute redirect={PATH.profile.index} />,
                 children: [
                     {
                         element: <Account />,

@@ -33,15 +33,17 @@ const _asyncFunction = {}
 // B8: loading -> false
 
 
-export const useQuery = (options = {}) => {
-    const { queryFn,
-        queryKey,
-        dependencyList = [],
-        enabled = true,
-        cacheTime,
-        keepPreviousData,
-        limitDuration,
-        storeDriver = 'localStorage' } = options
+export const useQuery = ({
+    queryFn,
+    queryKey,
+    dependencyList = [],
+    enabled = true,
+    cacheTime,
+    keepPreviousData,
+    limitDuration,
+    storeDriver = 'localStorage'
+} = {}) => {
+
     const cache = _cache[storeDriver]
     const refetchRef = useRef()
     // Dùng để lưu trữ các data để sử dụng lại cho keepPreviousData
@@ -86,7 +88,7 @@ export const useQuery = (options = {}) => {
         if (cacheName && cacheTime && !refetchRef.current) {
             res = cache.get(cacheName)
         }
-       
+
         if (!res) {
             setLoading(true)
             setStatus('pending')

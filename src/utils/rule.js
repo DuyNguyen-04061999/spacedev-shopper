@@ -32,7 +32,6 @@ export const password = (level = 4, message = 'Vui lòng nhập password đủ m
         if (PASSWORD_REGEXP[i].test(value)) {
             _checkNumber--
         }
-        console.log(PASSWORD_REGEXP[i].test(value))
         if (_checkNumber === 0) break;
     }
 
