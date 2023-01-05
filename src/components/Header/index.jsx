@@ -1,14 +1,54 @@
 import { PATH } from '@/config/path'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { SearchDrawer } from '../SearchDrawer'
+import { useAuth } from '@/hooks/useAuth'
+import { avatarDefault } from '@/config/assets'
+import { useDispatch } from 'react-redux'
+import { logoutThunkAction } from '@/stories/auth'
+import { Dropdown } from 'antd'
+
+
 
 export const Header = () => {
+    const { user } = useAuth()
+    const dispatch = useDispatch()
     const [openSearchDrawer, setOpenSearchDrawer] = useState(false)
     const onOpenSearchDrawer = (ev) => {
         ev.preventDefault()
         setOpenSearchDrawer(true)
     }
+
+
+    const items = useMemo(() => {
+        return [
+            {
+                key: 1,
+                label: (
+                    <Link to={PATH.profile.index}>
+                        Tài khoản của tôi
+                    </Link>
+                ),
+            },
+            {
+                key: 3,
+                label: (
+                    <Link to={PATH.profile.order}>
+                        Đơn hàng
+                    </Link>
+                ),
+            },
+            {
+                key: 2,
+                label: 'Đăng xuất',
+                onClick: () => {
+                    dispatch(logoutThunkAction())
+                }
+            }
+        ]
+    }, [])
+
+
     return (
         <>
             <SearchDrawer open={openSearchDrawer} onClose={() => setOpenSearchDrawer(false)} />
@@ -155,9 +195,21 @@ export const Header = () => {
                                 </a>
                             </li>
                             <li className="nav-item ml-lg-n4">
-                                <Link className="nav-link" to={PATH.account}>
-                                    <i className="fe fe-user" />
-                                </Link>
+                                {
+                                    user ? (
+                                        <Dropdown menu={{ items }} placement='bottomRight' arrow>
+                                            <Link className="header-avatar nav-link" to={PATH.profile.index}>
+                                                <img src={user.avatar || avatarDefault} />
+                                            </Link>
+                                        </Dropdown>
+                                    ) : (
+                                        <Link className="nav-link" to={PATH.account}>
+                                            <i className="fe fe-user" />
+                                        </Link>
+                                    )
+
+                                }
+
                             </li>
                         </ul>
                     </div>
