@@ -1,3 +1,4 @@
+import { cn } from '@/utils'
 import React, { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
 
 const Context = createContext({})
@@ -6,7 +7,7 @@ export const Radio = ({ children, ...props }) => {
     const id = useId()
     const { selected, name, onChange, onClick } = useContext(Context)
     return (
-        <>
+        <div className='custom-control custom-radio '>
             <input
                 onChange={onChange}
                 {...props}
@@ -14,17 +15,26 @@ export const Radio = ({ children, ...props }) => {
             <label onClick={() => onClick(props.value)} className="custom-control-label flex items-center" htmlFor={id}>
                 {children}
             </label>
-        </>
+        </div>
     )
 }
 
 
-Radio.Group = ({ children, value, onChange, onCheckedWhen2nd }) => {
+Radio.Toggle = ({ children, ...props }) => {
+    const { selected, onChange, name } = useContext(Context)
+    return (
+        <label className={cn('btn btn-sm btn-outline-border', { active: props.value == selected })} >
+            <input onChange={onChange} {...props} selected={props.value == selected} type="radio" name={name} /> {children}
+        </label>
+    )
+}
+
+Radio.Group = ({ children, value, toggle, onChange, onCheckedWhen2nd }) => {
     const name = useId()
     const uncheckRef = useRef(false)
 
     const newOnChange = (ev) => {
-        if(!uncheckRef.current) {
+        if (!uncheckRef.current) {
             onChange?.(ev)
         }
 
@@ -40,5 +50,7 @@ Radio.Group = ({ children, value, onChange, onCheckedWhen2nd }) => {
         }
     }
 
-    return <Context.Provider value={{ selected: value, name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
+    return <div className={cn({ 'btn-group-toggle': toggle })}>
+        <Context.Provider value={{ selected: value, name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
+    </div>
 }

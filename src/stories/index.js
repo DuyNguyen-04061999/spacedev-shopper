@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authReducer } from "./auth";
+import { authReducer, getUserThunkAction } from "./auth";
 import { ENV } from "@/config";
 
 export const store = configureStore({
@@ -9,3 +9,6 @@ export const store = configureStore({
     // middleware: (getDefaultMiddlware) => getDefaultMiddlware().concat(...[]),
     devTools: ENV === 'development'
 })
+
+
+store.dispatch(getUserThunkAction())

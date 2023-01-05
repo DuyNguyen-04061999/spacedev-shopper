@@ -93,7 +93,7 @@ export const validate = (rules, forms) => {
             }
 
             if(rule.confirm) {
-                if(forms[rule.confirm] !== forms[name]) {
+                if(Boolean(forms[rule.confirm]) !== Boolean(forms[name]) || forms[rule.confirm] !== forms[name]) {
                     errorObject[name] = rule.message || ERROR_MESSAGE.confirm(rule.confirm)
                     break;
 

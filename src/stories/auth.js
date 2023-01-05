@@ -1,6 +1,6 @@
 import { authService } from "@/services/auth"
 import { userService } from "@/services/user"
-import { clearToken, clearUser, getUser, setToken, setUser } from "@/utils/token"
+import { clearToken, clearUser, getToken, getUser, setToken, setUser } from "@/utils/token"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 
@@ -26,6 +26,22 @@ export const logoutThunkAction = createAsyncThunk('auth/logout', async (_, thunk
     thunkApi.dispatch(authActions.logout())
     clearToken()
     clearUser()
+})
+
+export const getUserThunkAction = createAsyncThunk('auth/getUser', async (_, thunkApi) => {
+    try {
+        if(getToken()) {
+            const user = await userService.getProfile()
+            thunkApi.dispatch(setUserAction(user.data))
+        }
+    } catch (err) {
+        console.error(err)
+    }
+})
+
+export const setUserAction = createAsyncThunk('auth/setUser', (user, thunkApi) => {
+    setUser(user)
+    thunkApi.dispatch(authActions.setUser(user))
 })
 
 export const { reducer: authReducer, actions: authActions } = createSlice({

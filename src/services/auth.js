@@ -9,6 +9,6 @@ export const authService = {
         return http.get(`${AUTH_API}`)
     },
     refreshToken(data){
-        return http.post(`${AUTH_API}`, data)
+        return http.post(`${AUTH_API}/refresh-token`, data)
     }
 }

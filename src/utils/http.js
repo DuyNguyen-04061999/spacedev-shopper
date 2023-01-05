@@ -1,6 +1,6 @@
 import { authService } from "@/services/auth";
 import axios from "axios";
-import { getToken } from "./token";
+import { getToken, setToken } from "./token";
 
 
 export const http = axios.create()
@@ -28,7 +28,7 @@ http.interceptors.response.use((res) => {
 
         }
     } catch (err) {
-
+        console.error(err)
     }
     throw error
 })
