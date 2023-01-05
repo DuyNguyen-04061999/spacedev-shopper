@@ -1,18 +1,49 @@
-import { useRoutes } from "react-router-dom"
+import { useLocation, useRoutes } from "react-router-dom"
 import { routers } from "./routers"
-import { Suspense } from "react"
+import { Suspense, startTransition, useEffect, useState } from "react"
 import "@/assets/css/tailwind.css"
 import { message } from "antd"
+import { MainLayout } from "./layouts/MainLayout"
 message.config({
   maxCount: 3
 })
 
+
+
+
 function App() {
-  const element = useRoutes(routers)
+  const location = useLocation();
+
+  const [displayLocation, setDisplayLocation] = useState(location);
+  const [transitionStage, setTransistionStage] = useState("pageFadeIn");
+
+  // useEffect(() => {
+  //   if (location !== displayLocation) setTransistionStage("pageFadeOut");
+  // }, [location, displayLocation]);
+
+
+  useEffect(() => {
+    startTransition(() => {
+      setDisplayLocation(location)
+    })
+  }, [location])
+
+  const element = useRoutes(routers, displayLocation)
+
   return (
-    <Suspense fallback={<div>App Loading....</div>}>
-      {element}
-    </Suspense>
+    <div
+      className={`${transitionStage}`}
+      onAnimationEnd={() => {
+        if (transitionStage === "pageFadeOut") {
+          setTransistionStage("pageFadeIn");
+          setDisplayLocation(location);
+        }
+      }}
+    >
+      <Suspense fallback={<div>App Loading....</div>}>
+        {element}
+      </Suspense>
+    </div>
   )
 }
 

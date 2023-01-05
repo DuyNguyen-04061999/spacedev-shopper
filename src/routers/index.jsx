@@ -3,6 +3,7 @@ import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
 import { lazy } from "react";
 import { profile } from "./ca-nhan";
+
 const Home = lazy(() => import('@/pages'))
 const Page404 = lazy(() => import('@/pages/404'))
 const Account = lazy(() => import('@/pages/signin'))
@@ -13,6 +14,7 @@ const Contact = lazy(() => import('@/pages/lien-he'))
 const FAQ = lazy(() => import('@/pages/hoi-dap'))
 const About = lazy(() => import('@/pages/ve-chung-toi'))
 const Shipping = lazy(() => import('@/pages/quy-dinh-giao-hang'))
+
 
 export const routers = [
     {
