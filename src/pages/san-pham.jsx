@@ -261,8 +261,9 @@ export default function Product() {
                                     </li>
                                 </ol>
                             </div>
-                            <div className="col-12 col-md-auto">
+                            <div className="col-12 col-md-auto flex gap-1 items-center whitespace-nowrap">
                                 {/* Select */}
+                                Sắp xếp theo:
                                 <select
                                     value={search.sort} onChange={ev => {
                                         // search.set('sort', ev.target.value)

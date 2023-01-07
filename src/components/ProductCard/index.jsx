@@ -90,9 +90,9 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
                     </span>
                     {
                         showWishlist && (
-                            <Popconfirm disabled={user} title="Thông báo" description={
+                            <Popconfirm disabled={user} title={<span className='text-lg'>Thông báo</span>} description={
                                 <>
-                                    <p>Bạn cần đăng nhập trước khi sử dụng chức năng này</p>
+                                    <p className='text-lg'>Bạn cần đăng nhập trước khi sử dụng chức năng này</p>
                                     <div className='flex justify-end gap-2'>
                                         {/* <Button type='outline'>Hủy bỏ</Button> */}
                                         <Button onClick={() => navigate(PATH.account, { state: { redirect: window.location.pathname + window.location.search } })} >Đăng nhập</Button>

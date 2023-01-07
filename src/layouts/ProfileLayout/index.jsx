@@ -17,7 +17,7 @@ export const ProfileLayout = () => {
         <div className="row">
           <div className="col-12 text-center">
             {/* Heading */}
-            <h3 className="mb-10">Theo dõi đơn hàng</h3>
+            <h3 className="mb-10" id="main-profile-title"></h3>
           </div>
         </div>
         <div className="row">
@@ -46,3 +46,6 @@ export const ProfileLayout = () => {
 
   )
 }
+
+
+export default ProfileLayout

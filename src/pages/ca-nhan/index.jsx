@@ -1,6 +1,7 @@
 import { Button } from "@/components/Button";
 import { Field } from "@/components/Field";
 import { Form } from "@/components/Form";
+import { Portal } from "@/components/Portal";
 import { Radio } from "@/components/Radio";
 import { UploadFile } from "@/components/UploadFile";
 import { avatarDefault } from "@/config/assets";
@@ -73,7 +74,7 @@ export default function Profile() {
                 const res = await uploadFileService(fileRef.current)
                 avatar = res.link
 
-                
+
             }
         } catch (err) {
             console.error(err)
@@ -123,6 +124,9 @@ export default function Profile() {
                 }
             }}
             rules={rules} onSubmit={onSubmit}>
+            <Portal selector="#main-profile-title">
+                Thông tin cá nhân
+            </Portal>
             <div className="row">
                 <div className="col-12">
                     <div className="profile-avatar">

@@ -12,6 +12,8 @@ import { authService } from "@/services/auth"
 import { useDispatch, useSelector } from "react-redux"
 import { useAuth } from "@/hooks/useAuth"
 import { loginThunkAction } from "@/stories/auth"
+import { useEffect } from "react"
+import { useBodyClass } from "@/hooks/useBodyClass"
 
 
 const registerRule = {
@@ -28,6 +30,8 @@ const loginRule = {
 
 
 export default function Account() {
+    useBodyClass('bg-light')
+
     const dispatch = useDispatch()
     const { loginLoading } = useAuth()
     const registerForm = useForm(registerRule, {
@@ -85,7 +89,7 @@ export default function Account() {
                                 {/* Form */}
                                 <div>
                                     <div className="row">
-                                        
+
                                         <div className="col-12">
                                             {/* Email */}
                                             <Field {...loginForm.register('username')} placeholder="Email Address *" />
@@ -130,7 +134,7 @@ export default function Account() {
                                                     Password?</a>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="col-12">
                                             {/* Button */}
                                             <Button loading={loginLoading} onClick={onSubmitLogin}>
@@ -138,7 +142,14 @@ export default function Account() {
                                             </Button>
                                         </div>
                                         <div className="col-12">
-                                            <p className="text-gray-400 text-sm mt-5 mb-2">Tài khoản demo: <br />demo@spacedev.com / Spacedev@123</p>
+                                            <p className="font-size-sm text-muted mt-5 mb-2 font-light">Tài khoản demo: <b className="text-black">demo@spacedev.com / Spacedev@123</b></p>
+                                            <p className="font-size-sm text-muted mt-5 mb-2 font-light text-justify">
+                                                Chúng tôi cung cấp cho bạn tài khoản demo vì mục đích học tập, để đảm bảo những người khác có thể sử dụng chung tài khoản chúng tôi sẽ
+                                                hạn chế rất nhiều quyền trên tài khoản này ví dụ:  <br />
+                                                - Không thay đổi thông tin cá nhân, mật khẩu <br />
+                                                - không reset password,... <br /><br />
+                                                Để có thể sử dụng toàn bộ chức năng trên website, vui lòng tiến hành <b className="text-black">đăng ký</b> bằng tài khoản email có thật
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +167,7 @@ export default function Account() {
                                     <div className="row">
                                         <div className="col-12">
                                             {/* Email */}
-                                            <Field {...registerForm.register('name')} placeholder="Full name *" />
+                                            <Field {...registerForm.register('name')} placeholder="Full Name *" />
                                         </div>
                                         <div className="col-12">
                                             {/* Email */}
@@ -191,7 +202,7 @@ export default function Account() {
                                         </div>
                                         <div className="col-12 col-md-auto">
                                             {/* Link */}
-                                            <div className="form-group font-size-sm text-muted">
+                                            <div className="form-group font-size-sm text-muted font-light">
                                                 By registering your details, you agree with our Terms &amp; Conditions,
                                                 and Privacy and Cookie Policy.
                                             </div>

@@ -1,4 +1,5 @@
 import { Paginate } from '@/components/Paginate'
+import { Portal } from '@/components/Portal'
 import { ProductCard, ProductCardLoading } from '@/components/ProductCard'
 import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
@@ -8,6 +9,7 @@ import { array } from '@/utils/array'
 import { indexDBStorage } from '@/utils/indexDB'
 import queryString from 'query-string'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 
 
@@ -23,6 +25,9 @@ export default function Wishlist() {
     })
     return (
         <>
+            <Portal selector="#main-profile-title">
+                Sản phẩm yêu thích
+            </Portal>
             {/* Products */}
             <div className="row">
                 {

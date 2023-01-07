@@ -212,6 +212,10 @@
     display: block;
     line-height: 0 !important;
 }
+.ant-popconfirm-message {
+    display: flex !important;
+    align-items: center !important;
+}
 
 .pageFadeIn {
     animation: 0.5s fadeIn forwards;
