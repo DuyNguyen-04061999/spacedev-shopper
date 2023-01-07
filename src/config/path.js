@@ -18,7 +18,6 @@ export const PATH = {
         addressDetail: profile + '/so-dia-chi/:id',
         payment: profile + '/so-thanh-toan',
         paymentDetail: profile + '/so-thanh-toan/:id',
-        productHistory: profile + '/san-pham-da-xem'
     },
     account: '/signin'
 }
