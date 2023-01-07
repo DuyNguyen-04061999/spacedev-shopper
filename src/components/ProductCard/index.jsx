@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, generatePath } from 'react-router-dom'
+import { Link, Navigate, generatePath, useLocation, useNavigate } from 'react-router-dom'
 import Skeleton from '../Skeleton'
 import { currency } from '@/utils/currency'
 import { useCategory } from '@/hooks/useCategories'
@@ -7,15 +7,17 @@ import { slugify } from '@/utils/slugify'
 import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
 import { productService } from '@/services/product'
-import { message } from 'antd'
+import { Popconfirm, message } from 'antd'
 import { MESSAGE } from '@/config/message'
 import { handleError } from '@/utils/handleError'
 import { delay } from '@/utils'
+import { Button } from '../Button'
+import { useAuth } from '@/hooks/useAuth'
 
-export const ProductCard = ({ hideWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
-
+export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
+    const { user } = useAuth()
     const category = useCategory(categories)
-
+    const navigate = useNavigate()
     const image1 = images[0].thumbnail_url
     const image2 = images?.[1]?.thumbnail_url || image1
     const salePrice = price - real_price
@@ -27,16 +29,35 @@ export const ProductCard = ({ hideWishlist, categories, name, price, real_price,
         try {
             message.loading({
                 key,
-                content: `Đang đưa sản phẩm "${name}" vào yêu thích`,
+                content: MESSAGE.LOADING_ADD_WISHLIST(name),
                 duration: 0
             })
-            
+            // await delay(100000)
             await productService.addWishlist(id)
             message.success({
                 key,
                 content: MESSAGE.ADD_WISHLIST_SUCCESS(name)
             })
 
+        } catch (err) {
+            handleError(err, key)
+        }
+    }
+
+    const _onRemoveWishlist = async () => {
+        const key = `remove-wishlist-${id}`
+        try {
+            message.loading({
+                key,
+                content: MESSAGE.LOADING_REMOVE_WISHLIST(name),
+                duration: 0
+            })
+            await productService.removeWishlist(id)
+            onRemoveWishlistSuccess?.(id)
+            message.success({
+                key,
+                content: MESSAGE.REMOVE_WISHLIST_SUCCESS(name)
+            })
         } catch (err) {
             handleError(err, key)
         }
@@ -68,10 +89,33 @@ export const ProductCard = ({ hideWishlist, categories, name, price, real_price,
                         </button>
                     </span>
                     {
-                        !hideWishlist && (
+                        showWishlist && (
+                            <Popconfirm disabled={user} title="Thông báo" description={
+                                <>
+                                    <p>Bạn cần đăng nhập trước khi sử dụng chức năng này</p>
+                                    <div className='flex justify-end gap-2'>
+                                        {/* <Button type='outline'>Hủy bỏ</Button> */}
+                                        <Button onClick={() => navigate(PATH.account, { state: { redirect: window.location.pathname + window.location.search } })} >Đăng nhập</Button>
+                                    </div>
+                                </>
+                            }
+                                showCancel={false}
+                                okButtonProps={{ hidden: true }}
+                            >
+                                <span className="card-action">
+                                    <button onClick={() => user && onAddWishlist()} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                        <i className="fe fe-heart" />
+                                    </button>
+                                </span>
+                            </Popconfirm>
+                        )
+                    }
+
+                    {
+                        showRemove && (
                             <span className="card-action">
-                                <button onClick={onAddWishlist} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
-                                    <i className="fe fe-heart" />
+                                <button onClick={_onRemoveWishlist} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                                    <i className="fe fe-x" />
                                 </button>
                             </span>
                         )

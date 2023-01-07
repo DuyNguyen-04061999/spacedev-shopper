@@ -66,11 +66,49 @@ export const useQuery = ({
 
     useEffect(() => {
         if (enabled) {
-            fetchData()
+            callService()
         }
     }, [enabled].concat(dependencyList, queryKey))
 
-    const fetchData = async (...data) => {
+
+    const getCacheDataOrPreviousData = async () => {
+        // Lấy data từ biến lưu trữ
+        if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
+            return dataRef.current[cacheName]
+        }
+
+        // Kiểm tra cache xem có dữ liệu hay không
+        if (cacheName && cacheTime && !refetchRef.current) {
+            return cache.get(cacheName)
+        }
+
+        // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
+        if (cacheName && _asyncFunction[cacheName]) {
+            return await _asyncFunction[cacheName]
+        }
+
+    }
+
+    const setCacheDataOrPreviousData = async (data) => {
+        // Lưu trữ lại giá trị khi keepPreviousData
+        if (keepPreviousData && cacheName) {
+            dataRef.current[cacheName] = data
+        }
+
+
+
+        // update lại thời gian expired trong trường hợp cache đã tồn tại
+        if (cacheName && cacheTime) {
+            let expired = cacheTime
+            if (cacheTime) {
+                expired += Date.now()
+            }
+            cache.set(cacheName, data, expired)
+        }
+    }
+
+
+    const callService = async (isGetCache = true, ...data) => {
         controllerRef.current.abort()
         controllerRef.current = new AbortController()
 
@@ -78,28 +116,13 @@ export const useQuery = ({
         let res
         let error
 
-
-        // Lấy data từ biến lưu trữ
-        if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
-            res = dataRef.current[cacheName]
-        }
-
-        // Kiểm tra cache xem có dữ liệu hay không
-        if (cacheName && cacheTime && !refetchRef.current) {
-            res = cache.get(cacheName)
-        }
-
         if (!res) {
             setLoading(true)
             setStatus('pending')
 
             try {
-
-
-
-                // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
-                if (cacheName && _asyncFunction[cacheName]) {
-                    res = await _asyncFunction[cacheName]
+                if (isGetCache) {
+                    res = await getCacheDataOrPreviousData()
                 }
 
                 if (!res) {
@@ -117,23 +140,10 @@ export const useQuery = ({
                     delete _asyncFunction[cacheName]
                 }
 
-                // Lưu trữ lại giá trị khi keepPreviousData
-                if (keepPreviousData && cacheName) {
-                    dataRef.current[cacheName] = res
-                }
-
-
-
-                // update lại thời gian expired trong trường hợp cache đã tồn tại
-                if (cacheName && cacheTime) {
-                    let expired = cacheTime
-                    if (cacheTime) {
-                        expired += Date.now()
-                    }
-                    cache.set(cacheName, res, expired)
-                }
+                setCacheDataOrPreviousData(res)
 
             } catch (err) {
+                console.error(err)
                 error = err
             }
         }
@@ -146,7 +156,6 @@ export const useQuery = ({
             }
         }
 
-
         if (res) {
             setLoading(false)
             refetchRef.current = false
@@ -154,7 +163,6 @@ export const useQuery = ({
             setData(res)
             return res
         } else if (error) {
-            console.error(error)
             if (error instanceof CanceledError) {
                 delete _asyncFunction[cacheName]
             } else {
@@ -165,14 +173,19 @@ export const useQuery = ({
             }
 
         }
-
     }
+
+    const clearPreviousData = () => {
+        dataRef.current = {}
+    }
+
     return {
         loading,
         error,
         data,
         status,
-        refetch: fetchData
+        refetch: (...params) => callService(false, ...params),
+        clearPreviousData
     }
 }
 

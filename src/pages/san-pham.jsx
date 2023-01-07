@@ -291,7 +291,7 @@ export default function Product() {
                         <div className="row">
                             {
                                 loading ? array(15).map((_, i) => <div className="col-6 col-md-4" key={i}><ProductCardLoading /></div>) :
-                                    products.length > 0 ? products.map(e => <div className="col-6 col-md-4" key={e.id}><ProductCard  {...e} /></div>) : (
+                                    products.length > 0 ? products.map(e => <div className="col-6 col-md-4" key={e.id}><ProductCard showWishlist  {...e} /></div>) : (
                                         <div className="col-12">
                                             <div className="modal-body border ">
                                                 {/* Text */}

@@ -72,6 +72,8 @@ export default function Profile() {
             if (fileRef.current) {
                 const res = await uploadFileService(fileRef.current)
                 avatar = res.link
+
+                
             }
         } catch (err) {
             console.error(err)
@@ -90,6 +92,7 @@ export default function Profile() {
             }).then(res => {
                 dispatch(setUserAction(res.data))
                 message.success(MESSAGE.UPDATE_PROFILE_SUCCESS)
+                fileRef.current = null
             }).catch(handleError)
         } else if (!values.newPassword) {
             message.warning(MESSAGE.WARNING_NOTHING_CHANGE)

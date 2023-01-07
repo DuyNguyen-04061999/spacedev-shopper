@@ -2,7 +2,7 @@ import { cn } from '@/utils'
 import React, { useId } from 'react'
 import { ErrorText, FieldStyle } from './ErrorText'
 
-export const Field = ({ renderField, ...args }) => {
+export const Field = ({ renderField, autoComplete = 'new-password', ...args }) => {
     const id = useId()
     const { label, required, error, type = 'text', ...props } = args
 
@@ -13,7 +13,7 @@ export const Field = ({ renderField, ...args }) => {
                 {label} {required && '*'}
             </label>
             {
-                renderField?.(args) || <input {...props} className={cn("form-control form-control-sm", props.className)} id={id} type={type} />
+                renderField?.(args) || <input autoComplete={autoComplete} {...props} className={cn("form-control form-control-sm", props.className)} id={id} type={type} />
             }
             {error && <ErrorText>{error}</ErrorText>}
         </FieldStyle>

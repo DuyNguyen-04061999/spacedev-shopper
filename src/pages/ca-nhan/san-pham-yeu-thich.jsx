@@ -16,7 +16,7 @@ export default function Wishlist() {
 
     const qs = queryString.stringify(search)
 
-    const { data: { data: products = [], paginate = {} } = {}, loading } = useQuery({
+    const { data: { data: products = [], paginate = {} } = {}, loading, refetch, clearPreviousData } = useQuery({
         queryFn: () => productService.getWishlist(`?${qs}`),
         queryKey: [qs],
         keepPreviousData: true
@@ -28,7 +28,16 @@ export default function Wishlist() {
                 {
                     loading ? array(9).map((_, i) => (<div key={i} className="col-6 col-md-4"><ProductCardLoading /></div>))
                         :
-                        products.length > 0 ? products.map(e => (<div key={e.id} className="col-6 col-md-4"><ProductCard hideWishlist {...e} /></div>))
+                        products.length > 0 ? products.map(e => (<div key={e.id} className="col-6 col-md-4">
+                            <ProductCard
+                                onRemoveWishlistSuccess={() => {
+                                    refetch()
+                                    clearPreviousData()
+                                }}
+                                showRemove
+                                {...e}
+                            />
+                        </div>))
                             : <p className='text-xl border p-5 w-full text-center'>Hiện bạn chưa có sản phẩm yêu thích nào, bạn có thể đưa bất kỳ sản phẩm nào bạn muốn vào sản phẩm yêu thích 😞
                                 <br />
                                 <Link className='btn btn-sm btn-dark mt-5' to={PATH.product}>Sản phẩm</Link>

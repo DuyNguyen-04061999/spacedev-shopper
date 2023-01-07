@@ -65,9 +65,9 @@ export default function Account() {
 
     const onSubmitLogin = async () => {
         if (loginForm.validate()) {
-            try{
+            try {
                 await dispatch(loginThunkAction(loginForm.values)).unwrap()
-            }catch(err) {
+            } catch (err) {
                 handleError(err)
             }
         }
@@ -85,6 +85,7 @@ export default function Account() {
                                 {/* Form */}
                                 <div>
                                     <div className="row">
+                                        
                                         <div className="col-12">
                                             {/* Email */}
                                             <Field {...loginForm.register('username')} placeholder="Email Address *" />
@@ -97,6 +98,7 @@ export default function Account() {
                                         </div>
                                         <div className="col-12">
                                             {/* Password */}
+
                                             <Field {...loginForm.register('password')} type="password" placeholder="Password *" />
 
                                             {/* <div className="form-group">
@@ -128,11 +130,15 @@ export default function Account() {
                                                     Password?</a>
                                             </div>
                                         </div>
+                                        
                                         <div className="col-12">
                                             {/* Button */}
                                             <Button loading={loginLoading} onClick={onSubmitLogin}>
                                                 Sign In
                                             </Button>
+                                        </div>
+                                        <div className="col-12">
+                                            <p className="text-gray-400 text-sm mt-5 mb-2">Tài khoản demo: <br />demo@spacedev.com / Spacedev@123</p>
                                         </div>
                                     </div>
                                 </div>
