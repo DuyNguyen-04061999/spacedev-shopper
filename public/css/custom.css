@@ -150,6 +150,9 @@
     height: 100%;
 }
 
+.address-card:hover .card-action-right-bottom{
+    display: block;
+}
 .card-action-right-bottom {
     position: absolute;
     bottom: 2rem;
@@ -207,6 +210,10 @@
 
 .collapse {
     visibility: unset;
+}
+
+.ant-message {
+    top: 45px !important;
 }
 .ant-popover-content span[role="img"] {
     display: block;

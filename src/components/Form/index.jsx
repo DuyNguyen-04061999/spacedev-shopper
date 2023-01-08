@@ -1,11 +1,12 @@
 import { useForm } from '@/hooks/useForm'
-import React, { createContext, useCallback, useContext, useEffect, useMemo } from 'react'
+import React, { createContext, useContext, useEffect } from 'react'
 
 const Context = createContext({})
 
-export const Form = ({ children, onSubmit, form = { initialValue, rules, dependencies: {} } }) => {
+export const Form = ({ children, onSubmit, form = { initialValue: undefined, rules: undefined, dependencies: {} } }) => {
+
     useEffect(() => {
-        if(form.initialValue) {
+        if (form.initialValue) {
             _form.setValues(form.initialValue)
         }
     }, [form.initialValue])

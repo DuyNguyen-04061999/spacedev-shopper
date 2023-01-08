@@ -8,5 +8,11 @@ export const MESSAGE = {
     ADD_WISHLIST_SUCCESS:(name) => `Thêm sản phẩm "${name}" vào yêu thích thành công`,
 
     LOADING_REMOVE_WISHLIST: (name) => `Đang đưa sản phẩm "${name}" khỏi yêu thích`,
-    REMOVE_WISHLIST_SUCCESS: (name) => `Loại bỏ sản phẩm "${name} khỏi yêu thích thành công"`
+    REMOVE_WISHLIST_SUCCESS: (name) => `Loại bỏ sản phẩm "${name} khỏi yêu thích thành công"`,
+
+    ADD_ADDRESS_SUCCESS: 'Thêm sổ địa chỉ thành công',
+    EDIT_ADDRESS_SUCCESS: 'Cập nhật sổ địa chỉ thành công',
+    LOADING_MESSAGE: 'Thao tác đang được xử lý',
+    CHANGE_ADDRESS_DEFAULT_SUCCESS: 'Thay đổi địa chỉ mặc định thành công',
+    DELETE_ADDRESS_SUCCESS: 'Xóa sổ địa chỉ thành công'
 }

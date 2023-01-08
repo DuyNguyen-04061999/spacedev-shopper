@@ -41,6 +41,8 @@ export const useQuery = ({
     cacheTime,
     keepPreviousData,
     limitDuration,
+    onSuccess,
+    onError,
     storeDriver = 'localStorage'
 } = {}) => {
 
@@ -160,14 +162,14 @@ export const useQuery = ({
             setLoading(false)
             refetchRef.current = false
             setStatus('success')
-            setData(res)
+            _setData(res)
             return res
         } else if (error) {
             if (error instanceof CanceledError) {
                 delete _asyncFunction[cacheName]
             } else {
                 setLoading(false)
-                setError(error)
+                _setError(error)
                 setStatus('error')
                 throw error
             }
@@ -175,8 +177,60 @@ export const useQuery = ({
         }
     }
 
+    const _setError = (err) => {
+        let res
+        if (onError) {
+            res = onError(err)
+        }
+        if (typeof res !== 'undefined') {
+            setError(res)
+        } else {
+            setError(data)
+        }
+    }
+
+    const _setData = (data) => {
+        let res
+        if (onSuccess) {
+            res = onSuccess(data)
+        }
+        if (typeof res !== 'undefined') {
+            setData(res)
+        } else {
+            setData(data)
+        }
+
+    }
+
     const clearPreviousData = () => {
         dataRef.current = {}
+    }
+
+    const callBackgroundApi = async () => {
+        let res
+        try {
+            if (!res) {
+                const asyncFun = queryFn({
+                    signal: controllerRef.current.signal,
+                    params: data
+                })
+
+                if (cacheName) {
+                    _asyncFunction[cacheName] = asyncFun
+                }
+
+                res = await asyncFun
+
+                delete _asyncFunction[cacheName]
+            }
+
+            setCacheDataOrPreviousData(res)
+        } catch (err) {
+            console.error(err)
+        }
+        if (res) {
+            _setData(res)
+        }
     }
 
     return {
@@ -185,7 +239,8 @@ export const useQuery = ({
         data,
         status,
         refetch: (...params) => callService(false, ...params),
-        clearPreviousData
+        clearPreviousData,
+        callBackgroundApi
     }
 }
 

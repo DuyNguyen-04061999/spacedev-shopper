@@ -13,5 +13,21 @@ export const userService = {
     },
     changePassword(data) {
         return http.post(`${USER_API}/change-password`, data)
+    },
+
+    newAddress(data) {
+        return http.post(`${USER_API}/address`, data)
+    },
+    getAddress(query = '') {
+        return http.get(`${USER_API}/address${query}`)
+    },
+    getAddressDetail(id) {
+        return http.get(`${USER_API}/address/${id}`)
+    },
+    editAddress(id, data) {
+        return http.patch(`${USER_API}/address/${id}`, data)
+    },
+    deleteAddress(id) {
+        return http.delete(`${USER_API}/address/${id}`)
     }
 }

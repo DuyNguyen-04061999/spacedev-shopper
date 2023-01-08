@@ -8,7 +8,7 @@ import { validate } from "../utils/validate"
  * @return register, values, errors, validate
  */
 export const useForm = (rules, { initialValue = {}, dependencies = {} } = {}) => {
-    const [values, setValues] = useState(initialValue)
+    const [values, setValues] = useState(initialValue || {})
     const [errors, setError] = useState({})
 
 

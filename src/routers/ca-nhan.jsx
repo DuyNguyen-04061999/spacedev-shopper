@@ -8,7 +8,7 @@ const Order = lazy(() => import('@/pages/ca-nhan/don-hang'))
 const OrderDetail = lazy(() => import('@/pages/ca-nhan/don-hang/[id]'))
 const Wishlist = lazy(() => import('@/pages/ca-nhan/san-pham-yeu-thich'))
 const Address = lazy(() => import('@/pages/ca-nhan/so-dia-chi'))
-const AddressDetail = lazy(() => import('@/pages/ca-nhan/so-dia-chi/[id]'))
+const AddressDetail = lazy(() => import('@/pages/ca-nhan/so-dia-chi/new'))
 const Payment = lazy(() => import('@/pages/ca-nhan/so-thanh-toan'))
 const PaymentDetail = lazy(() => import('@/pages/ca-nhan/so-thanh-toan/[id]'))
 
@@ -42,6 +42,10 @@ export const profile = {
                 {
                     element: <AddressDetail />,
                     path: PATH.profile.addressDetail
+                },
+                {
+                    element: <AddressDetail />,
+                    path: PATH.profile.newAddress
                 },
                 {
                     element: <Payment />,

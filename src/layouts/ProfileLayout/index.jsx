@@ -30,7 +30,6 @@ export const ProfileLayout = () => {
                 <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.wishlist}>Sản phẩm yêu thích</NavLink>
                 <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.address}>Sổ địa chỉ</NavLink>
                 <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.payment}>Sổ thanh toán</NavLink>
-                <NavLink className="list-group-item list-group-item-action dropright-toggle " to={PATH.profile.productHistory}>Sản phẩm đã xem</NavLink>
                 <a className="list-group-item list-group-item-action dropright-toggle" href="#!" onClick={logout}>Đăng xuất</a>
               </div>
             </nav>

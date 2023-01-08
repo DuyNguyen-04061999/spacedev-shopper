@@ -4,7 +4,7 @@ export const Checkbox = ({ children, ...props }) => {
     const id = useId()
 
     const _onChange = (ev) => {
-        props?.onChange({ target: { value: ev.target.checked } })
+        props?.onChange?.({ target: { value: ev.target.checked } })
     }
     return (
         <div className="custom-control custom-checkbox">
