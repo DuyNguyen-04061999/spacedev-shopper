@@ -16,3 +16,7 @@ export const MESSAGE = {
     CHANGE_ADDRESS_DEFAULT_SUCCESS: 'Thay đổi địa chỉ mặc định thành công',
     DELETE_ADDRESS_SUCCESS: 'Xóa sổ địa chỉ thành công'
 }
+
+export const WARNING = {
+    NOT_HAVE_CHANGE_TO_EDIT: 'Xin vui lòng thay đổi dữ liệu trước khi tiến hành cập nhật'
+}

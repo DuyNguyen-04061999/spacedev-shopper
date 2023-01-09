@@ -3,14 +3,16 @@ import { Checkbox } from '@/components/Checkbox'
 import { Field } from '@/components/Field'
 import { Form } from '@/components/Form'
 import { Portal } from '@/components/Portal'
-import { MESSAGE } from '@/config/message'
+import { MESSAGE, WARNING } from '@/config/message'
 import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
 import { userService } from '@/services/user'
 import { handleError } from '@/utils/handleError'
+import { isEqual } from '@/utils/object'
 import { regexp, required } from '@/utils/rule'
 import { Spin, message } from 'antd'
 import React from 'react'
+import { Helmet } from 'react-helmet'
 import { useNavigate, useParams } from 'react-router-dom'
 
 const rules = {
@@ -46,8 +48,16 @@ export default function AddressDetail() {
     })
 
     const onSubmit = async (values) => {
+
         try {
             if (id) {
+
+                if (isEqual(address, values)) {
+                    return message.warning({
+                        content: WARNING.NOT_HAVE_CHANGE_TO_EDIT,
+                        key: 'warning'
+                    })
+                }
                 await editAddressService(id, values)
                 message.success(MESSAGE.EDIT_ADDRESS_SUCCESS)
             } else {
@@ -65,9 +75,12 @@ export default function AddressDetail() {
             <Portal selector="#main-profile-title">
                 Sổ địa chỉ
             </Portal>
+            <Helmet>
+                <title>Sổ địa chỉ</title>
+            </Helmet>
             {/* Heading */}
             <h6 className="mb-7">
-                Add Address
+                {id ? 'Edit Address' : 'Add Address'}
             </h6>
             {/* Form */}
             <Spin spinning={dataLoading}>
@@ -148,8 +161,9 @@ export default function AddressDetail() {
                     </div>
                     {/* Button */}
                     <Button loading={loading || editLoading}>
-                        Add Address
+                        {id ? 'Edit Address' : 'Add Address'}
                     </Button>
+
                 </Form>
             </Spin>
 
