@@ -5,9 +5,18 @@ import { message } from 'antd'
 import { Popconfirm } from '../Popconfirm'
 import { Link, generatePath } from 'react-router-dom'
 import { PATH } from '@/config/path'
+import Skeleton from '../Skeleton'
+import { Button } from '../Button'
+import { useRef } from 'react'
 
 export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDefault, fullName, district, province, address, email, phone }) => {
+    const loadingDefaultRef = useRef(false)
+    const loadingDeleteRef = useRef(false)
     const _onChangeDefault = async (ev) => {
+        if(loadingDefaultRef.current) return
+
+
+        loadingDefaultRef.current = true
         try {
             const key = `address-default-${_id}`
             message.loading({
@@ -23,9 +32,13 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
         } catch (err) {
             handleError(err, key)
         }
+        loadingDefaultRef.current = false
     }
 
     const _onDelete = async (ev) => {
+        if(loadingDeleteRef.current) return
+
+        loadingDeleteRef.current = true
         try {
             const key = `remove-address-${_id}`
             message.loading({
@@ -41,6 +54,8 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
         } catch (err) {
             handleError(err)
         }
+        loadingDeleteRef.current = false
+
     }
 
     return (
@@ -63,9 +78,9 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
                         </div>
                     ) : (
                         <div className='card-action-right-bottom hidden'>
-                            <div onClick={_onChangeDefault} className="cursor-pointer link color-success">
+                            <Button size="xs" onClick={_onChangeDefault}>
                                 Đặt làm địa chỉ mặc định
-                            </div>
+                            </Button>
                         </div>
                     )
                 }
@@ -93,6 +108,28 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
                     }
 
                 </div>
+            </div>
+        </div>
+    )
+}
+
+
+export const AddressCardLoading = () => {
+    return (
+        <div className="address-card card card-lg bg-light mb-8">
+            <div className="card-body">
+                {/* Heading */}
+                <h6 className="mb-6">
+                    <Skeleton height={24} width={200} />
+                </h6>
+                {/* Text */}
+                <p className="text-muted mb-1">
+                    <Skeleton width={350} height={22} />
+                </p>
+                <p className="text-muted mb-0">
+                    <Skeleton width={150} height={22} />
+                </p>
+
             </div>
         </div>
     )

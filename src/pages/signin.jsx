@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth"
 import { loginThunkAction } from "@/stories/auth"
 import { useEffect } from "react"
 import { useBodyClass } from "@/hooks/useBodyClass"
+import { copyToClipboard } from '@/utils/copyToClipboard'
 
 
 const registerRule = {
@@ -76,6 +77,12 @@ export default function Account() {
             }
         }
     }
+
+    const _copyToClipboard = async (ev) => {
+        await copyToClipboard(ev.target.innerText)
+        message.info('Copy to Clipboard')
+    }
+
     return (
         <section className="py-12">
             <div className="container">
@@ -142,7 +149,7 @@ export default function Account() {
                                             </Button>
                                         </div>
                                         <div className="col-12">
-                                            <p className="font-size-sm text-muted mt-5 mb-2 font-light">Tài khoản demo: <b className="text-black">demo@spacedev.com / Spacedev@123</b></p>
+                                            <p className="font-size-sm text-muted mt-5 mb-2 font-light">Tài khoản demo: <b className="text-black"><span className="cursor-pointer underline" onClick={_copyToClipboard}>demo@spacedev.com</span> / <span onClick={_copyToClipboard} className="cursor-pointer underline">Spacedev@123</span></b></p>
                                             <p className="font-size-sm text-muted mt-5 mb-2 font-light text-justify">
                                                 Chúng tôi cung cấp cho bạn tài khoản demo vì mục đích học tập, để đảm bảo những người khác có thể sử dụng chung tài khoản chúng tôi sẽ
                                                 hạn chế rất nhiều quyền trên tài khoản này ví dụ:  <br />

@@ -1,6 +1,7 @@
 import { Paginate } from '@/components/Paginate'
 import { Portal } from '@/components/Portal'
 import { ProductCard, ProductCardLoading } from '@/components/ProductCard'
+import { PROFILE_HEADER_SELECTOR } from '@/config'
 import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
 import { useSearch } from '@/hooks/useSearch'
@@ -24,7 +25,7 @@ export default function Wishlist() {
     })
     return (
         <>
-            <Portal selector="#main-profile-title">
+            <Portal selector={PROFILE_HEADER_SELECTOR}>
                 Sản phẩm yêu thích
             </Portal>
             {/* Products */}
