@@ -16,7 +16,8 @@ import { useAuth } from '@/hooks/useAuth'
 
 export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
-    const loadingRef = useRef()
+    const loadingWishlsitRef = useRef(false)
+    const loadingRemoveWishlistRef = useRef(false)
     const category = useCategory(categories)
     const navigate = useNavigate()
     const image1 = images[0].thumbnail_url
@@ -26,8 +27,8 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     const _slug = '/' + slug
 
     const onAddWishlist = async () => {
-        if(loadingRef.current) return
-        loadingRef.current = true
+        if(loadingWishlsitRef.current) return
+        loadingWishlsitRef.current = true
 
         const key = `wishlist-${id}`
         try {
@@ -46,10 +47,13 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
         } catch (err) {
             handleError(err, key)
         }
-        loadingRef.current = false
+        loadingWishlsitRef.current = false
     }
 
     const _onRemoveWishlist = async () => {
+        if(loadingRemoveWishlistRef.current) return
+
+        loadingRemoveWishlistRef.current = true
         const key = `remove-wishlist-${id}`
         try {
             message.loading({
@@ -66,6 +70,7 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
         } catch (err) {
             handleError(err, key)
         }
+        loadingRemoveWishlistRef.current = false
     }
 
     return (
