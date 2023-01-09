@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Link, Navigate, generatePath, useLocation, useNavigate } from 'react-router-dom'
 import Skeleton from '../Skeleton'
 import { currency } from '@/utils/currency'
@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth'
 
 export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
+    const loadingRef = useRef()
     const category = useCategory(categories)
     const navigate = useNavigate()
     const image1 = images[0].thumbnail_url
@@ -25,8 +26,11 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     const _slug = '/' + slug
 
     const onAddWishlist = async () => {
+        if(loadingRef.current) return
+
         const key = `wishlist-${id}`
         try {
+            loadingRef.current = true
             message.loading({
                 key,
                 content: MESSAGE.LOADING_ADD_WISHLIST(name),
@@ -38,6 +42,7 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
                 key,
                 content: MESSAGE.ADD_WISHLIST_SUCCESS(name)
             })
+            loadingRef.current = false
 
         } catch (err) {
             handleError(err, key)
