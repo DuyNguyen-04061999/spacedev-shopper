@@ -27,10 +27,10 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
 
     const onAddWishlist = async () => {
         if(loadingRef.current) return
+        loadingRef.current = true
 
         const key = `wishlist-${id}`
         try {
-            loadingRef.current = true
             message.loading({
                 key,
                 content: MESSAGE.LOADING_ADD_WISHLIST(name),
@@ -42,11 +42,11 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
                 key,
                 content: MESSAGE.ADD_WISHLIST_SUCCESS(name)
             })
-            loadingRef.current = false
 
         } catch (err) {
             handleError(err, key)
         }
+        loadingRef.current = false
     }
 
     const _onRemoveWishlist = async () => {
