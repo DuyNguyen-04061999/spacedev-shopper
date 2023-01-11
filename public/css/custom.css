@@ -150,6 +150,7 @@
     height: 100%;
 }
 
+.payment-card:hover .card-action-right-bottom,
 .address-card:hover .card-action-right-bottom{
     display: block;
 }

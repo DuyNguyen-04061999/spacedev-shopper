@@ -35,7 +35,7 @@ export const ProfileLayout = () => {
             </nav>
           </div>
           <div className="col-12 col-md-9 col-lg-8 offset-lg-1">
-            <Suspense fallback={<div>ProfileLayout loading....</div>}>
+            <Suspense fallback={<div></div>}>
               <Outlet />
             </Suspense>
           </div>

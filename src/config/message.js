@@ -14,7 +14,15 @@ export const MESSAGE = {
     EDIT_ADDRESS_SUCCESS: 'Cập nhật sổ địa chỉ thành công',
     LOADING_MESSAGE: 'Thao tác đang được xử lý',
     CHANGE_ADDRESS_DEFAULT_SUCCESS: 'Thay đổi địa chỉ mặc định thành công',
-    DELETE_ADDRESS_SUCCESS: 'Xóa sổ địa chỉ thành công'
+    DELETE_ADDRESS_SUCCESS: 'Xóa sổ địa chỉ thành công',
+
+    DELETE_PAYMENT_SUCCESS: 'Xóa sổ thanh toán thành công',
+    CHANGE_PAYMENT_DEFAULT_SUCCESS: 'Thay đổi sổ thanh toán mặc định thành công',
+    EDIT_PAYMENT_SUCCESS: 'Cập nhật sổ thanh toán thành công',
+    ADD_PAYMENT_SUCCESS: 'Thêm sổ thanh toán thành công',
+
+    SUCCESS_MESSAGE: 'Thực hiện thao tác thành công',
+
 }
 
 export const WARNING = {

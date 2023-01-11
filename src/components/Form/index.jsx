@@ -28,6 +28,6 @@ export const Form = ({ children, onSubmit, form = { initialValue: undefined, rul
 
 Form.Item = ({ name, children }) => {
     const { register } = useContext(Context)
-
-    return React.cloneElement(children, { ...register(name) })
+    const props = register(name)
+    return typeof children === 'function' ? children?.(props) : React.cloneElement(children, props)
 }

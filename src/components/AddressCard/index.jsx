@@ -78,7 +78,7 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
                         </div>
                     ) : (
                         <div className='card-action-right-bottom hidden'>
-                            <Button size="xs" onClick={_onChangeDefault}>
+                            <Button size="xs" type="outline" onClick={_onChangeDefault}>
                                 Đặt làm địa chỉ mặc định
                             </Button>
                         </div>
@@ -88,7 +88,7 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
                 {/* Action */}
                 <div className="card-action card-action-right gap-2 flex">
                     {/* Button */}
-                    <Link className="btn btn-xs btn-circle btn-white-primary" to={generatePath(PATH.profile.addressDetail, { id: _id })}>
+                    <Link className="btn btn-xs btn-circle btn-white-primary" to={generatePath(PATH.profile.editAddress, { id: _id })}>
                         <i className="fe fe-edit-2" />
                     </Link>
                     {

@@ -9,9 +9,9 @@ export const Radio = ({ children, ...props }) => {
     return (
         <div className='custom-control custom-radio '>
             <input
-                onChange={onChange}
+                onChange={(ev) => onChange(ev.target.value)}
                 {...props}
-                checked={props.value == selected} className="custom-control-input" type="radio" id={id} name={name} />
+            checked={props.value == selected} className="custom-control-input" type="radio" id={id} name={name} />
             <label onClick={() => onClick(props.value)} className="custom-control-label flex items-center" htmlFor={id}>
                 {children}
             </label>
@@ -22,20 +22,21 @@ export const Radio = ({ children, ...props }) => {
 
 Radio.Toggle = ({ children, ...props }) => {
     const { selected, onChange, name } = useContext(Context)
+
     return (
         <label className={cn('btn btn-sm btn-outline-border', { active: props.value == selected })} >
-            <input onChange={onChange} {...props} selected={props.value == selected} type="radio" name={name} /> {children}
+            <input {...props}   onChange={(ev) => onChange(ev.target.value)} selected={props.value == selected} type="radio" name={name} /> {children}
         </label>
     )
 }
 
-Radio.Group = ({ children, value, toggle, onChange, onCheckedWhen2nd }) => {
-    const name = useId()
+Radio.Group = ({ children, value, toggle, onChange, onCheckedWhen2nd, name }) => {
+    const _name = useId()
     const uncheckRef = useRef(false)
 
-    const newOnChange = (ev) => {
+    const newOnChange = (value) => {
         if (!uncheckRef.current) {
-            onChange?.(ev)
+            onChange?.(value)
         }
 
         uncheckRef.current = false
@@ -51,6 +52,6 @@ Radio.Group = ({ children, value, toggle, onChange, onCheckedWhen2nd }) => {
     }
 
     return <div className={cn({ 'btn-group-toggle': toggle })}>
-        <Context.Provider value={{ selected: value, name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
+        <Context.Provider value={{ selected: value, name: name || _name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
     </div>
 }

@@ -41,7 +41,7 @@ export const profile = {
                 },
                 {
                     element: <AddressDetail />,
-                    path: PATH.profile.addressDetail
+                    path: PATH.profile.editAddress
                 },
                 {
                     element: <AddressDetail />,
@@ -53,7 +53,11 @@ export const profile = {
                 },
                 {
                     element: <PaymentDetail />,
-                    path: PATH.profile.paymentDetail
+                    path: PATH.profile.newPayment
+                },
+                {
+                    element: <PaymentDetail />,
+                    path: PATH.profile.editPayment
                 },
             ]
         }

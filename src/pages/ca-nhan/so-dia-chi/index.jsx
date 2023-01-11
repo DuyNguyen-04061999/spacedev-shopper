@@ -1,12 +1,10 @@
 import { AddressCard, AddressCardLoading } from '@/components/AddressCard'
 import { Portal } from '@/components/Portal'
-import Skeleton from '@/components/Skeleton'
 import { PROFILE_HEADER_SELECTOR } from '@/config'
 import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
 import { userService } from '@/services/user'
 import { array } from '@/utils/array'
-import React from 'react'
 import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 

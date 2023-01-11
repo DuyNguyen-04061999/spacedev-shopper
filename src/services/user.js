@@ -29,5 +29,22 @@ export const userService = {
     },
     deleteAddress(id) {
         return http.delete(`${USER_API}/address/${id}`)
-    }
+    },
+
+    newPayment(data) {
+        return http.post(`${USER_API}/payment`, data)
+    },
+    getPayment(query = '') {
+        return http.get(`${USER_API}/payment${query}`)
+    },
+    getPaymentDetail(id) {
+        return http.get(`${USER_API}/payment/${id}`)
+    },
+    editPayment(id, data) {
+        return http.patch(`${USER_API}/payment/${id}`, data)
+    },
+    deletePayment(id) {
+        return http.delete(`${USER_API}/payment/${id}`)
+    },
+
 }

@@ -5,6 +5,8 @@ export const ErrorText = styled.span`
     position: absolute;
     font-size: 0.875rem;
     font-style: italic;
+    left: 0;
+    top: 100%;
 `
 
 export const FieldStyle = styled.div`

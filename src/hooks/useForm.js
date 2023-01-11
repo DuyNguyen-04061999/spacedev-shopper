@@ -7,17 +7,16 @@ import { validate } from "../utils/validate"
  * @param {*} rules 
  * @return register, values, errors, validate
  */
-export const useForm = (rules, { initialValue = {}, dependencies = {} } = {}) => {
+export const useForm = (rules = {}, { initialValue = {}, dependencies = {} } = {}) => {
     const [values, setValues] = useState(initialValue || {})
     const [errors, setError] = useState({})
-
 
     const register = (name) => {
         return {
             error: errors[name],
             value: values[name] || '',
-            onChange: (ev) => {
-                let _values = { ...values, [name]: ev.target.value }
+            onChange: (value) => {
+                let _values = { ...values, [name]: value }
                 if (rules[name]) {
 
                     const errorObj = {}
@@ -38,7 +37,7 @@ export const useForm = (rules, { initialValue = {}, dependencies = {} } = {}) =>
 
                     setError(prev => ({ ...prev, ...errorObj }))
                 }
-                setValues((prev) => ({ ...prev, [name]: ev.target.value }))
+                setValues((prev) => ({ ...prev, [name]: value }))
             }
         }
     }
