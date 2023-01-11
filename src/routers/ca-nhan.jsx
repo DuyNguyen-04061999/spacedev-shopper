@@ -8,9 +8,9 @@ const Order = lazy(() => import('@/pages/ca-nhan/don-hang'))
 const OrderDetail = lazy(() => import('@/pages/ca-nhan/don-hang/[id]'))
 const Wishlist = lazy(() => import('@/pages/ca-nhan/san-pham-yeu-thich'))
 const Address = lazy(() => import('@/pages/ca-nhan/so-dia-chi'))
-const AddressDetail = lazy(() => import('@/pages/ca-nhan/so-dia-chi/new'))
+const AddressDetail = lazy(() => import('@/pages/ca-nhan/so-dia-chi/action'))
 const Payment = lazy(() => import('@/pages/ca-nhan/so-thanh-toan'))
-const PaymentDetail = lazy(() => import('@/pages/ca-nhan/so-thanh-toan/[id]'))
+const PaymentDetail = lazy(() => import('@/pages/ca-nhan/so-thanh-toan/action'))
 
 export const profile = {
     element: <PrivateRoute redirect={PATH.account} />,
