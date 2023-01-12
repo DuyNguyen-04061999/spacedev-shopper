@@ -34,12 +34,31 @@ export default function PaymentDetail() {
     const [step, setStep] = useState(id ? 1 : 0)
     const [type, setType] = useState('card')
     const navigate = useNavigate()
-    const { loading, refetch: addPaymentService } = useQuery({
-        queryFn: ({ params }) => userService.newPayment(...params),
+    const { loading, refetch: onSubmit } = useQuery({
+        queryFn: async ({ params: [values] }) => {
+            const obj = {
+                cardName: values.cardName,
+                cardNumber: values.cardNumber,
+                type,
+                expired: values.month + '/' + values.year,
+                cvv: values.cvv,
+                default: values.default
+            }
+
+            if (id) {
+                await userService.editPayment(id, obj)
+                message.success(MESSAGE.EDIT_PAYMENT_SUCCESS)
+            } else {
+                await userService.newPayment(obj)
+                message.success(MESSAGE.ADD_PAYMENT_SUCCESS)
+            }
+            navigate(PATH.profile.payment)
+        },
+        onError: (err) => handleError(err),
         enabled: false
     })
 
-    const { loading: loadingPayment, data: payment = {} } = useQuery({
+    const { loading: loadingPayment, data: payment } = useQuery({
         queryFn: () => userService.getPaymentDetail(id),
         enabled: !!id,
         onSuccess: (res) => {
@@ -51,22 +70,22 @@ export default function PaymentDetail() {
         }
     })
 
-    const onSubmit = async (values) => {
-        try {
-            await addPaymentService({
-                cardName: values.cardName,
-                cardNumber: values.cardNumber,
-                type,
-                expired: values.month + '/' + values.year,
-                cvv: values.cvv,
-                default: values.default
-            })
-            message.success(MESSAGE.ADD_PAYMENT_SUCCESS)
-            navigate(PATH.profile.payment)
-        } catch (err) {
-            handleError(err)
-        }
-    }
+    // const onSubmit = async (values) => {
+    //     try {
+    //         await addPaymentService({
+    //             cardName: values.cardName,
+    //             cardNumber: values.cardNumber,
+    //             type,
+    //             expired: values.month + '/' + values.year,
+    //             cvv: values.cvv,
+    //             default: values.default
+    //         })
+    //         message.success(MESSAGE.ADD_PAYMENT_SUCCESS)
+    //         navigate(PATH.profile.payment)
+    //     } catch (err) {
+    //         handleError(err)
+    //     }
+    // }
 
 
     return (
@@ -142,7 +161,7 @@ export default function PaymentDetail() {
                                                 <Select {...props}>
                                                     <option value="">Month *</option>
                                                     {
-                                                        array(12).map((_, i) => <option key={i} value={i}>{moment(`${i + 1}/01/2000`).format('MMMM')}</option>)
+                                                        array(12).map((_, i) => <option key={i} value={i + 1}>{moment(`${i + 1}/01/2000`).format('MMMM')}</option>)
                                                     }
                                                 </Select>
                                             )}
@@ -189,7 +208,7 @@ export default function PaymentDetail() {
                                     <Form.Item name="default">
                                         {
                                             (props) => <Checkbox {...props} onChange={ev => {
-                                                if (payment.default) {
+                                                if (payment?.default) {
                                                     message.warning('Bạn không thể bỏ địa chỉ mặc định')
                                                     return
                                                 }

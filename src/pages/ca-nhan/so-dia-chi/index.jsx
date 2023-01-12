@@ -1,4 +1,4 @@
-import { AddressCard, AddressCardLoading } from '@/components/AddressCard'
+import { AddressCard, AddressCardLoading, ListAddressCard } from '@/components/AddressCard'
 import { Portal } from '@/components/Portal'
 import { PROFILE_HEADER_SELECTOR } from '@/config'
 import { PATH } from '@/config/path'
@@ -27,13 +27,20 @@ export default function Address() {
                 Sổ địa chỉ
             </Portal>
             <div className="row">
-                {
+
+                <ListAddressCard
+                    loading={loading}
+                    data={data}
+                    onDelete={callBackgroundApi}
+                    onChangeDefault={callBackgroundApi}
+                />
+                {/* {
                     loading ? array(3).map((_, i) => <div key={i} className="col-12">
                         <AddressCardLoading />
                     </div>) : data.length > 0 ? data.map(e => <div key={e._id} className="col-12 ">
                         <AddressCard onDelete={onRefetch} onChangeDefault={onRefetch} {...e} />
                     </div>) : <div className="col-12"><p className='text-xl border p-5 text-center'>Hiện bạn chưa có sổ địa chỉ nào, thêm sổ địa chỉ để sử dụng trong quá trình mua hàng được tốt hơn 😞</p></div>
-                }
+                } */}
 
                 {/* <div className="col-12 col-lg-6">
                 <div className="card card-lg bg-light mb-8">

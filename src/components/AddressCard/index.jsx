@@ -8,6 +8,7 @@ import { PATH } from '@/config/path'
 import Skeleton from '../Skeleton'
 import { Button } from '../Button'
 import { useRef } from 'react'
+import { withListLoading } from '@/utils/withListLoading'
 
 export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDefault, fullName, district, province, address, email, phone }) => {
     const loadingDefaultRef = useRef(false)
@@ -98,7 +99,7 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
                                 title="Cảnh báo"
                                 cancelText="Hủy bỏ"
                                 okText="Tiếp tục xóa"
-                                onOk={_onDelete}
+                                onConfirm={_onDelete}
                                 description={<p>Thao tác này sẽ không thể hoàn lại, bạn có chắc chắn muốn thực hiện thao tác này?</p>}>
                                 <button className="btn btn-xs btn-circle btn-white-primary">
                                     <i className="fe fe-x"></i>
@@ -134,3 +135,5 @@ export const AddressCardLoading = () => {
         </div>
     )
 }
+
+export const ListAddressCard = withListLoading(AddressCard, AddressCardLoading)

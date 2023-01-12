@@ -146,11 +146,9 @@ export default function AddressDetail() {
                                         checked={props.value}
                                         {...props}
                                         onChange={ev => {
-                                            if (address) {
-                                                if (address.default) {
-                                                    message.warning('Bạn không thể bỏ địa chỉ mặc định')
-                                                    return
-                                                }
+                                            if (address?.default) {
+                                                message.warning('Bạn không thể bỏ địa chỉ mặc định')
+                                                return
                                             }
                                             props?.onChange(ev)
                                         }}
