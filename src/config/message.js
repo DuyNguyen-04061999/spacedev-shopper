@@ -23,6 +23,9 @@ export const MESSAGE = {
 
     SUCCESS_MESSAGE: 'Thực hiện thao tác thành công',
 
+    LOADING_ADD_CART: (name) => `Đang thêm "${name}" vào giỏ hàng`,
+    ADD_CART_SUCCESS: (name) => `Thêm "${name}" vào giỏ hàng thành công`
+
 }
 
 export const WARNING = {

@@ -18,13 +18,19 @@ export const useAction = ({
         try {
             message.loading({
                 content: messageLoading,
-                key
+                key,
+                duration: 0
             })
             await action(...data)
-            message.success({
-                key,
-                content: messageSuccess
-            })
+            if (messageSuccess) {
+                message.success({
+                    key,
+                    content: messageSuccess
+                })
+            }else {
+                message.destroy(key)
+            }
+
             onSuccess?.()
         } catch (err) {
             handleError(err)

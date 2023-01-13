@@ -6,13 +6,20 @@ import { useAuth } from '@/hooks/useAuth'
 import { avatarDefault } from '@/config/assets'
 import { useDispatch } from 'react-redux'
 import { logoutThunkAction } from '@/stories/auth'
-import { Dropdown } from 'antd'
+import { Dropdown, Popover } from 'antd'
+import { useCart } from '@/hooks/useCart'
+import { Button } from '../Button'
+import { CheckCircleFilled, CheckCircleOutlined } from '@ant-design/icons'
+import { cartActions } from '@/stories/cart'
+import { CartDrawer } from '../CartDrawer'
 
 
 
 export const Header = () => {
     const { user } = useAuth()
     const dispatch = useDispatch()
+    const [openCart, setOpenCart] = useState(false)
+    const { cart, openCartOver } = useCart()
     const [openSearchDrawer, setOpenSearchDrawer] = useState(false)
     const onOpenSearchDrawer = (ev) => {
         ev.preventDefault()
@@ -188,11 +195,25 @@ export const Header = () => {
                                 </Link>
                             </li>
                             <li className="nav-item ml-lg-n4">
-                                <a className="nav-link" data-toggle="modal" href="#modalShoppingCart">
-                                    <span data-cart-items={2}>
-                                        <i className="fe fe-shopping-cart" />
-                                    </span>
-                                </a>
+                                <Popover
+                                    trigger={[openCartOver ? 'click' : 'hover']}
+                                    onOpenChange={() => dispatch(cartActions.toggleCartOver(false))}
+                                    open={openCartOver}
+                                    placement='bottomRight'
+                                    content={<div>
+                                        <p className='mb-2 flex items-center gap-1'> <span className='text-green-500'><CheckCircleFilled /></span> Thêm vào giỏ hàng thành công</p>
+                                        <Button size='xs'>Xem giỏ hàng và thanh toánnn</Button>
+                                    </div>}
+                                >
+                                    <div onClick={() => setOpenCart(true)} className="nav-link cursor-pointer">
+                                        <span data-cart-items={cart?.totalQuantity || undefined}>
+                                            <i className="fe fe-shopping-cart" />
+                                        </span>
+                                    </div>
+
+                                </Popover>
+
+                                <CartDrawer open={openCart} onClose={() => setOpenCart(false)} />
                             </li>
                             <li className="nav-item ml-lg-n4">
                                 {

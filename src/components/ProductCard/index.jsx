@@ -13,6 +13,10 @@ import { handleError } from '@/utils/handleError'
 import { delay } from '@/utils'
 import { Button } from '../Button'
 import { useAuth } from '@/hooks/useAuth'
+import { useAction } from '@/hooks/useAction'
+import { cartService } from '@/services/cart'
+import { useDispatch } from 'react-redux'
+import { updateCartItemAction } from '@/stories/cart'
 
 export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
@@ -20,14 +24,21 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     const loadingRemoveWishlistRef = useRef(false)
     const category = useCategory(categories)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const image1 = images[0].thumbnail_url
     const image2 = images?.[1]?.thumbnail_url || image1
     const salePrice = price - real_price
 
     const _slug = '/' + slug
 
+    const onAddProductToCart = useAction({
+        action: () => dispatch(updateCartItemAction({ productId: id, quantity: 1, showPopover: true })),
+        messageLoading: MESSAGE.LOADING_ADD_CART(name),
+        messageSuccess: false
+    })
+
     const onAddWishlist = async () => {
-        if(loadingWishlsitRef.current) return
+        if (loadingWishlsitRef.current) return
         loadingWishlsitRef.current = true
 
         const key = `wishlist-${id}`
@@ -51,7 +62,7 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     }
 
     const _onRemoveWishlist = async () => {
-        if(loadingRemoveWishlistRef.current) return
+        if (loadingRemoveWishlistRef.current) return
 
         loadingRemoveWishlistRef.current = true
         const key = `remove-wishlist-${id}`
@@ -94,7 +105,7 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
                     <span className="card-action">
                     </span>
                     <span className="card-action">
-                        <button className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
+                        <button onClick={onAddProductToCart} className="btn btn-xs btn-circle btn-white-primary" data-toggle="button">
                             <i className="fe fe-shopping-cart" />
                         </button>
                     </span>
