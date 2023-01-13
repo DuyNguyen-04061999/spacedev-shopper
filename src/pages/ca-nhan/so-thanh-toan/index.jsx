@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom'
 export default function Payment() {
     const { loading, data: { data: payments = [] } = {}, callBackgroundApi } = useQuery({
         queryFn: () => userService.getPayment(),
+        queryKey: ['payment'],
+        cacheTime: 3600000,
         onSuccess: (res) => {
             res.data.sort(e => e.default ? -1 : 0)
             return res

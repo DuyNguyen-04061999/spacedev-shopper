@@ -46,7 +46,7 @@ export default function PaymentDetail() {
             }
 
             if (id) {
-                await userService.editPayment(id, obj)
+                const res = await userService.editPayment(id, obj)
                 message.success(MESSAGE.EDIT_PAYMENT_SUCCESS)
             } else {
                 await userService.newPayment(obj)
