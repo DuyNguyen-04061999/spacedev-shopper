@@ -3,7 +3,7 @@ import { http } from "@/utils/http"
 
 export const authService = {
     login(form){
-        return http.post(`${AUTH_API}/login`, form)
+        return http.post(`${AUTH_API}/login-test`, form)
     },
     getProfile(){
         return http.get(`${AUTH_API}`)

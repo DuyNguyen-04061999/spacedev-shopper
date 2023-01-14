@@ -24,8 +24,12 @@ export const MESSAGE = {
     SUCCESS_MESSAGE: 'Thực hiện thao tác thành công',
 
     LOADING_ADD_CART: (name) => `Đang thêm "${name}" vào giỏ hàng`,
-    ADD_CART_SUCCESS: (name) => `Thêm "${name}" vào giỏ hàng thành công`
+    ADD_CART_SUCCESS: (name) => `Thêm "${name}" vào giỏ hàng thành công`,
 
+}
+
+export const INFO = {
+    LOGIN_TO_ADD_CART: 'Vui lòng đăng nhập trước khi tiến hành mua hàng'
 }
 
 export const WARNING = {

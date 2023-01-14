@@ -8,7 +8,7 @@ import { PATH } from '@/config/path'
 import { useQuery } from '@/hooks/useQuery'
 import { productService } from '@/services/product'
 import { Popconfirm, message } from 'antd'
-import { MESSAGE } from '@/config/message'
+import { INFO, MESSAGE } from '@/config/message'
 import { handleError } from '@/utils/handleError'
 import { delay } from '@/utils'
 import { Button } from '../Button'
@@ -17,6 +17,7 @@ import { useAction } from '@/hooks/useAction'
 import { cartService } from '@/services/cart'
 import { useDispatch } from 'react-redux'
 import { updateCartItemAction } from '@/stories/cart'
+import { fullPathName } from '@/utils/fullPathname'
 
 export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
@@ -32,7 +33,13 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     const _slug = '/' + slug
 
     const onAddProductToCart = useAction({
-        action: () => dispatch(updateCartItemAction({ productId: id, quantity: 1, showPopover: true })),
+        action: () => {
+            if (!user) {
+                message.info(INFO.LOGIN_TO_ADD_CART)
+                navigate(PATH.account, { state: { redirect: fullPathName() } })
+            }
+            return dispatch(updateCartItemAction({ productId: id, quantity: 1, showPopover: true }))
+        },
         messageLoading: MESSAGE.LOADING_ADD_CART(name),
         messageSuccess: false
     })
