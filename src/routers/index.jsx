@@ -14,6 +14,7 @@ const Contact = lazy(() => import('@/pages/lien-he'))
 const FAQ = lazy(() => import('@/pages/hoi-dap'))
 const About = lazy(() => import('@/pages/ve-chung-toi'))
 const Shipping = lazy(() => import('@/pages/quy-dinh-giao-hang'))
+const ViewCart = lazy(() => import('@/pages/gio-hang'))
 
 
 export const routers = [
@@ -51,6 +52,10 @@ export const routers = [
             {
                 element: <Shipping />,
                 path: PATH.shipping
+            },
+            {
+                element: <ViewCart />,
+                path: PATH.viewCart
             },
             profile,
             {

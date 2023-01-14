@@ -1,20 +1,22 @@
 import { updateCartItemAction } from '@/stories/cart'
 import { cn } from '@/utils'
 import { currency } from '@/utils/currency'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Popconfirm } from '../Popconfirm'
 import { useCart } from '@/hooks/useCart'
+import { Checkbox } from '../Checkbox'
 
-export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
+export const CartItem = ({selected, allowSelect, onSelect, id, name, real_price, price, quantity, thumbnail_url }) => {
     const dispatch = useDispatch()
     const { loading: { [id]: loading } } = useCart()
-    // const [loading, setLoading] = useState(false)
-    const [deleting, setDeleting] = useState(false)
     const [_quantity, setQuantity] = useState(quantity)
 
+    useEffect(() => {
+        setQuantity(quantity)
+    }, [quantity])
+
     const onChangeQuantity = (quantity) => async (ev) => {
-        // setLoading(true)
         try {
             setQuantity(quantity)
             dispatch(updateCartItemAction({
@@ -24,22 +26,23 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
         } catch (err) {
             console.error(err)
         }
-
-        // setLoading(false)
     }
 
     return (
         <li className="list-group-item">
             <div className="row align-items-center">
-                <div className="col-4">
+                <div className="col-4 d-flex flex items-center gap-2">
+                    {
+                        allowSelect && <Checkbox onChange={onSelect} checked={selected}/>
+                    }
                     {/* Image */}
                     <a href="./product.html">
-                        <img className="img-fluid" src={images[0].thumbnail_url} alt="..." />
+                        <img className="img-fluid" src={thumbnail_url} alt="..." />
                     </a>
                 </div>
                 <div className="col-8">
                     {/* Title */}
-                    <p className="font-size-sm font-weight-bold mb-6">
+                    <p className="font-size-sm mb-6">
                         <a className="text-body" href="./product.html">{name}</a> <br />
                         <span className="card-product-price">
                             {
@@ -68,7 +71,7 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
                             </Popconfirm>
                             <input
                                 type="number"
-                                value={_quantity || (!deleting && 1)}
+                                value={_quantity}
                                 onKeyDown={evt => {
                                     if (evt.key === 'e' || evt.key === 'E' || (evt.target.value === '' && evt.key === '0')) {
                                         evt.preventDefault();

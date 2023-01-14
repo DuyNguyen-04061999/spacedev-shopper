@@ -9,6 +9,7 @@ export const PATH = {
     faq: '/hoi-dap',
     about: '/ve-chung-toi',
     shipping: '/quy-dinh-giao-hang',
+    viewCart: '/gio-hang',
     profile: {
         index: profile,
         order: profile + '/don-hang',
