@@ -1,6 +1,7 @@
 import { cartService } from "@/services/cart";
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { call, takeEvery, takeLatest, put, delay, putResolve } from 'redux-saga/effects'
+import { getToken } from "@/utils/token";
 
 
 
@@ -15,6 +16,9 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
         setCart: (state, action) => {
             state.cart = action.payload
         },
+        clearCart: (state) => {
+            state.cart = null
+        },
         toggleCartOver: (state, action) => {
             state.openCartOver = action.payload
         },
@@ -25,15 +29,19 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
 })
 
 export const getCartAction = createAsyncThunk(`${name}/getCart`, async (_, thunkApi) => {
-    try {
-        const res = await cartService.getCart()
-        thunkApi.dispatch(cartActions.setCart(res.data))
-    } catch (err) {
-        console.error(err)
+    if (getToken()) {
+        try {
+            const res = await cartService.getCart()
+            thunkApi.dispatch(cartActions.setCart(res.data))
+        } catch (err) {
+            console.error(err)
+        }
     }
+
 })
 
 export const updateCartItemAction = createAction(`${name}/addCart`)
+
 
 // export const updateCartItemAction = createAsyncThunk(`${name}/addCart`, async (data, thunkApi) => {
 // try {
