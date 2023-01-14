@@ -99,7 +99,7 @@ function* fetchUpdateCartItem(action) {
         }
 
         yield put(cartActions.setLoading({
-            [productId]: true
+            [productId]: false
         }))
 
 
