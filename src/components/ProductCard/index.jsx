@@ -18,9 +18,11 @@ import { cartService } from '@/services/cart'
 import { useDispatch } from 'react-redux'
 import { updateCartItemAction } from '@/stories/cart'
 import { fullPathName } from '@/utils/fullPathname'
+import { useCart } from '@/hooks/useCart'
 
 export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
+    const { cart } = useCart()
     const loadingWishlsitRef = useRef(false)
     const loadingRemoveWishlistRef = useRef(false)
     const category = useCategory(categories)
@@ -38,7 +40,9 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
                 message.info(INFO.LOGIN_TO_ADD_CART)
                 navigate(PATH.account, { state: { redirect: fullPathName() } })
             }
-            return dispatch(updateCartItemAction({ productId: id, quantity: 1, showPopover: true }))
+
+            const quantity = cart?.listItems?.find(e => e.productId === id)?.quantity || 0
+            return dispatch(updateCartItemAction({ productId: id, quantity: quantity + 1, showPopover: true }))
         },
         messageLoading: MESSAGE.LOADING_ADD_CART(name),
         messageSuccess: false

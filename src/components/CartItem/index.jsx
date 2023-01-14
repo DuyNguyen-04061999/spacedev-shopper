@@ -13,7 +13,7 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
     const [deleting, setDeleting] = useState(false)
     const [_quantity, setQuantity] = useState(quantity)
 
-    const onChangeQuantity = (quantity) => async () => {
+    const onChangeQuantity = (quantity) => async (ev) => {
         // setLoading(true)
         try {
             setQuantity(quantity)
@@ -64,7 +64,7 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
                                 description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
                                 onConfirm={onChangeQuantity(_quantity - 1)}
                             >
-                                <button className="btn" onClick={_quantity > 1 && onChangeQuantity(_quantity - 1)}>-</button>
+                                <button className="btn" onClick={_quantity > 1 ? onChangeQuantity(_quantity - 1) : undefined}>-</button>
                             </Popconfirm>
                             <input
                                 type="number"
@@ -74,15 +74,22 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
                                         evt.preventDefault();
                                     }
                                 }}
-                                onBlur={onChangeQuantity(_quantity || 1)}
-                                onChange={(ev) => setQuantity(parseInt(ev.target.value))}
+                                onBlur={_quantity !== quantity ? onChangeQuantity(_quantity || 1) : undefined}
+                                onChange={(ev) => setQuantity(parseInt(ev.target.value || '1'))}
                             />
                             <button className="btn" onClick={onChangeQuantity(_quantity + 1)}>+</button>
                         </div>
                         {/* Remove */}
-                        <a className="font-size-xs text-gray-400 ml-auto" href="#!">
-                            <i className="fe fe-x" /> Xóa
-                        </a>
+                        <Popconfirm
+                            title="Xóa sản phẩm"
+                            placement="left"
+                            description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                            onConfirm={onChangeQuantity(0)}
+                        >
+                            <a className="font-size-xs text-gray-400 ml-auto" href="#!">
+                                <i className="fe fe-x" /> Xóa
+                            </a>
+                        </Popconfirm>
                     </div>
                 </div>
             </div>

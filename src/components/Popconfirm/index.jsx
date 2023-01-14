@@ -9,9 +9,9 @@ export const Popconfirm = ({ children, ...props }) => {
         props.onCancel?.()
     }
 
-    const _onConfirm = () => {
+    const _onConfirm = (ev) => {
         setOpen(false)
-        props.onConfirm?.()
+        props.onConfirm?.(ev)
     }
 
     return (
@@ -24,8 +24,8 @@ export const Popconfirm = ({ children, ...props }) => {
             description={<>
                 {props.description}
                 <div className="flex gap-2 justify-end">
-                    <Button onClick={onCancel} type='outline' {...props.cancelButtonProps}>{props.cancelText || 'Cancel'}</Button>
-                    <Button onClick={_onConfirm} {...props.okButtonProps}>{props.okText || 'Ok'}</Button>
+                    <Button size='xs' onClick={onCancel} type='outline' {...props.cancelButtonProps}>{props.cancelText || 'Cancel'}</Button>
+                    <Button size='xs' onClick={_onConfirm} {...props.okButtonProps}>{props.okText || 'Ok'}</Button>
                 </div>
             </>}
         >

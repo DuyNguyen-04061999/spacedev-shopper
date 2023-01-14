@@ -60,7 +60,6 @@ function* fetchCart() {
 
 export const updateCartItemAction = createAction(`${name}/addCart`)
 
-
 // export const updateCartItemAction = createAsyncThunk(`${name}/addCart`, async (data, thunkApi) => {
 // try {
 //     await cartService.updateProduct(data.productId, data.quantity)
@@ -94,7 +93,7 @@ function* fetchUpdateCartItem(action) {
         } else {
             yield call(cartService.updateProduct, productId, quantity)
         }
-        yield putResolve(getCartAction())
+        yield call(fetchCart)
         if (action.payload.showPopover) {
             yield put(cartActions.toggleCartOver(true))
             window.scroll({
@@ -121,6 +120,6 @@ function* clearCart() {
 export function* cartSaga() {
     yield fork(fetchCart)
     yield takeLatest(updateCartItemAction, fetchUpdateCartItem)
-    yield takeLatest(loginThunkAction.fulfilled, fetchCart)
+    yield takeLatest([loginThunkAction.fulfilled], fetchCart)
     yield takeLatest(logoutThunkAction.fulfilled, clearCart)
 }
