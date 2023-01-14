@@ -11,7 +11,6 @@ export const CartItem = ({selected, allowSelect, onSelect, id, name, real_price,
     const dispatch = useDispatch()
     const { loading: { [id]: loading } } = useCart()
     const [_quantity, setQuantity] = useState(quantity)
-
     useEffect(() => {
         setQuantity(quantity)
     }, [quantity])

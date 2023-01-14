@@ -3,6 +3,7 @@ import { PATH } from "@/config/path";
 import { MainLayout } from "@/layouts/MainLayout";
 import { lazy } from "react";
 import { profile } from "./ca-nhan";
+import { PrivateRoute } from "@/components/PrivateRoute";
 
 const Home = lazy(() => import('@/pages'))
 const Page404 = lazy(() => import('@/pages/404'))
@@ -52,10 +53,6 @@ export const routers = [
             {
                 element: <Shipping />,
                 path: PATH.shipping
-            },
-            {
-                element: <ViewCart />,
-                path: PATH.viewCart
             },
             profile,
             {

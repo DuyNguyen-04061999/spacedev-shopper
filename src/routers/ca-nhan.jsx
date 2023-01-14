@@ -11,10 +11,15 @@ const Address = lazy(() => import('@/pages/ca-nhan/so-dia-chi'))
 const AddressDetail = lazy(() => import('@/pages/ca-nhan/so-dia-chi/action'))
 const Payment = lazy(() => import('@/pages/ca-nhan/so-thanh-toan'))
 const PaymentDetail = lazy(() => import('@/pages/ca-nhan/so-thanh-toan/action'))
+const ViewCart = lazy(() => import('@/pages/gio-hang'))
 
 export const profile = {
     element: <PrivateRoute redirect={PATH.account} />,
     children: [
+        {
+            element: <ViewCart />,
+            path: PATH.viewCart
+        },
         {
             element: <ProfileLayout />,
             path: PATH.profile.index,

@@ -1,9 +1,10 @@
 import { useForm } from '@/hooks/useForm'
+import { cn } from '@/utils'
 import React, { createContext, useContext, useEffect } from 'react'
 
 const Context = createContext({})
 
-export const Form = ({ children, onSubmit, form = { initialValue: undefined, rules: undefined, dependencies: {} } }) => {
+export const Form = ({ className, children, onSubmit, form = { initialValue: undefined, rules: undefined, dependencies: {} } }) => {
 
     useEffect(() => {
         if (form.initialValue) {
@@ -21,7 +22,7 @@ export const Form = ({ children, onSubmit, form = { initialValue: undefined, rul
 
     return (
         <Context.Provider value={{ ..._form }}>
-            <form onSubmit={_onSubmit}>{children}</form>
+            <form onSubmit={_onSubmit} className={cn(className)}>{children}</form>
         </Context.Provider>
     )
 }

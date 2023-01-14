@@ -1,20 +1,37 @@
+import { Button } from '@/components/Button'
 import { CartItem } from '@/components/CartItem'
+import { Form } from '@/components/Form'
+import { Input } from '@/components/Input'
 import { useCart } from '@/hooks/useCart'
-import { selectItemPreCheckoutAction } from '@/stories/cart'
+import { changePromotionAction, fetchPreCheckoutDataAction, selectItemPreCheckoutAction } from '@/stories/cart'
 import { currency } from '@/utils/currency'
+import { required } from '@/utils/rule'
 import { Spin } from 'antd'
-import React from 'react'
+import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 export const ViewCart = () => {
-    const { cart, preCheckoutData, loadingPreCheckoutData } = useCart()
+    const { cart, preCheckoutData, preCheckoutRequest, loadingPreCheckoutData } = useCart()
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(fetchPreCheckoutDataAction())
+    }, [])
+    const addPromotion = (values, form) => {
+        dispatch(changePromotionAction([values.code]))
+        form.reset()
+    }
+
     const onSelect = (id) => (checked) => {
         dispatch(selectItemPreCheckoutAction({
             productId: id,
             selected: checked
         }))
     }
+
+    const { promotion } = preCheckoutData
+
+    const selected = (id) => !!preCheckoutRequest?.listItems?.find(e => e === id)
     return (
         <section className="pt-7 pb-12">
             <div className="container">
@@ -29,35 +46,49 @@ export const ViewCart = () => {
                         {/* List group */}
                         <ul className="list-group list-group-lg list-group-flush-x mb-6">
                             {
-                                cart?.listItems?.map(e => <CartItem onSelect={onSelect(e.productId)} allowSelect key={e.productId} {...e.product} quantity={e.quantity} />)
+                                cart?.listItems?.map(e => <CartItem selected={selected(e.productId)} onSelect={onSelect(e.productId)} allowSelect key={e.productId} {...e.product} quantity={e.quantity} />)
                             }
                         </ul>
                         {/* Footer */}
                         <div className="row align-items-end justify-content-between mb-10 mb-md-0">
                             <div className="col-12 col-md-7">
-                                <div className="promotion-code-card mb-5">
-                                    <div className="title">Promotion (-50%)</div>
-                                    <div className="Code">SALE50</div>
-                                    <i className="fe fe-x close" />
-                                </div>
+                                {
+                                    promotion && (
+                                        <div className="promotion-code-card mb-5">
+                                            <div className="font-bold">{promotion.title} ({promotion.code})</div>
+                                            <div className="text-sm">{promotion.description}</div>
+                                            <i className="fe fe-x close" onClick={() => dispatch(changePromotionAction([]))} />
+                                        </div>
+                                    )
+                                }
+
                                 {/* Coupon */}
-                                <form className="mb-7 mb-md-0">
+                                <Form
+                                    onSubmit={addPromotion}
+                                    form={{
+                                        rules: {
+                                            code: [required()]
+                                        }
+                                    }}
+                                    className="mb-7 mb-md-0">
                                     <label className="font-size-sm font-weight-bold" htmlFor="cartCouponCode">
                                         Coupon code:
                                     </label>
                                     <div className="row form-row">
                                         <div className="col">
                                             {/* Input */}
-                                            <input className="form-control form-control-sm" id="cartCouponCode" type="text" placeholder="Enter coupon code*" />
+                                            <Form.Item name="code">
+                                                <Input placeholder="Enter coupon code*" />
+                                            </Form.Item>
                                         </div>
                                         <div className="col-auto">
                                             {/* Button */}
-                                            <button className="btn btn-sm btn-dark" type="submit">
+                                            <Button>
                                                 Apply
-                                            </button>
+                                            </Button>
                                         </div>
                                     </div>
-                                </form>
+                                </Form>
                             </div>
                         </div>
                     </div>
@@ -71,7 +102,7 @@ export const ViewCart = () => {
                                             <span>Subtotal</span> <span className="ml-auto font-size-sm">{currency(preCheckoutData?.subTotal)}</span>
                                         </li>
                                         <li className="list-group-item d-flex">
-                                            <span>Promotion</span> <span className="ml-auto font-size-sm">{preCheckoutData?.promotion?.discount && '-'} {currency(preCheckoutData?.promotion?.discount)}</span>
+                                            <span>Promotion</span> <span className="ml-auto font-size-sm">{!!preCheckoutData?.promotion?.discount && '-'} {currency(preCheckoutData?.promotion?.discount)}</span>
                                         </li>
                                         <li className="list-group-item d-flex">
                                             <span>Tax</span> <span className="ml-auto font-size-sm">{currency(preCheckoutData?.tax)}</span>

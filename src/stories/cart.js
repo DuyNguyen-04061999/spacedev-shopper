@@ -1,7 +1,7 @@
 import { cartService } from "@/services/cart";
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { call, takeEvery, takeLatest, put, delay, putResolve, take, fork, race, select } from 'redux-saga/effects'
-import { getToken } from "@/utils/token";
+import { getPreCheckout, getToken, setPreCheckout } from "@/utils/token";
 import { authActions, loginThunkAction, logoutThunkAction } from "./auth";
 
 
@@ -13,12 +13,13 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
         openCartOver: false,
         loading: {},
         loadingPreCheckoutData: false,
-        preCheckoutData: null,
-        preCheckoutRequest: {
+        preCheckoutData: {},
+        preCheckoutRequest: getPreCheckout() || {
             listItems: [],
             shippingMethod: '',
             promotionCode: []
         }
+
     },
     reducers: {
         setCart: (state, action) => {
@@ -66,6 +67,8 @@ function* fetchCart() {
 
 export const updateCartItemAction = createAction(`${name}/addCart`)
 export const selectItemPreCheckoutAction = createAction(`${name}/selectItemPreCheckout`)
+export const changePromotionAction = createAction(`${name}/changePromotion`)
+export const fetchPreCheckoutDataAction = createAction(`${name}/fetchPreCheckoutData`)
 
 
 function* fetchUpdateCartItem(action) {
@@ -145,9 +148,25 @@ function* fetchPreCheckoutData() {
     try {
         yield put(cartActions.set({ loadingPreCheckoutData: true }))
         let { cart: { preCheckoutRequest } } = yield select()
+        setPreCheckout(preCheckoutRequest)
+
         const preCheckoutData = yield call(cartService.preCheckout, preCheckoutRequest)
         yield put(cartActions.set({ preCheckoutData: preCheckoutData.data }))
         yield put(cartActions.set({ loadingPreCheckoutData: false }))
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+function* changePromotion(action) {
+    try {
+        let { cart: { preCheckoutRequest } } = yield select()
+        preCheckoutRequest = { ...preCheckoutRequest }
+        preCheckoutRequest.promotionCode = action.payload || []
+
+        yield put(cartActions.set({ preCheckoutRequest }))
+        yield call(fetchPreCheckoutData)
+
     } catch (err) {
         console.error(err)
     }
@@ -159,4 +178,6 @@ export function* cartSaga() {
     yield takeLatest([loginThunkAction.fulfilled], fetchCart)
     yield takeLatest(logoutThunkAction.fulfilled, clearCart)
     yield takeLatest(selectItemPreCheckoutAction, toggleSelectCartItem)
+    yield takeLatest(changePromotionAction, changePromotion)
+    yield takeLatest(fetchPreCheckoutDataAction, fetchPreCheckoutData)
 }
