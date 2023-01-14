@@ -1,6 +1,6 @@
 import { cartService } from "@/services/cart";
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { call, takeEvery, takeLatest, put, delay, putResolve, take, fork, race, select } from 'redux-saga/effects'
+import { call, takeEvery, takeLatest, put, delay, putResolve, take, fork, race, select, all } from 'redux-saga/effects'
 import { getPreCheckout, getToken, setPreCheckout } from "@/utils/token";
 import { authActions, loginThunkAction, logoutThunkAction } from "./auth";
 
@@ -11,7 +11,10 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
     initialState: {
         cart: null,
         openCartOver: false,
-        loading: {},
+        loading: {
+            cartLoading: true,
+            loadingPreCheckoutData: false,
+        },
         loadingPreCheckoutData: false,
         preCheckoutData: {},
         preCheckoutRequest: getPreCheckout() || {
@@ -32,7 +35,9 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
             state.openCartOver = action.payload
         },
         setLoading: (state, action) => {
-            state.loading[action.payload.productId] = action.payload.loading
+            for(let i in action.payload) {
+                state.loading[i] = action.payload[i]
+            }
         },
         set(state, action) {
             for (let i in action.payload) {
@@ -76,8 +81,7 @@ function* fetchUpdateCartItem(action) {
         yield delay(200)
         const { productId, quantity } = action.payload
         yield put(cartActions.setLoading({
-            productId,
-            loading: true
+            [productId]: true
         }))
         if (quantity === 0) {
             yield call(cartService.removeItem, productId)
@@ -95,8 +99,7 @@ function* fetchUpdateCartItem(action) {
         }
 
         yield put(cartActions.setLoading({
-            productId,
-            loading: false
+            [productId]: true
         }))
 
 
@@ -146,13 +149,13 @@ function* toggleSelectCartItem(action) {
 
 function* fetchPreCheckoutData() {
     try {
-        yield put(cartActions.set({ loadingPreCheckoutData: true }))
+        yield put(cartActions.setLoading({ loadingPreCheckoutData: true }))
         let { cart: { preCheckoutRequest } } = yield select()
         setPreCheckout(preCheckoutRequest)
 
         const preCheckoutData = yield call(cartService.preCheckout, preCheckoutRequest)
         yield put(cartActions.set({ preCheckoutData: preCheckoutData.data }))
-        yield put(cartActions.set({ loadingPreCheckoutData: false }))
+        yield put(cartActions.setLoading({ loadingPreCheckoutData: false }))
     } catch (err) {
         console.error(err)
     }
@@ -172,8 +175,17 @@ function* changePromotion(action) {
     }
 }
 
+function* fetchCartFirstTime() {
+    yield put(cartActions.setLoading({ cartLoading: true }))
+    yield all([
+        call(fetchCart),
+        delay(1000)
+    ])
+    yield put(cartActions.setLoading({ cartLoading: false }))
+}
+
 export function* cartSaga() {
-    yield fork(fetchCart)
+    yield fork(fetchCartFirstTime)
     yield takeLatest(updateCartItemAction, fetchUpdateCartItem)
     yield takeLatest([loginThunkAction.fulfilled], fetchCart)
     yield takeLatest(logoutThunkAction.fulfilled, clearCart)

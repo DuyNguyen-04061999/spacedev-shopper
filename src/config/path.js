@@ -10,6 +10,7 @@ export const PATH = {
     about: '/ve-chung-toi',
     shipping: '/quy-dinh-giao-hang',
     viewCart: '/gio-hang',
+    checkout: '/checkout',
     profile: {
         index: profile,
         order: profile + '/don-hang',
