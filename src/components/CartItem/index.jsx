@@ -3,35 +3,29 @@ import { cn } from '@/utils'
 import { currency } from '@/utils/currency'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
+import { Popconfirm } from '../Popconfirm'
+import { useCart } from '@/hooks/useCart'
 
 export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
     const dispatch = useDispatch()
-    const [loading, setLoading] = useState(false)
+    const { loading: { [id]: loading } } = useCart()
+    // const [loading, setLoading] = useState(false)
+    const [deleting, setDeleting] = useState(false)
+    const [_quantity, setQuantity] = useState(quantity)
 
-    const onDecre = async () => {
-        setLoading(true)
+    const onChangeQuantity = (quantity) => async () => {
+        // setLoading(true)
         try {
-            await dispatch(updateCartItemAction({
-                quantity: quantity - 1,
+            setQuantity(quantity)
+            dispatch(updateCartItemAction({
+                quantity,
                 productId: id
             }))
-        }catch(err) {
+        } catch (err) {
             console.error(err)
         }
-        setLoading(false)
-    }
 
-    const onIncre = async () => {
-        setLoading(true)
-        try {
-            await dispatch(updateCartItemAction({
-                quantity: quantity + 1,
-                productId: id
-            }))
-        }catch(err) {
-            console.error(err)
-        }
-        setLoading(false)
+        // setLoading(false)
     }
 
     return (
@@ -63,9 +57,27 @@ export const CartItem = ({ id, name, real_price, price, quantity, images }) => {
                     <div className="d-flex align-items-center">
                         {/* Select */}
                         <div className={cn('btn-group btn-quantity', { 'opacity-30 pointer-events-none': loading })}>
-                            <button className="btn" onClick={onDecre}>-</button>
-                            <input defaultValue={quantity} />
-                            <button className="btn" onClick={onIncre}>+</button>
+                            <Popconfirm
+                                disabled={_quantity > 1}
+                                title="Xóa sản phẩm"
+                                placement="left"
+                                description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                                onConfirm={onChangeQuantity(_quantity - 1)}
+                            >
+                                <button className="btn" onClick={_quantity > 1 && onChangeQuantity(_quantity - 1)}>-</button>
+                            </Popconfirm>
+                            <input
+                                type="number"
+                                value={_quantity || (!deleting && 1)}
+                                onKeyDown={evt => {
+                                    if (evt.key === 'e' || evt.key === 'E' || (evt.target.value === '' && evt.key === '0')) {
+                                        evt.preventDefault();
+                                    }
+                                }}
+                                onBlur={onChangeQuantity(_quantity || 1)}
+                                onChange={(ev) => setQuantity(parseInt(ev.target.value))}
+                            />
+                            <button className="btn" onClick={onChangeQuantity(_quantity + 1)}>+</button>
                         </div>
                         {/* Remove */}
                         <a className="font-size-xs text-gray-400 ml-auto" href="#!">

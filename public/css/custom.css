@@ -81,11 +81,17 @@
 }
 
 .btn-quantity .btn {
-    height: 30px;
+    margin-top: -4px;
+    height: auto;
     padding: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border: none
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }
 
 .btn-quantity input {
@@ -93,6 +99,14 @@
     text-align: center;
     border: none;
     outline: none;
+}
+
+.btn-quantity input::-webkit-outer-spin-button,
+.btn-quantity input::-webkit-inner-spin-button {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
 }
 
 .profile-avatar {
@@ -151,9 +165,10 @@
 }
 
 .payment-card:hover .card-action-right-bottom,
-.address-card:hover .card-action-right-bottom{
+.address-card:hover .card-action-right-bottom {
     display: block;
 }
+
 .card-action-right-bottom {
     position: absolute;
     bottom: 2rem;
@@ -216,10 +231,12 @@
 .ant-message {
     top: 45px !important;
 }
+
 .ant-popover-content span[role="img"] {
     display: block;
     line-height: 0 !important;
 }
+
 .ant-popconfirm-message {
     display: flex !important;
     align-items: center !important;
