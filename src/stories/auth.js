@@ -2,7 +2,7 @@ import { authService } from "@/services/auth"
 import { userService } from "@/services/user"
 import { clearToken, clearUser, getToken, getUser, setToken, setUser } from "@/utils/token"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { cartActions, getCartAction } from "./cart"
+import { put } from "redux-saga/effects"
 
 
 
@@ -16,7 +16,6 @@ export const loginThunkAction = createAsyncThunk('auth/login', async (data, thun
         thunkApi.fulfillWithValue(user.data)
         // dispatch({ type: SET_USER_ACTION, payload: user.data })
 
-        thunkApi.dispatch(getCartAction())
         return user.data
     } catch (err) {
         console.error(err)
@@ -25,16 +24,15 @@ export const loginThunkAction = createAsyncThunk('auth/login', async (data, thun
     }
 })
 
-export const logoutThunkAction = createAsyncThunk('auth/logout', async (_, thunkApi) => {
+export const logoutThunkAction = createAsyncThunk('auth/sideLogout', async (_, thunkApi) => {
     thunkApi.dispatch(authActions.logout())
     clearToken()
     clearUser()
-    thunkApi.dispatch(cartActions.clearCart())
 })
 
 export const getUserThunkAction = createAsyncThunk('auth/getUser', async (_, thunkApi) => {
     try {
-        if(getToken()) {
+        if (getToken()) {
             const user = await userService.getProfile()
             thunkApi.dispatch(setUserAction(user.data))
         }
@@ -79,3 +77,11 @@ export const { reducer: authReducer, actions: authActions } = createSlice({
         })
     }
 })
+
+
+
+
+
+export function* authSaga(){
+    yield put(getUserThunkAction())
+}

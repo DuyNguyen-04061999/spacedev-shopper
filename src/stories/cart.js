@@ -1,7 +1,8 @@
 import { cartService } from "@/services/cart";
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { call, takeEvery, takeLatest, put, delay, putResolve } from 'redux-saga/effects'
+import { call, takeEvery, takeLatest, put, delay, putResolve, take, fork, race } from 'redux-saga/effects'
 import { getToken } from "@/utils/token";
+import { loginThunkAction, logoutThunkAction } from "./auth";
 
 
 
@@ -28,17 +29,34 @@ export const { reducer: cartReducer, actions: cartActions, name } = createSlice(
     }
 })
 
-export const getCartAction = createAsyncThunk(`${name}/getCart`, async (_, thunkApi) => {
+// export const getCartAction = createAsyncThunk(`${name}/getCart`, async (_, thunkApi) => {
+// if (getToken()) {
+//     try {
+//         const res = await cartService.getCart()
+//         thunkApi.dispatch(cartActions.setCart(res.data))
+//     } catch (err) {
+//         console.error(err)
+//     }
+// }
+
+// })
+
+function* fetchCart() {
     if (getToken()) {
         try {
-            const res = await cartService.getCart()
-            thunkApi.dispatch(cartActions.setCart(res.data))
+            const { cart, logout } = yield race({
+                cart: call(cartService.getCart),
+                logout: take(logoutThunkAction)
+            })
+            console.log({cart, logout});
+            if(cart) {
+                yield put(cartActions.setCart(cart.data))
+            }
         } catch (err) {
             console.error(err)
         }
     }
-
-})
+}
 
 export const updateCartItemAction = createAction(`${name}/addCart`)
 
@@ -96,7 +114,13 @@ function* fetchUpdateCartItem(action) {
     }
 }
 
+function* clearCart() {
+    yield put(cartActions.clearCart())
+}
+
 export function* cartSaga() {
-    console.log('cartSaga')
+    yield fork(fetchCart)
     yield takeLatest(updateCartItemAction, fetchUpdateCartItem)
+    yield takeLatest(loginThunkAction.fulfilled, fetchCart)
+    yield takeLatest(logoutThunkAction.fulfilled, clearCart)
 }

@@ -1,14 +1,27 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { authReducer, getUserThunkAction } from "./auth";
+import { authReducer, authSaga } from "./auth";
 import { ENV } from "@/config";
-import { cartReducer, cartSaga, getCartAction } from "./cart";
+import { cartReducer, cartSaga } from "./cart";
 import createSagaMiddleware from 'redux-saga'
-import { all } from "redux-saga/effects";
+import { all,  select, take } from "redux-saga/effects";
+
+
+function* watchAndLog() {
+    while (true) {
+        const action = yield take('*')
+        const state = yield select()
+
+        console.log('action', action)
+        console.log('state after', state)
+    }
+}
 
 
 function* rootSaga() {
     yield all([
-        cartSaga()
+        cartSaga(),
+        // watchAndLog(), 
+        authSaga()
     ])
 }
 
@@ -24,7 +37,3 @@ export const store = configureStore({
 })
 
 saga.run(rootSaga)
-
-store.dispatch(getUserThunkAction())
-
-store.dispatch(getCartAction())
