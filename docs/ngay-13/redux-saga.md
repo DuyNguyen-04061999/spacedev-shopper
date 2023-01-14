@@ -125,9 +125,17 @@ Bước 3: Cài đặt saga middleware vào redux store
 
 # Case study
 
+Ngoại trừ những case xử lý side effect call api, loading bình thường thì redux-saga sẽ mạnh hơn redux-thunk ở những case sau đây:
+
 - Chỉ thực hiện action cuối cùng khi user thao tác nhanh và cancel những action trước đó
 
 - Delay các action
+
+- Xử lý thông tin user và cart với những logic phức tạp:
+
+    1. Xử lý khi user logout ngay sau khi login
+
+    2. Xử lý khi refresh page, cart chưa lấy về kịp thì user logout
 
 
 

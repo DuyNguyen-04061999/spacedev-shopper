@@ -2,7 +2,7 @@ import { cartService } from "@/services/cart";
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { call, takeEvery, takeLatest, put, delay, putResolve, take, fork, race } from 'redux-saga/effects'
 import { getToken } from "@/utils/token";
-import { loginThunkAction, logoutThunkAction } from "./auth";
+import { authActions, loginThunkAction, logoutThunkAction } from "./auth";
 
 
 
@@ -46,7 +46,7 @@ function* fetchCart() {
         try {
             const { cart, logout } = yield race({
                 cart: call(cartService.getCart),
-                logout: take(logoutThunkAction)
+                logout: take(authActions.logout)
             })
             console.log({cart, logout});
             if(cart) {
