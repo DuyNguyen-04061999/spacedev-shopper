@@ -6,11 +6,11 @@ import { useCart } from '@/hooks/useCart'
 import { usePreCheckoutData } from '@/hooks/usePreCheckoutData'
 import { useQuery } from '@/hooks/useQuery'
 import { cartService } from '@/services/cart'
-import { cartActions, fetchPreCheckoutDataAction } from '@/stories/cart'
+import { cartActions, clearPreCheckoutDataAction, fetchPreCheckoutDataAction } from '@/stories/cart'
 import { array } from '@/utils/array'
 import { currency } from '@/utils/currency'
 import { Skeleton, Spin } from 'antd'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { startTransition, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import SkeletonM from '@/components/Skeleton'
 import { Radio } from '@/components/Radio'
@@ -87,6 +87,7 @@ export const Checkout = () => {
                 note: noteRef.current
             })
             navigate(PATH.checkoutSuccess, { state: res.data })
+            dispatch(clearPreCheckoutDataAction())
         } catch (err) {
             handleError(err)
         }

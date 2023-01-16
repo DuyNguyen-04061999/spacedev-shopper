@@ -32,8 +32,13 @@ export const { reducer: cartReducer, actions: cartActions, name, getInitialState
         setCart: (state, action) => {
             state.cart = action.payload
         },
-        clearCart: (state) => {
+        clearCart: () => {
             return getInitialState()
+        },
+        clearPreCheckout: (state) => {
+            const reset = getInitialState()
+            state.preCheckoutData = reset.preCheckoutData
+            state.preCheckoutRequest = reset.preCheckoutRequest
         },
         toggleCartOver: (state, action) => {
             state.openCartOver = action.payload
@@ -86,6 +91,7 @@ export const updateCartItemAction = createAction(`${name}/addCart`)
 export const selectItemPreCheckoutAction = createAction(`${name}/selectItemPreCheckout`)
 export const changePromotionAction = createAction(`${name}/changePromotion`)
 export const fetchPreCheckoutDataAction = createAction(`${name}/fetchPreCheckoutData`)
+export const clearPreCheckoutDataAction = createAction(`${name}/clearPreCheckoutData`)
 
 function* fetchUpdateCartItem(action) {
     try {
@@ -164,7 +170,7 @@ function* fetchPreCheckoutData() {
     try {
         yield put(cartActions.setLoading({ loadingPreCheckoutData: true }))
         let { cart: { preCheckoutRequest } } = yield select()
-        preCheckoutStore.set('preCheckoutRequest',preCheckoutRequest)
+        preCheckoutStore.set('preCheckoutRequest', preCheckoutRequest)
 
         const preCheckoutData = yield call(cartService.preCheckout, preCheckoutRequest)
         yield put(cartActions.set({ preCheckoutData: preCheckoutData.data }))
@@ -190,7 +196,7 @@ function* changePromotion(action) {
         // Check xem promoition code có tồn tại hay không
         if (preCheckoutRequest.promotionCode.length > 0) {
             yield call(cartService.getPromotion, preCheckoutRequest.promotionCode[0])
-        }else {
+        } else {
 
         }
 
@@ -219,6 +225,22 @@ function* fetchCartFirstTime() {
     yield put(cartActions.setLoading({ cartLoading: false }))
 }
 
+function* clearPreCheckout() {
+    preCheckoutStore.clear()
+    yield call(fetchCart)
+    yield put(cartActions.set({
+        preCheckoutData: null,
+        preCheckoutRequest: {
+            listItems: [],
+            shippingMethod: 'mien-phi',
+            promotionCode: [],
+            payment: {
+                paymentMethod: "money"
+            }
+        }
+    }))
+}
+
 export function* cartSaga() {
     yield fork(fetchCartFirstTime)
     yield takeLatest(updateCartItemAction, fetchUpdateCartItem)
@@ -227,4 +249,5 @@ export function* cartSaga() {
     yield takeLatest(selectItemPreCheckoutAction, toggleSelectCartItem)
     yield takeLatest(changePromotionAction, changePromotion)
     yield takeLatest([fetchPreCheckoutDataAction, cartActions.changeShippingMethod, cartActions.changePaymentMethod], fetchPreCheckoutData)
+    yield takeLatest(clearPreCheckoutDataAction, clearPreCheckout)
 }
