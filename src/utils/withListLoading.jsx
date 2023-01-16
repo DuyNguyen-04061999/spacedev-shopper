@@ -11,7 +11,7 @@ export const withListLoading = (Component, ComponentLoading) => {
                         <div key={e._id} className={wraperClass}>
                             <Component {...props} {...e} />
                         </div>
-                    )) : (empty || <div className="col-12"><p className='text-xl border p-5 text-center'>Không tìm thấy dữ liệu 😞</p></div>)
+                    )) : (empty || <div className="col-12"><p className='text-xl border p-5 text-center mb-5'>Không tìm thấy dữ liệu 😞</p></div>)
             }
         </>
     }

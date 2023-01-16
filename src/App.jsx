@@ -14,7 +14,6 @@ message.config({
 
 function App() {
   const location = useLocation();
-  const history = useNavigate()
   const [displayLocation, setDisplayLocation] = useState(location);
   const [transitionStage, setTransistionStage] = useState("pageFadeIn");
 

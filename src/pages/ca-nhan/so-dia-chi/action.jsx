@@ -1,3 +1,4 @@
+import { AddressForm } from '@/components/AddressForm'
 import { Button } from '@/components/Button'
 import { Checkbox } from '@/components/Checkbox'
 import { Field } from '@/components/Field'
@@ -84,61 +85,10 @@ export default function AddressDetail() {
             </h6>
             {/* Form */}
             <Spin spinning={dataLoading}>
-                <Form form={{ rules, initialValue: address }} onSubmit={onSubmit}>
-                    <div className="row">
-                        <div className="col-12">
-                            <Form.Item name="fullName">
-                                <Field
-                                    label="Full Name *"
-                                    placeholder="Full Name *"
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <Form.Item name="phone">
-                                <Field
-                                    label="Phone Number*"
-                                    placeholder="Phone Number*"
-
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <Form.Item name="email">
-                                <Field
-                                    label="Email Address *"
-                                    placeholder="Email Address *"
-
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <Form.Item name="district">
-                                <Field
-                                    label="District *"
-                                    placeholder="District *"
-
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="col-12 col-md-6">
-                            <Form.Item name="province">
-                                <Field
-                                    label="Province / City*"
-                                    placeholder="Province / City*"
-
-                                />
-                            </Form.Item>
-                        </div>
-                        <div className="col-12">
-                            <Form.Item name="address">
-                                <Field
-                                    label="Address *"
-                                    placeholder="Address *"
-
-                                />
-                            </Form.Item>
-                        </div>
+                <AddressForm
+                    onSubmit={onSubmit}
+                    initialValue={address}
+                    footer={
                         <div className="col-12">
                             <Form.Item name="default">
                                 <Field
@@ -156,13 +106,14 @@ export default function AddressDetail() {
                                 />
                             </Form.Item>
                         </div>
-                    </div>
-                    {/* Button */}
-                    <Button loading={loading || editLoading}>
-                        {id ? 'Edit Address' : 'Add Address'}
-                    </Button>
+                    }
+                    action={
+                        <Button loading={loading || editLoading}>
+                            {id ? 'Edit Address' : 'Add Address'}
+                        </Button>
+                    }
 
-                </Form>
+                />
             </Spin>
 
         </>

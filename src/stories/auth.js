@@ -3,6 +3,7 @@ import { userService } from "@/services/user"
 import { clearToken, clearUser, getToken, getUser, setToken, setUser } from "@/utils/token"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { put } from "redux-saga/effects"
+import { cacheActions } from "./cache"
 
 
 
@@ -28,6 +29,7 @@ export const logoutThunkAction = createAsyncThunk('auth/sideLogout', async (_, t
     thunkApi.dispatch(authActions.logout())
     clearToken()
     clearUser()
+    thunkApi.dispatch(cacheActions.clearCache())
 })
 
 export const getUserThunkAction = createAsyncThunk('auth/getUser', async (_, thunkApi) => {

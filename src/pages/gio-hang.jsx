@@ -5,6 +5,7 @@ import { Input } from '@/components/Input'
 import Skeleton from '@/components/Skeleton'
 import { PATH } from '@/config/path'
 import { useCart } from '@/hooks/useCart'
+import { usePreCheckoutData } from '@/hooks/usePreCheckoutData'
 import { changePromotionAction, fetchPreCheckoutDataAction, selectItemPreCheckoutAction } from '@/stories/cart'
 import { cn } from '@/utils'
 import { currency } from '@/utils/currency'
@@ -15,12 +16,10 @@ import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 export const ViewCart = () => {
-    const { cart, preCheckoutData, preCheckoutRequest, loading: { cartLoading, loadingPreCheckoutData } } = useCart()
+    const { cart, preCheckoutRequest, loading: { cartLoading, loadingPromotion } } = useCart()
+    const { preCheckoutData, loadingPreCheckoutData } = usePreCheckoutData()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(fetchPreCheckoutDataAction())
-    }, [])
     const addPromotion = (values, form) => {
         dispatch(changePromotionAction([values.code]))
         form.reset()
@@ -33,9 +32,9 @@ export const ViewCart = () => {
         }))
     }
 
-    if (cartLoading) return <ViewCartLoading />
+    if (cartLoading && !cart) return <ViewCartLoading />
 
-    const { promotion } = preCheckoutData
+    const { promotion } = preCheckoutData || {}
 
     const selected = (id) => !!preCheckoutRequest?.listItems?.find(e => e === id)
     return (
@@ -96,7 +95,7 @@ export const ViewCart = () => {
                                                     </div>
                                                     <div className="col-auto">
                                                         {/* Button */}
-                                                        <Button>
+                                                        <Button loading={loadingPromotion}>
                                                             Apply
                                                         </Button>
                                                     </div>
@@ -121,7 +120,7 @@ export const ViewCart = () => {
                                                         <span>Tax</span> <span className="ml-auto font-size-sm">{currency(preCheckoutData?.tax)}</span>
                                                     </li>
                                                     <li className="list-group-item d-flex font-size-lg font-weight-bold">
-                                                        <span>Total</span> <span className="ml-auto font-size-sm">{currency(preCheckoutData?.total)}</span>
+                                                        <span>Total</span> <span className="ml-auto font-size-sm">{currency(preCheckoutData?.viewCartTotal)}</span>
                                                     </li>
                                                     <li className="list-group-item font-size-sm text-center text-gray-500">
                                                         Giá vận chuyển sẽ được tính khi checkout *
@@ -133,7 +132,7 @@ export const ViewCart = () => {
                                     {/* Button */}
                                     <Link
                                         className={cn("btn btn-block btn-dark mb-2", {
-                                            'opacity-50 pointer-events-none': preCheckoutData.listItems?.length === 0
+                                            'opacity-50 pointer-events-none': preCheckoutData?.listItems?.length === 0
                                         })}
                                         to={PATH.checkout}>
                                         Proceed to Checkout

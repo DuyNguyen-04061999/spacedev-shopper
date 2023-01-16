@@ -7,5 +7,7 @@ export const Navigate = ({ to, replace = true, ...props }) => {
         navigate(to, { ...props, replace })
     }, [])
 
+    
+
     return null
 }

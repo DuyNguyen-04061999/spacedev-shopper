@@ -7,7 +7,7 @@ import { Popconfirm } from '../Popconfirm'
 import { useCart } from '@/hooks/useCart'
 import { Checkbox } from '../Checkbox'
 
-export const CartItem = ({selected, allowSelect, onSelect, id, name, real_price, price, quantity, thumbnail_url }) => {
+export const CartItem = ({ checkoutPrice, className, selected, allowSelect, hideRemove, hideInputQuantity, onSelect, id, name, real_price, price, quantity, thumbnail_url }) => {
     const dispatch = useDispatch()
     const { loading: { [id]: loading } } = useCart()
     const [_quantity, setQuantity] = useState(quantity)
@@ -28,20 +28,20 @@ export const CartItem = ({selected, allowSelect, onSelect, id, name, real_price,
     }
 
     return (
-        <li className="list-group-item">
+        <li className={cn("list-group-item", className)}>
             <div className="row align-items-center">
-                <div className="col-4 d-flex flex items-center gap-2">
+                <div className="w-[120px] d-flex flex items-center gap-2">
                     {
-                        allowSelect && <Checkbox onChange={onSelect} checked={selected}/>
+                        allowSelect && <Checkbox onChange={onSelect} checked={selected} />
                     }
                     {/* Image */}
                     <a href="./product.html">
                         <img className="img-fluid" src={thumbnail_url} alt="..." />
                     </a>
                 </div>
-                <div className="col-8">
+                <div className="flex-1 px-2">
                     {/* Title */}
-                    <p className="font-size-sm mb-6">
+                    <div className="font-size-sm mb-6">
                         <a className="text-body" href="./product.html">{name}</a> <br />
                         <span className="card-product-price">
                             {
@@ -54,44 +54,56 @@ export const CartItem = ({selected, allowSelect, onSelect, id, name, real_price,
                             }
 
                         </span>
-                    </p>
+                        <div>{checkoutPrice}</div>
+                    </div>
                     {/*Footer */}
                     <div className="d-flex align-items-center">
                         {/* Select */}
-                        <div className={cn('btn-group btn-quantity', { 'opacity-30 pointer-events-none': loading })}>
-                            <Popconfirm
-                                disabled={_quantity > 1}
-                                title="Xóa sản phẩm"
-                                placement="left"
-                                description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
-                                onConfirm={onChangeQuantity(_quantity - 1)}
-                            >
-                                <button className="btn" onClick={_quantity > 1 ? onChangeQuantity(_quantity - 1) : undefined}>-</button>
-                            </Popconfirm>
-                            <input
-                                type="number"
-                                value={_quantity}
-                                onKeyDown={evt => {
-                                    if (evt.key === 'e' || evt.key === 'E' || (evt.target.value === '' && evt.key === '0')) {
-                                        evt.preventDefault();
-                                    }
-                                }}
-                                onBlur={_quantity !== quantity ? onChangeQuantity(_quantity || 1) : undefined}
-                                onChange={(ev) => setQuantity(parseInt(ev.target.value || '1'))}
-                            />
-                            <button className="btn" onClick={onChangeQuantity(_quantity + 1)}>+</button>
-                        </div>
+                        
+                        {
+                            !hideInputQuantity && (
+                                <div className={cn('btn-group btn-quantity', { 'opacity-30 pointer-events-none': loading })}>
+                                    <Popconfirm
+                                        disabled={_quantity > 1}
+                                        title="Xóa sản phẩm"
+                                        placement="left"
+                                        description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                                        onConfirm={onChangeQuantity(_quantity - 1)}
+                                    >
+                                        <button className="btn" onClick={_quantity > 1 ? onChangeQuantity(_quantity - 1) : undefined}>-</button>
+                                    </Popconfirm>
+                                    <input
+                                        type="number"
+                                        value={_quantity}
+                                        onKeyDown={evt => {
+                                            if (evt.key === 'e' || evt.key === 'E' || (evt.target.value === '' && evt.key === '0')) {
+                                                evt.preventDefault();
+                                            }
+                                        }}
+                                        onBlur={_quantity !== quantity ? onChangeQuantity(_quantity || 1) : undefined}
+                                        onChange={(ev) => setQuantity(parseInt(ev.target.value || '1'))}
+                                    />
+                                    <button className="btn" onClick={onChangeQuantity(_quantity + 1)}>+</button>
+                                </div>
+                            )
+                        }
+
                         {/* Remove */}
-                        <Popconfirm
-                            title="Xóa sản phẩm"
-                            placement="left"
-                            description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
-                            onConfirm={onChangeQuantity(0)}
-                        >
-                            <a className="font-size-xs text-gray-400 ml-auto" href="#!">
-                                <i className="fe fe-x" /> Xóa
-                            </a>
-                        </Popconfirm>
+                        {
+                            !hideRemove && (
+                                <Popconfirm
+                                    title="Xóa sản phẩm"
+                                    placement="left"
+                                    description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                                    onConfirm={onChangeQuantity(0)}
+                                >
+                                    <a className="font-size-xs text-gray-400 ml-auto" href="#!">
+                                        <i className="fe fe-x" /> Xóa
+                                    </a>
+                                </Popconfirm>
+                            )
+                        }
+
                     </div>
                 </div>
             </div>

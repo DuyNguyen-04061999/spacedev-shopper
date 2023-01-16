@@ -202,7 +202,7 @@ export const Header = () => {
                                     placement='bottomRight'
                                     content={<div>
                                         <p className='mb-2 flex items-center gap-1'> <span className='text-green-500'><CheckCircleFilled /></span> Thêm vào giỏ hàng thành công</p>
-                                        <Button size='xs'>Xem giỏ hàng và thanh toán</Button>
+                                        <Button onClick={() => dispatch(cartActions.toggleCartOver(false))} link={PATH.viewCart} size='xs'>Xem giỏ hàng và thanh toán</Button>
                                     </div>}
                                 >
                                     <div onClick={() => setOpenCart(true)} className="nav-link cursor-pointer">

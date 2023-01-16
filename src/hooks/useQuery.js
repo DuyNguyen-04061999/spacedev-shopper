@@ -1,4 +1,4 @@
-import { localStorageCache, sessionStorageCache } from "@/utils/cache"
+import { localStorageCache, reduxStorageCache, sessionStorageCache } from "@/utils/cache"
 import { CanceledError } from "axios"
 import { useRef } from "react"
 import { useEffect, useState } from "react"
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 const _cache = {
     localStorage: localStorageCache,
     sessionStorage: sessionStorageCache,
+    redux: reduxStorageCache
 }
 
 
@@ -47,7 +48,7 @@ export const useQuery = ({
 } = {}) => {
 
     const cache = _cache[storeDriver]
-    const refetchRef = useRef()
+    // const refetchRef = useRef()
     // Dùng để lưu trữ các data để sử dụng lại cho keepPreviousData
     const dataRef = useRef({})
     const cacheName = Array.isArray(queryKey) ? queryKey?.[0] : typeof queryKey === 'string' ? queryKey : undefined
@@ -56,15 +57,15 @@ export const useQuery = ({
     const controllerRef = useRef(new AbortController())
 
 
-    const [data, setData] = useState()
-    const [loading, setLoading] = useState(false)
+    const [data, setData] = useState({})
+    const [loading, setLoading] = useState(enabled)
     const [error, setError] = useState()
     const [status, setStatus] = useState('idle')
-    useEffect(() => {
-        if (typeof refetchRef.current === 'boolean') {
-            refetchRef.current = true
-        }
-    }, dependencyList)
+    // useEffect(() => {
+    //     if (typeof refetchRef.current === 'boolean') {
+    //         refetchRef.current = true
+    //     }
+    // }, dependencyList)
 
     useEffect(() => {
         if (enabled) {
@@ -72,41 +73,51 @@ export const useQuery = ({
         }
     }, [enabled].concat(dependencyList, queryKey))
 
-
-    const getCacheDataOrPreviousData = async () => {
-        // Lấy data từ biến lưu trữ
-        if (keepPreviousData && cacheName && dataRef.current[cacheName]) {
-            return dataRef.current[cacheName]
+    useEffect(() => {
+        return () => {
+            controllerRef.current.abort()
+            if (cacheName) {
+                delete _asyncFunction[cacheName]
+            }
         }
+    }, [])
 
-        // Kiểm tra cache xem có dữ liệu hay không
-        if (cacheName && cacheTime && !refetchRef.current) {
+
+    const getCacheDataOrPreviousData = () => {
+        if (cacheName) {
+            // Lấy data từ biến lưu trữ
+            if (keepPreviousData && dataRef.current[cacheName]) {
+                return dataRef.current[cacheName]
+            }
+            // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
+            if (_asyncFunction[cacheName]) {
+                return _asyncFunction[cacheName]
+            }
+
+            // Kiểm tra cache xem có dữ liệu hay không
             return cache.get(cacheName)
         }
-
-        // Kiểm tra xem có 1 nơi nào khác đang thực thi api này hay không ?
-        if (cacheName && _asyncFunction[cacheName]) {
-            return await _asyncFunction[cacheName]
-        }
-
     }
 
-    const setCacheDataOrPreviousData = async (data) => {
-        // Lưu trữ lại giá trị khi keepPreviousData
-        if (keepPreviousData && cacheName) {
-            dataRef.current[cacheName] = data
-        }
-
-
-
-        // update lại thời gian expired trong trường hợp cache đã tồn tại
-        if (cacheName && cacheTime) {
-            let expired = cacheTime
-            if (cacheTime) {
-                expired += Date.now()
+    const setCacheDataOrPreviousData = (data) => {
+        if (cacheName) {
+            // Lưu trữ lại giá trị khi keepPreviousData
+            if (keepPreviousData) {
+                dataRef.current[cacheName] = data
+                return
             }
-            cache.set(cacheName, data, expired)
+
+
+            // update lại thời gian expired trong trường hợp cache đã tồn tại
+            if (cacheTime) {
+                let expired = cacheTime
+                if (cacheTime) {
+                    expired += Date.now()
+                }
+                cache.set(cacheName, data, expired)
+            }
         }
+
     }
 
 
@@ -124,7 +135,7 @@ export const useQuery = ({
 
             try {
                 if (isGetCache) {
-                    res = await getCacheDataOrPreviousData()
+                    res = getCacheDataOrPreviousData()
                 }
 
                 if (!res) {
@@ -132,14 +143,17 @@ export const useQuery = ({
                         signal: controllerRef.current.signal,
                         params: data
                     })
-
                     if (cacheName) {
                         _asyncFunction[cacheName] = asyncFun
                     }
 
-                    res = await asyncFun
 
-                    delete _asyncFunction[cacheName]
+                    res = asyncFun
+
+                }
+
+                if(res instanceof Promise) {
+                    res = await res
                 }
 
                 setCacheDataOrPreviousData(res)
@@ -160,7 +174,7 @@ export const useQuery = ({
 
         if (res) {
             setLoading(false)
-            refetchRef.current = false
+            // refetchRef.current = false
             setStatus('success')
             _setData(res)
             return res

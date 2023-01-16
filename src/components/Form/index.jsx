@@ -1,10 +1,10 @@
 import { useForm } from '@/hooks/useForm'
 import { cn } from '@/utils'
-import React, { createContext, useContext, useEffect } from 'react'
+import React, { createContext, forwardRef, useContext, useEffect, useImperativeHandle } from 'react'
 
 const Context = createContext({})
 
-export const Form = ({ className, children, onSubmit, form = { initialValue: undefined, rules: undefined, dependencies: {} } }) => {
+export const Form = forwardRef(({ className, children, onSubmit, form = { initialValue: undefined, rules: undefined, dependencies: {} } }, outerRef) => {
 
     useEffect(() => {
         if (form.initialValue) {
@@ -12,6 +12,11 @@ export const Form = ({ className, children, onSubmit, form = { initialValue: und
         }
     }, [form.initialValue])
     const _form = useForm(form.rules, form)
+
+
+    useImperativeHandle(outerRef, () => {
+        return _form
+    }, [_form])
 
     const _onSubmit = (ev) => {
         ev.preventDefault()
@@ -25,7 +30,7 @@ export const Form = ({ className, children, onSubmit, form = { initialValue: und
             <form onSubmit={_onSubmit} className={cn(className)}>{children}</form>
         </Context.Provider>
     )
-}
+})
 
 Form.Item = ({ name, children }) => {
     const { register } = useContext(Context)

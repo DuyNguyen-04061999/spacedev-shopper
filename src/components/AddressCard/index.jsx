@@ -1,20 +1,20 @@
 import { MESSAGE } from '@/config/message'
 import { userService } from '@/services/user'
 import { handleError } from '@/utils/handleError'
-import { message } from 'antd'
+import {  message } from 'antd'
 import { Popconfirm } from '../Popconfirm'
 import { Link, generatePath } from 'react-router-dom'
 import { PATH } from '@/config/path'
-import Skeleton from '../Skeleton'
 import { Button } from '../Button'
 import { useRef } from 'react'
 import { withListLoading } from '@/utils/withListLoading'
+import Skeleton from '../Skeleton'
 
 export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDefault, fullName, district, province, address, email, phone }) => {
     const loadingDefaultRef = useRef(false)
     const loadingDeleteRef = useRef(false)
     const _onChangeDefault = async (ev) => {
-        if(loadingDefaultRef.current) return
+        if (loadingDefaultRef.current) return
 
 
         loadingDefaultRef.current = true
@@ -37,7 +37,7 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
     }
 
     const _onDelete = async (ev) => {
-        if(loadingDeleteRef.current) return
+        if (loadingDeleteRef.current) return
 
         loadingDeleteRef.current = true
         try {
@@ -62,14 +62,14 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
     return (
         <div className="address-card card card-lg bg-light mb-8">
             <div className="card-body">
-                {/* Heading */}
-                <h6 className="mb-6">
-                    {fullName}
-                </h6>
                 {/* Text */}
-                <p className="text-muted mb-0">
-                    {phone}, {email} <br />
-                    {district}, {province}, {address},
+                <p className="font-size-sm mb-0 leading-[35px]">
+                    <a className="text-body text-xl font-bold " href="./product.html">{fullName}</a> <br />
+                    <b>Số điện thoại:</b> {phone} <br />
+                    <b>Email:</b>{email}<br />
+                    <b>Quận / Huyện:</b> {district} <br />
+                    <b>Tỉnh / thành phố:</b> {province} <br />
+                    <b>Địa chỉ:</b> {address}
                 </p>
 
                 {
@@ -117,19 +117,18 @@ export const AddressCard = ({ onDelete, onChangeDefault, _id, default: addressDe
 
 export const AddressCardLoading = () => {
     return (
-        <div className="address-card card card-lg bg-light mb-8">
-            <div className="card-body">
+        <div className="address-card card card-lg bg-light mb-8" style={{ height: 274 }}>
+            <div className="card-body h-full">
                 {/* Heading */}
-                <h6 className="mb-6">
-                    <Skeleton height={24} width={200} />
-                </h6>
-                {/* Text */}
-                <p className="text-muted mb-1">
-                    <Skeleton width={350} height={22} />
+                <p className="font-size-sm mb-0 flex gap-5 flex-col h-full">
+                    <Skeleton height={20} width="65%"/>
+                    <Skeleton height={20} width="40%"/>
+                    <Skeleton height={20} width="54%"/>
+                    <Skeleton height={20} width="35%"/>
+                    <Skeleton height={20} width="35%"/>
+                    <Skeleton height={20} width="20%"/>
                 </p>
-                <p className="text-muted mb-0">
-                    <Skeleton width={150} height={22} />
-                </p>
+
 
             </div>
         </div>

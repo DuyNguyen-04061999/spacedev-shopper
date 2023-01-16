@@ -2,6 +2,20 @@
     font-weight: 600;
 } */
 
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+h6 {
+    margin: 0
+}
+
+* {
+    box-sizing: border-box;
+}
+
 .card-sale {
     background: red;
     border-top-left-radius: 0;
@@ -171,7 +185,7 @@ input[type=number] {
 
 .card-action-right-bottom {
     position: absolute;
-    bottom: 2rem;
+    bottom: 2.25rem;
     right: 1.25rem;
 }
 

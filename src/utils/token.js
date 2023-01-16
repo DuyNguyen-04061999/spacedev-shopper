@@ -1,6 +1,5 @@
 const TOKEN_KEY = 'token'
 const USER_KEY = 'user'
-const PRE_CHECKOUT_DATA_KEY = 'preCheckout'
 
 export const setToken = (data) => {
     localStorage.setItem(TOKEN_KEY, JSON.stringify(data))
@@ -17,7 +16,7 @@ export const setUser = (data) => {
     localStorage.setItem(USER_KEY, JSON.stringify(data))
 }
 export const getUser = () => {
-    return JSON.parse(localStorage.getItem(USER_KEY)) 
+    return JSON.parse(localStorage.getItem(USER_KEY))
 }
 export const clearUser = () => {
     localStorage.removeItem(USER_KEY)
@@ -25,12 +24,41 @@ export const clearUser = () => {
 
 
 
-export const setPreCheckout = (data) => {
-    localStorage.setItem(PRE_CHECKOUT_DATA_KEY, JSON.stringify(data))
+
+
+export const createStoreChannel = (key) => {
+
+    let _data
+    try {
+        _data = JSON.parse(localStorage.getItem(key)) || {}
+    } catch (err) {
+        _data = {}
+    }
+
+    const set = (name, data) => {
+        _data[name] = data
+        localStorage.setItem(key, JSON.stringify(_data))
+    }
+    const get = (name) => {
+
+        if(name) {
+            return _data[name]
+        }
+
+        return _data
+    }
+    const clear = () => {
+        _data = {}
+        localStorage.removeItem(key)
+    }
+
+
+
+    return {
+        set,
+        get,
+        clear
+    }
 }
-export const getPreCheckout = () => {
-    return JSON.parse(localStorage.getItem(PRE_CHECKOUT_DATA_KEY)) 
-}
-export const clearPreCheckout = () => {
-    localStorage.removeItem(PRE_CHECKOUT_DATA_KEY)
-}
+
+export const preCheckoutStore = createStoreChannel('preCheckout')

@@ -4,6 +4,7 @@ import { ENV } from "@/config";
 import { cartReducer, cartSaga } from "./cart";
 import createSagaMiddleware from 'redux-saga'
 import { all,  select, take } from "redux-saga/effects";
+import { cacheReducer } from "./cache";
 
 
 function* watchAndLog() {
@@ -30,7 +31,8 @@ const saga = createSagaMiddleware()
 export const store = configureStore({
     reducer: {
         auth: authReducer,
-        cart: cartReducer
+        cart: cartReducer,
+        cache: cacheReducer
     },
     middleware: (getDefaultMiddlware) => getDefaultMiddlware().concat(saga),
     devTools: ENV === 'development'

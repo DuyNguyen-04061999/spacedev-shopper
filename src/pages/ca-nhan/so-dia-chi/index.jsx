@@ -16,8 +16,6 @@ export default function Address() {
         }
     })
 
-    const onRefetch = () => callBackgroundApi()
-
     return (
         <>
             <Helmet>

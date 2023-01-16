@@ -11,6 +11,7 @@ export const PATH = {
     shipping: '/quy-dinh-giao-hang',
     viewCart: '/gio-hang',
     checkout: '/checkout',
+    checkoutSuccess: '/dat-hang-thanh-cong',
     profile: {
         index: profile,
         order: profile + '/don-hang',
