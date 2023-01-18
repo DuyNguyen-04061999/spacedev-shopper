@@ -69,6 +69,7 @@ export const { reducer: cartReducer, actions: cartActions, name, getInitialState
 })
 
 function* fetchCart() {
+    yield delay(200)
     if (getToken()) {
         yield put(cartActions.setLoading({ cartLoading: true }))
         try {
@@ -95,7 +96,6 @@ export const clearPreCheckoutDataAction = createAction(`${name}/clearPreCheckout
 
 function* fetchUpdateCartItem(action) {
     try {
-        yield delay(200)
         const { productId, quantity } = action.payload
         yield put(cartActions.setLoading({
             [productId]: true

@@ -67,7 +67,7 @@ export const CartItem = ({ checkoutPrice, className, selected, allowSelect, hide
                                         disabled={_quantity > 1}
                                         title="Xóa sản phẩm"
                                         placement="left"
-                                        description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                                        description={<p className="mb-4">Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
                                         onConfirm={onChangeQuantity(_quantity - 1)}
                                     >
                                         <button className="btn" onClick={_quantity > 1 ? onChangeQuantity(_quantity - 1) : undefined}>-</button>
@@ -94,7 +94,7 @@ export const CartItem = ({ checkoutPrice, className, selected, allowSelect, hide
                                 <Popconfirm
                                     title="Xóa sản phẩm"
                                     placement="left"
-                                    description={<p>Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
+                                    description={<p className="mb-4">Bạn có muốn xóa sản phẩm khỏi giỏ hàng không ?</p>}
                                     onConfirm={onChangeQuantity(0)}
                                 >
                                     <a className="font-size-xs text-gray-400 ml-auto" href="#!">

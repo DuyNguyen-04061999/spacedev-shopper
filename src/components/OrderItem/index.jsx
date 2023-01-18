@@ -9,10 +9,12 @@ import queryString from 'query-string'
 import { currency } from '@/utils/currency'
 import moment from 'moment'
 import { Button } from '../Button'
-import { generatePath, useSearchParams } from 'react-router-dom'
+import { generatePath, useNavigate, useSearchParams } from 'react-router-dom'
 import { PATH } from '@/config/path'
 import { OrderItemStatus } from './OrderItemStatus'
 import { useSearch } from '@/hooks/useSearch'
+import { useDispatch } from 'react-redux'
+import { updateCartItemAction } from '@/stories/cart'
 
 
 
@@ -68,12 +70,23 @@ const OrderItemLoading = () => {
 
 export const OrderItem = withLoading((props) => {
     const { _id, status, listItems, finishedDate } = props
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const moreImage = listItems.slice(3)
     const checkoutReturn = useMemo(() => {
         if (status === 'finished') {
             return moment(finishedDate) > moment().add(-7, 'd')
         }
     }, [])
+    const onReOrder = () => {
+        for(let i in listItems) {
+            dispatch(updateCartItemAction({
+                productId: listItems[i].productId,
+                quantity: 1
+            }))
+        }
+        navigate(PATH.viewCart)
+    }
     return (
         <div className="card card-lg mb-5 border">
             <div className="card-body pb-0">
@@ -113,7 +126,7 @@ export const OrderItem = withLoading((props) => {
                     </div>
                     <div className="col-12 col-lg-6">
                         <div className="flex justify-end gap-3">
-                            {['finished', 'cancel'].includes(status) && <Button size="xs" type="outline" link="#" >Mua lại</Button>}
+                            {['finished', 'cancel'].includes(status) && <Button size="xs" type="outline" onClick={onReOrder}>Mua lại</Button>}
                             {status === 'finished' && checkoutReturn && <Button size="xs" type="outline" link="#">Đổi trả</Button>}
                             {status === 'pending' && <Button size="xs" type="outline" link="#">Hủy đơn</Button>}
                             <Button size="xs" type="outline" link={generatePath(PATH.profile.orderDetail, { id: _id })}>Xem chi tiết</Button>
