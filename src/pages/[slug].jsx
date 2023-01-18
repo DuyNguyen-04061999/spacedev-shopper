@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Page404 from './404'
 import { useQuery } from '@/hooks/useQuery'
@@ -14,10 +14,13 @@ import { useCart } from '@/hooks/useCart'
 import { updateCartItemAction } from '@/stories/cart'
 import { useAction } from '@/hooks/useAction'
 import { MESSAGE } from '@/config/message'
+import { Image } from 'antd'
 
 export default function ProductDetail() {
     const { slug } = useParams()
     const id = slug.split('-p').pop()
+    const [openModal, setOpenModal] = useState(false)
+    const [currentImage, setCurrentImage] = useState(0)
     const { data: { data: detail }, error, loading } = useQuery({
         queryFn: () => productService.getProductDetail(id),
         enabled: !!id
@@ -28,17 +31,17 @@ export default function ProductDetail() {
     })
     const onAddWishlist = useAction({
         action: () => productService.addWishlist(id),
-        messageSuccess: MESSAGE.ADD_WISHLIST_SUCCESS(detail?.name) 
+        messageSuccess: MESSAGE.ADD_WISHLIST_SUCCESS(detail?.name)
     })
     const dispatch = useDispatch()
-    const { cart: { listItems }, loading: cartLoading } = useCart()
+    const { cart, loading: cartLoading } = useCart()
     const { [id]: addCartLoading } = cartLoading
 
     if (loading) return <div>Loading....</div>
 
     if (!id || error) return <Page404 />
 
-    const cartQuantity = (listItems?.find(e => e.productId == id)?.quantity || 0) + 1
+    const cartQuantity = (cart?.listItems?.find(e => e.productId == id)?.quantity || 0) + 1
 
 
 
@@ -75,42 +78,48 @@ export default function ProductDetail() {
                                     {/* Card */}
                                     <div className="card">
                                         {/* Badge */}
-                                        <div className="badge badge-primary card-badge text-uppercase">
-                                            Sale
-                                        </div>
+                                        {
+                                            detail.discount_rate && (
+                                                <div className="badge badge-primary card-badge text-uppercase">
+                                                    -{detail.discount_rate}%
+                                                </div>
+                                            )
+                                        }
+
                                         {/* Slider */}
-                                        <div className="mb-4" data-flickity="{&quot;draggable&quot;: false, &quot;fade&quot;: true}" id="productSlider">
-                                            {/* Item */}
-                                            <a href="./img/products/product-7.jpg" data-fancybox>
-                                                <img src="./img/products/product-7.jpg" alt="..." className="card-img-top" />
-                                            </a>
-                                            {/* Item */}
-                                            <a href="./img/products/product-122.jpg" data-fancybox>
-                                                <img src="./img/products/product-122.jpg" alt="..." className="card-img-top" />
-                                            </a>
-                                            {/* Item */}
-                                            <a href="./img/products/product-146.jpg" data-fancybox>
-                                                <img src="./img/products/product-146.jpg" alt="..." className="card-img-top" />
-                                            </a>
+                                        <div className="mb-4">
+                                            <img onClick={() => setOpenModal(true)} src={detail.images[0].large_url} alt="..." className="card-img-top cursor-pointer" />
+                                        </div>
+
+                                        <div style={{ display: 'none' }}>
+                                            <Image.PreviewGroup st preview={{ current: currentImage, visible: openModal, onVisibleChange: (vis) => setOpenModal(vis), wrapStyle: { margin: 100 } }}>
+                                                {detail.images.map((e, i) => <Image key={i} src={e.large_url} />)}
+                                            </Image.PreviewGroup>
                                         </div>
                                     </div>
                                     {/* Slider */}
-                                    <div className="flickity-nav mx-n2 mb-10 mb-md-0" data-flickity="{&quot;asNavFor&quot;: &quot;#productSlider&quot;, &quot;contain&quot;: true, &quot;wrapAround&quot;: false}">
-                                        {/* Item */}
-                                        <div className="col-12 px-2" style={{ maxWidth: '113px' }}>
-                                            {/* Image */}
-                                            <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(./img/products/product-7.jpg)' }} />
-                                        </div>
-                                        {/* Item */}
-                                        <div className="col-12 px-2" style={{ maxWidth: '113px' }}>
-                                            {/* Image */}
-                                            <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(./img/products/product-122.jpg)' }} />
-                                        </div>
-                                        {/* Item */}
-                                        <div className="col-12 px-2" style={{ maxWidth: '113px' }}>
-                                            {/* Image */}
-                                            <div className="embed-responsive embed-responsive-1by1 bg-cover" style={{ backgroundImage: 'url(./img/products/product-146.jpg)' }} />
-                                        </div>
+                                    <div className="flex mx-n2 mb-10 mb-md-0" data-flickity="{&quot;asNavFor&quot;: &quot;#productSlider&quot;, &quot;contain&quot;: true, &quot;wrapAround&quot;: false}">
+                                        {
+                                            detail.images.slice(0, 3).map((e, i) => <div key={i} className="col-12 px-2" style={{ maxWidth: '113px' }}>
+                                                <div onClick={() => {
+                                                    setCurrentImage(i)
+                                                    setOpenModal(true)
+                                                }} className="embed-responsive embed-responsive-1by1 bg-cover cursor-pointer"
+                                                    style={{ 'background-image': `url(${e.thumbnail_url})` }}></div>
+                                            </div>)
+                                        }
+
+                                        {
+                                            detail.images.length > 3 && <div className=" col-12 px-2" style={{ maxWidth: '113px' }}>
+                                                <div onClick={() => {
+                                                    setCurrentImage(4)
+                                                    setOpenModal(true)
+                                                }} className="rounded-sm h-full bg-light flex items-center justify-center cursor-pointer">
+                                                    + {detail.images.length - 3} <br />hình
+                                                </div>
+                                            </div>
+                                        }
+
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 pl-lg-10">
@@ -195,7 +204,7 @@ export default function ProductDetail() {
                                                 Wait List!</a>
                                         </p>
                                         {/* Share */}
-                                        <p className="mb-0">
+                                        <p className="mb-0 flex gap-2">
                                             <span className="mr-4">Share:</span>
                                             <a className="btn btn-xxs btn-circle btn-light font-size-xxxs text-gray-350" href="#!">
                                                 <i className="fab fa-twitter" />
