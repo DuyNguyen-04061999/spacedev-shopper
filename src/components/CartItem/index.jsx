@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { Popconfirm } from '../Popconfirm'
 import { useCart } from '@/hooks/useCart'
 import { Checkbox } from '../Checkbox'
+import { onKeyDownNumber } from '@/utils/onKeyDownNumber'
 
 export const CartItem = ({ checkoutPrice, className, selected, allowSelect, hideRemove, hideInputQuantity, onSelect, id, name, real_price, price, quantity, thumbnail_url }) => {
     const dispatch = useDispatch()
@@ -75,11 +76,7 @@ export const CartItem = ({ checkoutPrice, className, selected, allowSelect, hide
                                     <input
                                         type="number"
                                         value={_quantity}
-                                        onKeyDown={evt => {
-                                            if (evt.key === 'e' || evt.key === 'E' || (evt.target.value === '' && evt.key === '0')) {
-                                                evt.preventDefault();
-                                            }
-                                        }}
+                                        onKeyDown={onKeyDownNumber}
                                         onBlur={_quantity !== quantity ? onChangeQuantity(_quantity || 1) : undefined}
                                         onChange={(ev) => setQuantity(parseInt(ev.target.value || '1'))}
                                     />

@@ -33,7 +33,7 @@ export const useAction = ({
 
             onSuccess?.()
         } catch (err) {
-            handleError(err)
+            handleError(err, key)
         }
         loadingRef.current = false
     }
