@@ -1,39 +1,30 @@
 import { AddressDrawer } from '@/components/AddressDrawer'
+import { AddressForm } from '@/components/AddressForm'
 import { Button } from '@/components/Button'
 import { CartItem } from '@/components/CartItem'
+import { Navigate } from '@/components/Navigate'
+import { Radio } from '@/components/Radio'
+import SkeletonM from '@/components/Skeleton'
+import { PATH } from '@/config/path'
 import { useAddress } from '@/hooks/useAddress'
-import { useCart } from '@/hooks/useCart'
 import { usePreCheckoutData } from '@/hooks/usePreCheckoutData'
 import { useQuery } from '@/hooks/useQuery'
+import { useShippingMethod } from '@/hooks/useShippingMethod'
 import { cartService } from '@/services/cart'
-import { cartActions, clearPreCheckoutDataAction, fetchPreCheckoutDataAction } from '@/stories/cart'
+import { userService } from '@/services/user'
+import { cartActions, clearPreCheckoutDataAction } from '@/stories/cart'
 import { array } from '@/utils/array'
 import { currency } from '@/utils/currency'
-import { Skeleton, Spin } from 'antd'
-import React, { startTransition, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import SkeletonM from '@/components/Skeleton'
-import { Radio } from '@/components/Radio'
-import { Form } from '@/components/Form'
-import { useNavigate } from 'react-router'
-import { Navigate } from '@/components/Navigate'
-import { PATH } from '@/config/path'
-import { useAuth } from '@/hooks/useAuth'
-import { preCheckoutStore } from '@/utils/token'
-import { Field } from '@/components/Field'
-import { Checkbox } from '@/components/Checkbox'
-import { AddressForm } from '@/components/AddressForm'
 import { handleError } from '@/utils/handleError'
-import { userService } from '@/services/user'
+import { preCheckoutStore } from '@/utils/token'
+import { Skeleton, Spin } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router'
 
 
 const defaultSelectAddress = () => preCheckoutStore.get('selectAddress') || {}
-const queryGetShippingMethod = {
-    queryFn: () => cartService.getShippingMethod(),
-    queryKey: [`shipping-method`],
-    cacheTime: 3600000,
-    limitDuration: 1000,
-}
+
 
 const queryCheckout = {
     queryFn: ({ params }) => cartService.checkout(...params),
@@ -48,7 +39,7 @@ export const Checkout = () => {
     const { preCheckoutData, loadingPreCheckoutData, preCheckoutRequest } = usePreCheckoutData()
     const { addressDefault, loading: loadingAddress } = useAddress()
     const [openAddressDrawer, setOpenAddressDrawer] = useState(false)
-    const { data: { data: shippingMethod }, loading: loadingShipingMethod } = useQuery(queryGetShippingMethod)
+    const { data: { data: shippingMethod }, loading: loadingShipingMethod } = useShippingMethod()
     const { loading, refetch: checkoutService } = useQuery(queryCheckout)
     const [selectAddress, setSelectAddress] = useState(defaultSelectAddress)
     const noteRef = useRef()

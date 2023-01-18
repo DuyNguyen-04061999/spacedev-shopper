@@ -1,6 +1,6 @@
 import { array } from "./array"
 
-export const withListLoading = (Component, ComponentLoading) => {
+export const withListLoading = (Component, ComponentLoading = Component) => {
     return ({ loading, loadingCount = 3, wraperClass = "col-12", data, empty, ...props }) => {
         return <>
             {
