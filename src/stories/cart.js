@@ -5,6 +5,7 @@ import { getToken, preCheckoutStore } from "@/utils/token";
 import { authActions, loginThunkAction, logoutThunkAction } from "./auth";
 import { message } from "antd";
 import { handleError } from "@/utils/handleError";
+import { t } from "@/components/TranslateProvider";
 
 
 
@@ -205,7 +206,7 @@ function* changePromotion(action) {
         yield call(fetchPreCheckoutData)
         message.success({
             key,
-            content: action.payload.length ? 'Thêm mã giảm giá thành công' : "Xóa mã giảm giá thành công"
+            content: action.payload.length ? t('Add promotion success') : t("Remove promotion success")
         })
     } catch (err) {
         console.error(err)

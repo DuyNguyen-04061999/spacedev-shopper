@@ -15,6 +15,7 @@ import { loginThunkAction } from "@/stories/auth"
 import { useEffect } from "react"
 import { useBodyClass } from "@/hooks/useBodyClass"
 import { copyToClipboard } from '@/utils/copyToClipboard'
+import { useTranslate } from "@/components/TranslateProvider"
 
 
 const registerRule = {
@@ -35,6 +36,7 @@ export default function Account() {
 
     const dispatch = useDispatch()
     const { loginLoading } = useAuth()
+    const { t } = useTranslate()
     const registerForm = useForm(registerRule, {
         dependencies: {
             password: ['confirmPassword']
@@ -57,7 +59,7 @@ export default function Account() {
             if (registerForm.validate()) {
                 const res = await registerService(registerForm.values)
                 if (res.message) {
-                    message.success(res.message)
+                    message.success(t(res.message))
                 }
             }
         } catch (err) {
@@ -72,6 +74,7 @@ export default function Account() {
         if (loginForm.validate()) {
             try {
                 await dispatch(loginThunkAction(loginForm.values)).unwrap()
+                message.success(t('Login success'))
             } catch (err) {
                 handleError(err)
             }
