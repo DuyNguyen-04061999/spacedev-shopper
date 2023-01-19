@@ -20,7 +20,7 @@ import { updateCartItemAction } from '@/stories/cart'
 import { fullPathName } from '@/utils/fullPathname'
 import { useCart } from '@/hooks/useCart'
 
-export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
+export const ProductCard = ({ discount_rate, onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()
     const { cart } = useCart()
     const loadingWishlsitRef = useRef(false)
@@ -30,7 +30,6 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
     const dispatch = useDispatch()
     const image1 = images[0].thumbnail_url
     const image2 = images?.[1]?.thumbnail_url || image1
-    const salePrice = price - real_price
 
     const _slug = '/' + slug
 
@@ -99,8 +98,8 @@ export const ProductCard = ({ onRemoveWishlistSuccess, showRemove, showWishlist,
         <div className="product-card card mb-7">
             {/* Badge */}
             {
-                salePrice > 0 && <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
-                    -{Math.floor(salePrice / price * 100)}%
+                discount_rate > 0 && <div className="card-sale badge badge-dark card-badge card-badge-left text-uppercase">
+                    -{discount_rate}%
                 </div>
             }
 
