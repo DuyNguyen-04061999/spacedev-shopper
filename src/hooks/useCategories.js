@@ -5,7 +5,7 @@ export const useCategories = () => {
     const { data: { data = [] } = {}, loading } = useQuery({
         queryKey: 'categories',
         queryFn: () => productService.getCategories(),
-        cacheTime: 3600_000
+        // cacheTime: 3600_000
     })
     return { data, loading }
 }

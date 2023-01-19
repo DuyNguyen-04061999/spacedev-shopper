@@ -283,3 +283,7 @@ input[type=number] {
     font-family: unset;
     font-size: unset;
 }
+
+.swiper-pagination-bullet-active {
+    background: #ff6f61 !important;
+}

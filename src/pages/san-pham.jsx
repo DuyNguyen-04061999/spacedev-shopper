@@ -15,6 +15,7 @@ import { useCategories, useCategory } from "@/hooks/useCategories";
 import { useSearch } from "@/hooks/useSearch";
 import { useDidUpdateEffect } from "@/hooks/useDidUpdateEffect";
 import { Radio } from "@/components/Radio";
+import { Slider } from "@/components/Slider";
 
 
 export default function Product() {
@@ -196,7 +197,7 @@ export default function Product() {
                     </div>
                     <div className="col-12 col-md-8 col-lg-9">
                         {/* Slider */}
-                        {/* <div className="flickity-page-dots-inner mb-9" data-flickity="{&quot;pageDots&quot;: true}">
+                        <Slider className="mb-5">
                             <div className="w-100">
                                 <div className="card bg-h-100 bg-left" style={{ backgroundImage: 'url(/img/covers/cover-24.jpg)' }}>
                                     <div className="row" style={{ minHeight: '400px' }}>
@@ -245,7 +246,7 @@ export default function Product() {
                                     </div>
                                 </div>
                             </div>
-                        </div> */}
+                        </Slider>
                         {/* Header */}
                         <div className="row align-items-center mb-7">
                             <div className="col-12 col-md">
