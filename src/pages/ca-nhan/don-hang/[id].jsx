@@ -9,8 +9,9 @@ import { orderService } from '@/services/order'
 import { currency } from '@/utils/currency'
 import moment from 'moment/moment'
 import { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, generatePath, useParams } from 'react-router-dom'
 import { Skeleton as SkeletonA } from 'antd'
+import { slugify } from '@/utils/slugify'
 
 
 export default function OrderDetail() {
@@ -27,7 +28,6 @@ export default function OrderDetail() {
             return moment(detail.finishedDate) > moment().add(-7, 'd')
         }
     }, [detail])
-
     const shipping = useMemo(() => shippingMethod.find(e => e.code === detail.shipping.shippingMethod) || null, [detail])
 
     if (loading) return <Loading />
@@ -53,14 +53,17 @@ export default function OrderDetail() {
                     {/* List group */}
                     <ul className="list-group list-group-lg list-group-flush-y list-group-flush-x">
                         {
-                            detail.listItems.map(e => (
-                                <li key={e.productId} className="list-group-item px-0">
+                            detail.listItems.map(e => {
+                                const path = generatePath(PATH.productDetail, { slug: slugify(e.product.name) + '-p' + e.productId })
+
+
+                                return <li key={e.productId} className="list-group-item px-0">
                                     <div className="flex align-items-center gap-2">
-                                        <a className="block w-[120px]" href="product.html"><img src={e.product.thumbnail_url} alt="..." className="img-fluid" /></a>
+                                        <Link className="block w-[120px]" to={path}><img src={e.product.thumbnail_url} alt="..." className="img-fluid" /></Link>
                                         <div className="flex-1">
                                             {/* Title */}
                                             <p className="mb-4 font-size-sm font-weight-bold">
-                                                <a className="text-body" href="product.html">{e.product.name} {e.quantity > 1 ? `x ${e.quantity}` : ''}</a> <br />
+                                                <Link className="text-body" to={path}>{e.product.name} {e.quantity > 1 ? `x ${e.quantity}` : ''}</Link> <br />
                                                 <span className="text-muted">{currency(e.price)}</span>
                                             </p>
 
@@ -69,10 +72,10 @@ export default function OrderDetail() {
                                             detail.status === 'finished' && (
                                                 <div className="">
                                                     {
-                                                        checkoutReturn && <a href="#" className="btn btn-sm btn-block btn-outline-dark">Đỏi trả</a>
+                                                        checkoutReturn && <a href="#" className="btn btn-sm btn-block btn-outline-dark">Đổi trả</a>
                                                     }
                                                     {
-                                                        !e.review && <a href="#" className="btn btn-sm btn-block btn-outline-dark">Viết review</a>
+                                                        !e.review && <Link state={{ orderId: id }} to={generatePath(PATH.productDetail, { slug: `${slugify(e.product.name)}-p${e.productId}` })} className="btn btn-sm btn-block btn-outline-dark">Viết review</Link>
                                                     }
 
                                                 </div>
@@ -80,7 +83,7 @@ export default function OrderDetail() {
                                         }
                                     </div>
                                 </li>
-                            ))
+                            })
                         }
                     </ul>
                     {

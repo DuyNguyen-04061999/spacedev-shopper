@@ -172,7 +172,7 @@ export const useQuery = ({
             }
         }
 
-        if (res) {
+        if (res && !(res instanceof Promise)) {
             setLoading(false)
             // refetchRef.current = false
             setStatus('success')

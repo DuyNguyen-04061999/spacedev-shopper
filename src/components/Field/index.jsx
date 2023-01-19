@@ -7,7 +7,7 @@ export const Field = ({ renderField, autoComplete = 'new-password', ...args }) =
     const { label, required, error, type = 'text', ...props } = args
 
     const onChange = (ev) => {
-        props?.onChange?.(ev.target.value)
+        props?.onChange?.(ev)
     }
 
     return (

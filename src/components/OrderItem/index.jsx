@@ -107,7 +107,7 @@ export const OrderItem = withLoading((props) => {
                             }
                             {
                                 moreImage.length > 0 && (
-                                    <div class="col-3">
+                                    <div className="col-3">
 
                                         <div className="embed-responsive embed-responsive-1by1 bg-light">
                                             <a className="embed-responsive-item embed-responsive-item-text text-reset" href="#!">

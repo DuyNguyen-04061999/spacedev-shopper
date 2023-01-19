@@ -1,3 +1,4 @@
+import { cartService } from "@/services/cart"
 import { useQuery } from "./useQuery"
 
 export const useShippingMethod = () => {

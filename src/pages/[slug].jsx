@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import Page404 from './404'
 import { useQuery } from '@/hooks/useQuery'
 import { productService } from '@/services/product'
@@ -15,12 +15,29 @@ import { updateCartItemAction } from '@/stories/cart'
 import { useAction } from '@/hooks/useAction'
 import { MESSAGE } from '@/config/message'
 import { Image } from 'antd'
+import { reviewService } from '@/services/review'
+import moment from 'moment'
+import { ListReview, ReviewItem } from '@/components/ReviewItem'
+import { FormReview } from '@/components/FormReview'
+import { fullPathName } from '@/utils/fullPathname'
+import { Paginate } from '@/components/Paginate'
+import { useSearch } from '@/hooks/useSearch'
+import queryString from 'query-string'
 
 export default function ProductDetail() {
     const { slug } = useParams()
     const id = slug.split('-p').pop()
+    const [search] = useSearch({page: 1})
+    const { state, pathname } = useLocation()
     const [openModal, setOpenModal] = useState(false)
     const [currentImage, setCurrentImage] = useState(0)
+    const navigate = useNavigate()
+
+    const qs = queryString.stringify({
+        page: search.page
+    })
+
+
     const { data: { data: detail }, error, loading } = useQuery({
         queryFn: () => productService.getProductDetail(id),
         enabled: !!id
@@ -33,6 +50,12 @@ export default function ProductDetail() {
         action: () => productService.addWishlist(id),
         messageSuccess: MESSAGE.ADD_WISHLIST_SUCCESS(detail?.name)
     })
+    const { data: { data: reviews, paginate: reviewPaginate }, loading: loadingReview, refetch: refetchReview } = useQuery({
+        queryFn: () => reviewService.getReview(id, `?${qs}`),
+        enabled: !!id,
+        limitDuration: 3000
+    })
+
     const dispatch = useDispatch()
     const { cart, loading: cartLoading } = useCart()
     const { [id]: addCartLoading } = cartLoading
@@ -363,6 +386,17 @@ export default function ProductDetail() {
                         <div className="col-12">
                             {/* Heading */}
                             <h4 className="mb-10 text-center">Customer Reviews</h4>
+                            {
+                                state?.orderId && (
+                                    <FormReview productId={id} orderId={state.orderId} onSuccess={() => {
+                                        refetchReview()
+                                        navigate(fullPathName(), { replace: true })
+
+                                    }} />
+                                )
+                            }
+
+
                             {/* Header */}
                             <div className="row align-items-center">
                                 <div className="col-12 col-md-auto">
@@ -379,9 +413,9 @@ export default function ProductDetail() {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-12 col-md text-md-center">
+                                <div className="col-12 col-md text-md-right">
                                     {/* Rating */}
-                                    <div className="rating text-dark h6 mb-4 mb-md-0" data-value={4}>
+                                    <div className="rating text-dark h6 mb-4 mb-md-0" data-value={detail?.rating_average}>
                                         <div className="rating-item">
                                             <i className="fas fa-star" />
                                         </div>
@@ -399,255 +433,21 @@ export default function ProductDetail() {
                                         </div>
                                     </div>
                                     {/* Count */}
-                                    <strong className="font-size-sm ml-2">Reviews (3)</strong>
-                                </div>
-                                <div className="col-12 col-md-auto">
-                                    {/* Button */}
-                                    <a className="btn btn-sm btn-dark" data-toggle="collapse" href="#reviewForm">
-                                        Write Review
-                                    </a>
+                                    <strong className="font-size-sm ml-2">Reviews ({reviewPaginate?.count})</strong>
                                 </div>
                             </div>
-                            {/* New Review */}
-                            <div className="collapse" id="reviewForm">
-                                {/* Divider */}
-                                <hr className="my-8" />
-                                {/* Form */}
-                                <form>
-                                    <div className="row">
-                                        <div className="col-12 mb-6 text-center">
-                                            {/* Text */}
-                                            <p className="mb-1 font-size-xs">
-                                                Score:
-                                            </p>
-                                            {/* Rating form */}
-                                            <div className="rating-form">
-                                                {/* Input */}
-                                                <input className="rating-input" type="range" min={1} max={5} defaultValue={5} />
-                                                {/* Rating */}
-                                                <div className="rating h5 text-dark" data-value={5}>
-                                                    <div className="rating-item">
-                                                        <i className="fas fa-star" />
-                                                    </div>
-                                                    <div className="rating-item">
-                                                        <i className="fas fa-star" />
-                                                    </div>
-                                                    <div className="rating-item">
-                                                        <i className="fas fa-star" />
-                                                    </div>
-                                                    <div className="rating-item">
-                                                        <i className="fas fa-star" />
-                                                    </div>
-                                                    <div className="rating-item">
-                                                        <i className="fas fa-star" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            {/* Name */}
-                                            <div className="form-group">
-                                                <label className="sr-only" htmlFor="reviewName">Your Name:</label>
-                                                <input className="form-control form-control-sm" id="reviewName" type="text" placeholder="Your Name *" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-12 col-md-6">
-                                            {/* Email */}
-                                            <div className="form-group">
-                                                <label className="sr-only" htmlFor="reviewEmail">Your Email:</label>
-                                                <input className="form-control form-control-sm" id="reviewEmail" type="email" placeholder="Your Email *" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-12">
-                                            {/* Name */}
-                                            <div className="form-group">
-                                                <label className="sr-only" htmlFor="reviewTitle">Review Title:</label>
-                                                <input className="form-control form-control-sm" id="reviewTitle" type="text" placeholder="Review Title *" required />
-                                            </div>
-                                        </div>
-                                        <div className="col-12">
-                                            {/* Name */}
-                                            <div className="form-group">
-                                                <label className="sr-only" htmlFor="reviewText">Review:</label>
-                                                <textarea className="form-control form-control-sm" id="reviewText" rows={5} placeholder="Review *" required defaultValue={""} />
-                                            </div>
-                                        </div>
-                                        <div className="col-12 text-center">
-                                            {/* Button */}
-                                            <button className="btn btn-outline-dark" type="submit">
-                                                Post Review
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+
+                            <div className="row">
+                                <ListReview
+                                    loading={loadingReview}
+                                    loadingCount={5}
+                                    data={reviews}
+                                    empty={<div className="col-12 mt-5"><p className='text-xl border p-5 text-center mb-5'>Sản phẩm hiện chưa có đánh giá nào, hãy giúp chúng tôi mua hàng và đánh giá cho người khác biết</p></div>}
+                                />
                             </div>
-                            {/* Reviews */}
-                            <div className="mt-8">
-                                {/* Review */}
-                                <div className="review">
-                                    <div className="review-body">
-                                        <div className="row">
-                                            <div className="col-12 col-md-auto">
-                                                {/* Avatar */}
-                                                <div className="avatar avatar-xxl mb-6 mb-md-0">
-                                                    <span className="avatar-title rounded-circle">
-                                                        <i className="fa fa-user" />
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="col-12 col-md">
-                                                {/* Header */}
-                                                <div className="row mb-6">
-                                                    <div className="col-12">
-                                                        {/* Rating */}
-                                                        <div className="rating font-size-sm text-dark" data-value={5}>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        {/* Time */}
-                                                        <span className="font-size-xs text-muted">
-                                                            Logan Edwards, <time dateTime="2019-07-25">25 Jul 2019</time>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                {/* Title */}
-                                                <p className="mb-2 font-size-lg font-weight-bold">
-                                                    So cute!
-                                                </p>
-                                                {/* Text */}
-                                                <p className="text-gray-500">
-                                                    Justo ut diam erat hendrerit. Morbi porttitor, per eu. Sodales curabitur diam sociis. Taciti
-                                                    lobortis nascetur. Ante laoreet odio hendrerit.
-                                                    Dictumst curabitur nascetur lectus potenti dis sollicitudin habitant quis vestibulum.
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {/* Review */}
-                                <div className="review">
-                                    {/* Body */}
-                                    <div className="review-body">
-                                        <div className="row">
-                                            <div className="col-12 col-md-auto">
-                                                {/* Avatar */}
-                                                <div className="avatar avatar-xxl mb-6 mb-md-0">
-                                                    <span className="avatar-title rounded-circle">
-                                                        <i className="fa fa-user" />
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div className="col-12 col-md">
-                                                {/* Header */}
-                                                <div className="row mb-6">
-                                                    <div className="col-12">
-                                                        {/* Rating */}
-                                                        <div className="rating font-size-sm text-dark" data-value={3}>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                            <div className="rating-item">
-                                                                <i className="fas fa-star" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-12">
-                                                        {/* Time */}
-                                                        <span className="font-size-xs text-muted">
-                                                            Sophie Casey, <time dateTime="2019-07-07">07 Jul 2019</time>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                {/* Title */}
-                                                <p className="mb-2 font-size-lg font-weight-bold">
-                                                    Cute, but too small
-                                                </p>
-                                                {/* Text */}
-                                                <p className="text-gray-500">
-                                                    Shall good midst can't. Have fill own his multiply the divided. Thing great. Of heaven whose
-                                                    signs.
-                                                </p>
-                                                {/* Footer */}
-                                                <div className="row align-items-center">
-                                                    <div className="col-auto d-none d-lg-block">
-                                                        {/* Text */}
-                                                        <p className="mb-0 font-size-sm">Was this review helpful?</p>
-                                                    </div>
-                                                    <div className="col-auto mr-auto">
-                                                        {/* Rate */}
-                                                        <div className="rate">
-                                                            <a className="rate-item" data-toggle="vote" data-count={2} href="#" role="button">
-                                                                <i className="fe fe-thumbs-up" />
-                                                            </a>
-                                                            <a className="rate-item" data-toggle="vote" data-count={1} href="#" role="button">
-                                                                <i className="fe fe-thumbs-down" />
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                    <div className="col-auto d-none d-lg-block">
-                                                        {/* Text */}
-                                                        <p className="mb-0 font-size-sm">Comments (1)</p>
-                                                    </div>
-                                                    <div className="col-auto">
-                                                        {/* Button */}
-                                                        <a className="btn btn-xs btn-outline-border" href="#!">
-                                                            Comment
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
                             {/* Pagination */}
-                            <nav className="d-flex justify-content-center mt-9">
-                                <ul className="pagination pagination-sm text-gray-400">
-                                    <li className="page-item">
-                                        <a className="page-link page-link-arrow" href="#">
-                                            <i className="fa fa-caret-left" />
-                                        </a>
-                                    </li>
-                                    <li className="page-item active">
-                                        <a className="page-link" href="#">1</a>
-                                    </li>
-                                    <li className="page-item">
-                                        <a className="page-link" href="#">2</a>
-                                    </li>
-                                    <li className="page-item">
-                                        <a className="page-link" href="#">3</a>
-                                    </li>
-                                    <li className="page-item">
-                                        <a className="page-link page-link-arrow" href="#">
-                                            <i className="fa fa-caret-right" />
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                            <Paginate totalPage={reviewPaginate?.totalPage}/>
                         </div>
                     </div>
                 </div>

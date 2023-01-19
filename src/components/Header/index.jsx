@@ -219,9 +219,9 @@ export const Header = () => {
                                 {
                                     user ? (
                                         <Dropdown menu={{ items }} placement='bottomRight' arrow>
-                                            <Link className="header-avatar nav-link" to={PATH.profile.index}>
+                                            <div className="header-avatar nav-link cursor-pointer">
                                                 <img src={user.avatar || avatarDefault} />
-                                            </Link>
+                                            </div>
                                         </Dropdown>
                                     ) : (
                                         <Link className="nav-link" to={PATH.account}>
