@@ -7,16 +7,26 @@ const Context = createContext({
     setLang: (lang) => {}
 })
 
+const _global = {}
+
+
+export const t = (...params) => _global?.t?.(...params)
+
 export const TranslateProvider = ({ children, translate = {}, defaultLanguage = 'en' }) => {
     const [lang, setLang] = useState(() => {
         return localStorage.getItem('lang') || defaultLanguage
     })
 
+    const t = (keyword) => translate?.[lang]?.[keyword] || keyword
+
+    useEffect(() => {
+        _global.t = t
+    }, [t])
+
     useEffect(() => {
         localStorage.setItem('lang', lang)
     }, [lang])
 
-    const t = (keyword) => translate?.[lang]?.[keyword] || keyword
 
     return (
         <Context.Provider value={{ t, setLang, lang }}>{children}</Context.Provider>
