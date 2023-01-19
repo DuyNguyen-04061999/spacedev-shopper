@@ -12,10 +12,19 @@ import { Button } from '../Button'
 import { CheckCircleFilled, CheckCircleOutlined } from '@ant-design/icons'
 import { cartActions } from '@/stories/cart'
 import { CartDrawer } from '../CartDrawer'
+import { useTranslate } from '../TranslateProvider'
+import _ from 'lodash'
 
+
+const LANG = {
+    en: 'English',
+    vi: 'Tiếng Việt',
+    zh: 'China'
+}
 
 
 export const Header = () => {
+    const { t, setLang, lang } = useTranslate()
     const { user } = useAuth()
     const dispatch = useDispatch()
     const [openCart, setOpenCart] = useState(false)
@@ -54,7 +63,6 @@ export const Header = () => {
             }
         ]
     }, [])
-
 
     return (
         <>
@@ -101,15 +109,30 @@ export const Header = () => {
                                     <a className="dropdown-item" href="#!">EUR</a>
                                 </div>
                             </li>
-                            <li className="nav-item dropdown">
-                                {/* Toggle */}
-                                <a className="nav-link dropdown-toggle" data-toggle="dropdown" href="#">English</a>
-                                {/* Menu */}
-                                <div className="dropdown-menu minw-0">
-                                    <a className="dropdown-item" href="#">English</a>
-                                    <a className="dropdown-item" href="#">Tiếng Việt</a>
-                                    <a className="dropdown-item" href="#">China</a>
-                                </div>
+                            <li className="nav-item">
+                                <Dropdown arrow placement="topRight" menu={{
+                                    items: _.map(LANG, (title, code) => ({
+                                        key: code,
+                                        label: title,
+                                        onClick: () => setLang(code)
+                                    }))
+                                    // [
+                                    //     {
+                                    //         label: 'English',
+                                    //         onClick: () => setLang('en')
+                                    //     },
+                                    //     {
+                                    //         label: 'Tiếng Việt',
+                                    //         onClick: () => setLang('vi')
+                                    //     },
+                                    //     {
+                                    //         label: 'China',
+                                    //         onClick: () => setLang('zh')
+                                    //     },
+                                    // ]
+                                }}>
+                                    <a className="nav-link dropdown-toggle" href="#">{LANG[lang]}</a>
+                                </Dropdown>
                             </li>
                         </ul>
                         {/* Nav */}
@@ -167,10 +190,10 @@ export const Header = () => {
                         {/* Nav */}
                         <ul className="navbar-nav mx-auto">
                             <li className="nav-item">
-                                <a className="nav-link" href="./">Trang chủ</a>
+                                <Link className="nav-link" to={PATH.home}>{t('Home')}</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to={PATH.product}>Sản phẩm</Link>
+                                <Link className="nav-link" to={PATH.product}>{t('Product')}</Link>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link" href="./shop.html">Laptop</a>
