@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 
-const Context = createContext({
+export const TranslateContext = createContext({
     t: (keyword) => keyword,
     lang: 'en',
     setLang: (lang) => {}
@@ -29,9 +29,9 @@ export const TranslateProvider = ({ children, translate = {}, defaultLanguage = 
 
 
     return (
-        <Context.Provider value={{ t, setLang, lang }}>{children}</Context.Provider>
+        <TranslateContext.Provider value={{ t, setLang, lang }}>{children}</TranslateContext.Provider>
     )
 }
 
 
-export const useTranslate = () => useContext(Context)
+export const useTranslate = () => useContext(TranslateContext)

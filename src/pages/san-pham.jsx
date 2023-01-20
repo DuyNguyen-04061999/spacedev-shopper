@@ -16,10 +16,12 @@ import { useSearch } from "@/hooks/useSearch";
 import { useDidUpdateEffect } from "@/hooks/useDidUpdateEffect";
 import { Radio } from "@/components/Radio";
 import { Slider } from "@/components/Slider";
+import { Breadcrumb } from "@/components/Breadcrumb";
+import { useTranslate } from "@/components/TranslateProvider";
 
 
 export default function Product() {
-
+    const { t } = useTranslate()
     const [search, setSearch] = useSearch({
         page: 1,
         // search: undefined,
@@ -253,14 +255,10 @@ export default function Product() {
                                 {/* Heading */}
                                 <h3 className="mb-1">{category?.title || 'Tất cả sản phẩm'}</h3>
                                 {/* Breadcrumb */}
-                                <ol className="breadcrumb mb-md-0 font-size-xs text-gray-400">
-                                    <li className="breadcrumb-item">
-                                        <a className="text-gray-400" href="index.html">Home</a>
-                                    </li>
-                                    <li className="breadcrumb-item active">
-                                        Women's Clothing
-                                    </li>
-                                </ol>
+                                <Breadcrumb>
+                                    <Breadcrumb.Item to={PATH.home}>{t('Home')}</Breadcrumb.Item>
+                                    <Breadcrumb.Item>{category?.title || 'Tất cả sản phẩm'}</Breadcrumb.Item>
+                                </Breadcrumb>
                             </div>
                             <div className="col-12 col-md-auto flex gap-1 items-center whitespace-nowrap">
                                 {/* Select */}

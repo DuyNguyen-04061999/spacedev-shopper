@@ -23,11 +23,12 @@ import { fullPathName } from '@/utils/fullPathname'
 import { Paginate } from '@/components/Paginate'
 import { useSearch } from '@/hooks/useSearch'
 import queryString from 'query-string'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function ProductDetail() {
     const { slug } = useParams()
     const id = slug.split('-p').pop()
-    const [search] = useSearch({page: 1})
+    const [search] = useSearch({ page: 1 })
     const { state, pathname } = useLocation()
     const [openModal, setOpenModal] = useState(false)
     const [currentImage, setCurrentImage] = useState(0)
@@ -65,7 +66,6 @@ export default function ProductDetail() {
     if (!id || error) return <Page404 />
 
     const cartQuantity = (cart?.listItems?.find(e => e.productId == id)?.quantity || 0) + 1
-
 
 
     return (
@@ -108,42 +108,41 @@ export default function ProductDetail() {
                                                 </div>
                                             )
                                         }
-
                                         {/* Slider */}
                                         <div className="mb-4">
                                             <img onClick={() => setOpenModal(true)} src={detail.images[0].large_url} alt="..." className="card-img-top cursor-pointer" />
                                         </div>
-
                                         <div style={{ display: 'none' }}>
-                                            <Image.PreviewGroup st preview={{ current: currentImage, visible: openModal, onVisibleChange: (vis) => setOpenModal(vis), wrapStyle: { margin: 100 } }}>
+                                            <Image.PreviewGroup st preview={{ current: currentImage, visible: openModal, onVisibleChange: (vis) => setOpenModal(vis), wrapStyle: { margin: 100 }, countRender: (count) => `Hình ảnh ${count}/${detail.images.length}` }}>
                                                 {detail.images.map((e, i) => <Image key={i} src={e.large_url} />)}
                                             </Image.PreviewGroup>
                                         </div>
                                     </div>
                                     {/* Slider */}
-                                    <div className="flex mx-n2 mb-10 mb-md-0" data-flickity="{&quot;asNavFor&quot;: &quot;#productSlider&quot;, &quot;contain&quot;: true, &quot;wrapAround&quot;: false}">
-                                        {
-                                            detail.images.slice(0, 3).map((e, i) => <div key={i} className="col-12 px-2" style={{ maxWidth: '113px' }}>
-                                                <div onClick={() => {
-                                                    setCurrentImage(i)
-                                                    setOpenModal(true)
-                                                }} className="embed-responsive embed-responsive-1by1 bg-cover cursor-pointer"
-                                                    style={{ 'background-image': `url(${e.thumbnail_url})` }}></div>
-                                            </div>)
-                                        }
-
-                                        {
-                                            detail.images.length > 3 && <div className=" col-12 px-2" style={{ maxWidth: '113px' }}>
-                                                <div onClick={() => {
-                                                    setCurrentImage(4)
-                                                    setOpenModal(true)
-                                                }} className="rounded-sm h-full bg-light flex items-center justify-center cursor-pointer">
-                                                    + {detail.images.length - 3} <br />hình
+                                    {
+                                        detail.images.length > 1 && <div className="flex mx-n2 mb-10 mb-md-0">
+                                            {
+                                                detail.images.slice(0, 3).map((e, i) => <div key={i} className="col-12 px-2" style={{ maxWidth: '113px' }}>
+                                                    <div onClick={() => {
+                                                        setCurrentImage(i)
+                                                        setOpenModal(true)
+                                                    }} className="embed-responsive embed-responsive-1by1 bg-cover cursor-pointer"
+                                                        style={{ 'background-image': `url(${e.thumbnail_url})` }}></div>
+                                                </div>)
+                                            }
+                                            {
+                                                detail.images.length > 3 && <div className=" col-12 px-2" style={{ maxWidth: '113px' }}>
+                                                    <div onClick={() => {
+                                                        setCurrentImage(4)
+                                                        setOpenModal(true)
+                                                    }} className="rounded-sm h-full bg-light flex items-center justify-center cursor-pointer">
+                                                        + {detail.images.length - 3} <br />hình
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        }
+                                            }
+                                        </div>
+                                    }
 
-                                    </div>
                                 </div>
                                 <div className="col-12 col-md-6 pl-lg-10">
                                     {/* Header */}
@@ -187,13 +186,11 @@ export default function ProductDetail() {
                                                     <span className="ml-1 font-size-h5 font-weight-bolder text-primary">{currency(detail.real_price)}</span>
                                                 </>
                                         }
-
                                         <span className="font-size-sm ml-1">(In Stock)</span>
                                     </div>
                                     {/* Form */}
                                     <p className="mb-10">{detail.short_description}</p>
                                     <div className="form-group">
-
                                         <div className="form-row mb-7">
                                             <div className="col-12 col-lg-auto">
                                                 {/* Quantity */}
@@ -391,63 +388,64 @@ export default function ProductDetail() {
                                     <FormReview productId={id} orderId={state.orderId} onSuccess={() => {
                                         refetchReview()
                                         navigate(fullPathName(), { replace: true })
-
                                     }} />
                                 )
                             }
-
-
-                            {/* Header */}
-                            <div className="row align-items-center">
-                                <div className="col-12 col-md-auto">
-                                    {/* Dropdown */}
-                                    <div className="dropdown mb-4 mb-md-0">
-                                        {/* Toggle */}
-                                        <a className="dropdown-toggle text-reset" data-toggle="dropdown" href="#">
-                                            <strong>Sort by: Newest</strong>
-                                        </a>
-                                        {/* Menu */}
-                                        <div className="dropdown-menu mt-3">
-                                            <a className="dropdown-item" href="#!">Newest</a>
-                                            <a className="dropdown-item" href="#!">Oldest</a>
+                            <ErrorBoundary
+                                render={<div className='w-full text-center my-10 text-sm border border-red border-solid p-10'>Đã có lỗi xây ra khi render dữ liệu đánh giá</div>}
+                            >
+                                {/* Header */}
+                                <div className="row align-items-center">
+                                    <div className="col-12 col-md-auto">
+                                        {/* Dropdown */}
+                                        <div className="dropdown mb-4 mb-md-0">
+                                            {/* Toggle */}
+                                            <a className="dropdown-toggle text-reset" data-toggle="dropdown" href="#">
+                                                <strong>Sort by: Newest</strong>
+                                            </a>
+                                            {/* Menu */}
+                                            <div className="dropdown-menu mt-3">
+                                                <a className="dropdown-item" href="#!">Newest</a>
+                                                <a className="dropdown-item" href="#!">Oldest</a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="col-12 col-md text-md-right">
-                                    {/* Rating */}
-                                    <div className="rating text-dark h6 mb-4 mb-md-0" data-value={detail?.rating_average}>
-                                        <div className="rating-item">
-                                            <i className="fas fa-star" />
+                                    <div className="col-12 col-md text-md-right">
+                                        {/* Rating */}
+                                        <div className="rating text-dark h6 mb-4 mb-md-0" data-value={detail?.rating_average}>
+                                            <div className="rating-item">
+                                                <i className="fas fa-star" />
+                                            </div>
+                                            <div className="rating-item">
+                                                <i className="fas fa-star" />
+                                            </div>
+                                            <div className="rating-item">
+                                                <i className="fas fa-star" />
+                                            </div>
+                                            <div className="rating-item">
+                                                <i className="fas fa-star" />
+                                            </div>
+                                            <div className="rating-item">
+                                                <i className="fas fa-star" />
+                                            </div>
                                         </div>
-                                        <div className="rating-item">
-                                            <i className="fas fa-star" />
-                                        </div>
-                                        <div className="rating-item">
-                                            <i className="fas fa-star" />
-                                        </div>
-                                        <div className="rating-item">
-                                            <i className="fas fa-star" />
-                                        </div>
-                                        <div className="rating-item">
-                                            <i className="fas fa-star" />
-                                        </div>
+                                        {/* Count */}
+                                        <strong className="font-size-sm ml-2">Reviews ({reviewPaginate?.count})</strong>
                                     </div>
-                                    {/* Count */}
-                                    <strong className="font-size-sm ml-2">Reviews ({reviewPaginate?.count})</strong>
                                 </div>
-                            </div>
+                                <div className="row">
 
-                            <div className="row">
-                                <ListReview
-                                    loading={loadingReview}
-                                    loadingCount={5}
-                                    data={reviews}
-                                    empty={<div className="col-12 mt-5"><p className='text-xl border p-5 text-center mb-5'>Sản phẩm hiện chưa có đánh giá nào, hãy giúp chúng tôi mua hàng và đánh giá cho người khác biết</p></div>}
-                                />
-                            </div>
+                                    <ListReview
+                                        loading={loadingReview}
+                                        loadingCount={5}
+                                        data={reviews}
+                                        empty={<div className="col-12 mt-5"><p className='text-xl border p-5 text-center mb-5'>Sản phẩm hiện chưa có đánh giá nào, hãy giúp chúng tôi mua hàng và đánh giá cho người khác biết</p></div>}
+                                    />
 
+                                </div>
+                            </ErrorBoundary>
                             {/* Pagination */}
-                            <Paginate totalPage={reviewPaginate?.totalPage}/>
+                            <Paginate totalPage={reviewPaginate?.totalPage} />
                         </div>
                     </div>
                 </div>
