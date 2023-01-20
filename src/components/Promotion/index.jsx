@@ -1,6 +1,8 @@
 import React from 'react'
+import { useTranslate } from '../TranslateProvider'
 
 export const Promotion = () => {
+    const {t} = useTranslate()
     return (
         <div className="py-3 bg-dark bg-pattern mb-4">
             <div className="container">
@@ -9,7 +11,7 @@ export const Promotion = () => {
                         {/* Text */}
                         <div className="text-center text-white">
                             <span className="heading-xxs letter-spacing-xl">
-                                ⚡️ Săn deal hot cho ngày lễ 2/9 ⚡️
+                                ⚡️ {t('HUNTING HOT DEAL FOR HOLIDAY 9/2')} ⚡️
                             </span>
                         </div>
                     </div>

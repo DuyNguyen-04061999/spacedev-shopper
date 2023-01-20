@@ -443,9 +443,9 @@ export default function ProductDetail() {
                                     />
 
                                 </div>
+                                <Paginate totalPage={reviewPaginate?.totalPage} />
                             </ErrorBoundary>
                             {/* Pagination */}
-                            <Paginate totalPage={reviewPaginate?.totalPage} />
                         </div>
                     </div>
                 </div>
