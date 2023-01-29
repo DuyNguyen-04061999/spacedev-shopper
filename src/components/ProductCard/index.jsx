@@ -20,6 +20,7 @@ import { updateCartItemAction } from '@/stories/cart'
 import { fullPathName } from '@/utils/fullPathname'
 import { useCart } from '@/hooks/useCart'
 import { useTranslate } from '../TranslateProvider'
+import { withListLoading } from '@/utils/withListLoading'
 
 export const ProductCard = ({ discount_rate, onRemoveWishlistSuccess, showRemove, showWishlist, categories, name, price, real_price, images, slug, id, rating_average, review_count }) => {
     const { user } = useAuth()

@@ -24,7 +24,7 @@ export const SearchDrawer = ({ open, onClose }) => {
         categories: categoryId || undefined
     })
     const { data: { data: products = [] } = {}, loading } = useQuery({
-        queryKey: ['search', query],
+        queryKey: [query],
         queryFn: () => productService.getProduct(`?${query}`),
         enabled: !!value,
     })
@@ -67,7 +67,7 @@ export const SearchDrawer = ({ open, onClose }) => {
             {/* Body: Results (add `.d-none` to disable it) */}
             <div className="modal-body border-top font-size-sm">
                 {/* Heading */}
-                {value ? <p>Kết quả tìm kiếm:</p> : <p className='border p-4'>Tìm kiếm bất kỳ sản phẩm nào mà bạn yêu thích, chúng tôi sẽ gợi ý cho bạn</p>}
+                {value ? <p>Kết quả tìm kiếm:</p> : <p className='border text-center p-4'>Tìm kiếm bất kỳ sản phẩm nào mà bạn yêu thích, chúng tôi sẽ gợi ý cho bạn</p>}
                 {/* Items */}
                 {
                     value && (
