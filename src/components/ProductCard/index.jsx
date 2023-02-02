@@ -17,7 +17,7 @@ import { useAction } from '@/hooks/useAction'
 import { cartService } from '@/services/cart'
 import { useDispatch } from 'react-redux'
 import { updateCartItemAction } from '@/stories/cart'
-import { fullPathName } from '@/utils/getFullPathName'
+import { getFullPathName } from '@/utils/getFullPathName'
 import { useCart } from '@/hooks/useCart'
 import { useTranslate } from '../TranslateProvider'
 import { withListLoading } from '@/utils/withListLoading'
@@ -39,7 +39,7 @@ export const ProductCard = ({ discount_rate, onRemoveWishlistSuccess, showRemove
         action: () => {
             if (!user) {
                 message.info(INFO.LOGIN_TO_ADD_CART)
-                navigate(PATH.account, { state: { redirect: fullPathName() } })
+                navigate(PATH.account, { state: { redirect: getFullPathName() } })
             }
 
             const quantity = cart?.listItems?.find(e => e.productId === id)?.quantity || 0
