@@ -5,6 +5,7 @@ import { Slider } from '@/components/Slider'
 import { Tab } from '@/components/Tab'
 import { useQuery } from '@/hooks/useQuery'
 import { reviewService } from '@/services/review'
+import { Link } from 'react-router-dom'
 
 export const Home = () => {
   const { data: { data: reviews }, loading } = useQuery({
@@ -28,9 +29,9 @@ export const Home = () => {
               </div>
               <div className="card-body mt-auto py-8">
                 {/* Button */}
-                <a className="btn btn-white stretched-link" href="shop.html">
+                <Link className="btn btn-white stretched-link" to="lam-dep-suc-khoe/1520">
                   Shop Women <i className="fe fe-arrow-right ml-2" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -45,9 +46,9 @@ export const Home = () => {
               </div>
               <div className="card-body mt-auto py-8">
                 {/* Button */}
-                <a className="btn btn-white stretched-link" href="shop.html">
+                <Link className="btn btn-white stretched-link" to="/san-pham">
                   Shop Men <i className="fe fe-arrow-right ml-2" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -62,9 +63,9 @@ export const Home = () => {
               </div>
               <div className="card-body mt-auto py-8">
                 {/* Button */}
-                <a className="btn btn-white stretched-link" href="shop.html">
+                <Link className="btn btn-white stretched-link" to="/do-choi-me-be/2549">
                   Shop Kids <i className="fe fe-arrow-right ml-2" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -179,9 +180,9 @@ export const Home = () => {
                   {/* Heading */}
                   <h4 className="mb-0">Bags Collection</h4>
                   {/* Link */}
-                  <a className="btn btn-link stretched-link text-reset" href="shop.html">
+                  <Link className="btn btn-link stretched-link text-reset" to="/san-pham">
                     Shop Now <i className="fe fe-arrow-right ml-2" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -202,9 +203,9 @@ export const Home = () => {
                   {/* Heading */}
                   <h4 className="mb-0">Printed men’s Shirts</h4>
                   {/* Link */}
-                  <a className="btn btn-link stretched-link px-0 text-reset" href="shop.html">
+                  <Link className="btn btn-link stretched-link px-0 text-reset" to="/san-pham">
                     Shop Now <i className="fe fe-arrow-right ml-2" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -220,9 +221,9 @@ export const Home = () => {
                   {/* Heading */}
                   <h4 className="mb-0">Basic women’s Dresses</h4>
                   {/* Link */}
-                  <a className="btn btn-link stretched-link px-0 text-reset" href="shop.html">
+                  <Link className="btn btn-link stretched-link px-0 text-reset" to="/san-pham">
                     Shop Now <i className="fe fe-arrow-right ml-2" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -238,9 +239,9 @@ export const Home = () => {
                   {/* Heading */}
                   <h4 className="mb-0">Sweatshirts</h4>
                   {/* Link */}
-                  <a className="btn btn-link stretched-link text-reset" href="shop.html">
+                  <Link className="btn btn-link stretched-link text-reset" to="/san-pham">
                     Shop Now <i className="fe fe-arrow-right ml-2" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

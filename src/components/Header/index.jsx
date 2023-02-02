@@ -144,7 +144,7 @@ export const Header = () => {
                                 <a className="nav-link" href="./faq.html">Câu hỏi</a>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="./contact-us.html">Liên hệ</a>
+                                <Link className="nav-link" to={PATH.contact}>Liên hệ</Link>
                             </li>
                         </ul>
                         {/* Nav */}
@@ -196,13 +196,13 @@ export const Header = () => {
                                 <Link className="nav-link" to={PATH.product}>{t('Product')}</Link>
                             </li>
                             <li className="nav-item dropdown">
-                                <a className="nav-link" href="./shop.html">Laptop</a>
+                                <Link className="nav-link" to={'/laptop-thiet-bi-it/1846'}>{t('Laptop')}</Link>
                             </li>
                             <li className="nav-item dropdown">
-                                <a className="nav-link" href="./shop.html">Máy tính</a>
+                                <Link className="nav-link" to={'/nha-cua-doi-song/1883'}>{t('House')}</Link>
                             </li>
                             <li className="nav-item">
-                                <a className="nav-link" href="./shop.html">Sản phẩm khuyến mãi</a>
+                                <Link className="nav-link" to={'san-pham?page=1&sort=discount_rate.desc'}>{t('Promotion product')}</Link>
                             </li>
                         </ul>
                         {/* Nav */}
