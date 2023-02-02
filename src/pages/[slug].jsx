@@ -19,7 +19,7 @@ import { reviewService } from '@/services/review'
 import moment from 'moment'
 import { ListReview, ReviewItem } from '@/components/ReviewItem'
 import { FormReview } from '@/components/FormReview'
-import { fullPathName } from '@/utils/fullPathName'
+import { getFullPathName } from '@/utils/getFullPathName'
 import { Paginate } from '@/components/Paginate'
 import { useSearch } from '@/hooks/useSearch'
 import queryString from 'query-string'
@@ -387,7 +387,7 @@ export default function ProductDetail() {
                                 state?.orderId && (
                                     <FormReview productId={id} orderId={state.orderId} onSuccess={() => {
                                         refetchReview()
-                                        navigate(fullPathName(), { replace: true })
+                                        navigate(getFullPathName(), { replace: true })
                                     }} />
                                 )
                             }

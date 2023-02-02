@@ -1,0 +1,1 @@
+export const getFullPathName = () => `${window.location.pathname}${window.location.search}` 
