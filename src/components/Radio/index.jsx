@@ -5,14 +5,11 @@ const Context = createContext({})
 
 export const Radio = ({ children, ...props }) => {
     const id = useId()
-    const { selected, name, onChange, onClick } = useContext(Context)
+    const { value, name, onChange } = useContext(Context)
     return (
-        <div className='custom-control custom-radio '>
-            <input
-                onChange={(ev) => onChange(ev.target.value)}
-                {...props}
-            checked={props.value == selected} className="custom-control-input" type="radio" id={id} name={name} />
-            <label onClick={() => onClick(props.value)} className="custom-control-label flex items-center" htmlFor={id}>
+        <div className='custom-control custom-radio ' onClick={(ev) => onChange(props.value)}>
+            <input checked={props.value == value} className="custom-control-input" type="radio" />
+            <label className="custom-control-label flex items-center" >
                 {children}
             </label>
         </div>
@@ -25,33 +22,40 @@ Radio.Toggle = ({ children, ...props }) => {
 
     return (
         <label className={cn('btn btn-sm btn-outline-border', { active: props.value == selected })} >
-            <input {...props}   onChange={(ev) => onChange(ev.target.value)} selected={props.value == selected} type="radio" name={name} /> {children}
+            <input {...props} onChange={(ev) => onChange(ev.target.value)} selected={props.value == selected} type="radio" name={name} /> {children}
         </label>
     )
 }
 
-Radio.Group = ({ children, value, toggle, onChange, onCheckedWhen2nd, name }) => {
+Radio.Group = ({ children, defaultValue, toggle, onChange, name }) => {
     const _name = useId()
-    const uncheckRef = useRef(false)
-
-    const newOnChange = (value) => {
-        if (!uncheckRef.current) {
-            onChange?.(value)
+    const [_value, setValue] = useState(defaultValue)
+    // const uncheckRef = useRef(false)
+    const _onChange = (value) => {
+        if (toggle && value === _value) {
+            setValue()
+            onChange?.()
+            return
         }
+        setValue(value)
+        onChange?.(value)
+        // if (!uncheckRef.current) {
+        //     onChange?.(value)
+        // }
 
-        uncheckRef.current = false
+        // uncheckRef.current = false
     }
 
-    const onClick = (radioValue) => {
-        if (onCheckedWhen2nd) {
-            if (radioValue == value) {
-                onCheckedWhen2nd?.()
-                uncheckRef.current = true
-            }
-        }
-    }
+    // const onClick = (radioValue) => {
+    //     if (onCheckedWhen2nd) {
+    //         if (radioValue == value) {
+    //             onCheckedWhen2nd?.()
+    //             uncheckRef.current = true
+    //         }
+    //     }
+    // }
 
     return <div className={cn({ 'btn-group-toggle': toggle })}>
-        <Context.Provider value={{ selected: value, name: name || _name, onChange: newOnChange, onClick }}>{children}</Context.Provider>
+        <Context.Provider value={{ value: _value, name: name || _name, onChange: _onChange }}>{children}</Context.Provider>
     </div>
 }

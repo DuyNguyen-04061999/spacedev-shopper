@@ -71,9 +71,9 @@ export default function Product() {
     }, [match?.params?.id])
 
 
-    const onChangeFilterRating = (ev) => {
+    const onChangeFilterRating = (value) => {
         setSearch({
-            filter_rating: ev.target.value || undefined
+            filter_rating: value
         })
     }
     return (
@@ -132,11 +132,9 @@ export default function Product() {
                                         {/* Collapse */}
                                         <div>
                                             <Radio.Group
-                                                value={search.filter_rating}
+                                                defaultValue={search.filter_rating}
                                                 onChange={onChangeFilterRating}
-                                                onCheckedWhen2nd={() => {
-                                                    setSearch({ filter_rating: undefined })
-                                                }}
+                                                toggle
                                             >
                                                 <div className="form-group form-group-overflow mb-6" id="seasonGroup">
                                                     <div className="custom-control custom-radio mb-3">
